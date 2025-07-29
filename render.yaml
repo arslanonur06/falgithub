@@ -1,0 +1,41 @@
+# Render.com Deployment Configuration for Fal Gram Bot
+# Version: 3.1.1
+
+services:
+  - type: web
+    name: fal-gram-bot
+    env: python
+    plan: starter
+    buildCommand: pip install -r requirements.txt
+    startCommand: python bot.py
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_KEY
+        sync: false
+      - key: PAYMENT_PROVIDER_TOKEN
+        sync: false
+      - key: ADMIN_ID
+        sync: false
+      - key: ENVIRONMENT
+        value: production
+      - key: PORT
+        value: 8080
+    healthCheckPath: /health
+    healthCheckTimeout: 180
+    autoDeploy: true
+    numInstances: 1
+    region: frankfurt
+
+# Optional: PostgreSQL Database (if not using Supabase)
+# databases:
+#   - name: fal-gram-db
+#     databaseName: falgram
+#     user: falgram_user
+#     plan: starter 

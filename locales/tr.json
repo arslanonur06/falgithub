@@ -1,0 +1,19 @@
+{
+  "start_message": "Merhaba! 🔮 Ben Fal Gram, senin dijital kahve, tarot ve rüya yorumcun. Aşağıdaki hizmetlerimden birini seçebilirsin.",
+  "main_menu_button": " मेनू / Ana Menü",
+  "referral_prompt": "Fal Gram'ı arkadaşlarınla paylaşarak ücretsiz fal hakkı kazan!  aşağıdaki linki kopyalayıp onlara gönder. Senin linkinle bota katılan her arkadaşın için 1 ÜCRETSİZ fal hakkı kazanacaksın.\n\nSenin özel linkin: {referral_link}",
+  "referral_success": "Harika! Bir arkadaşın senin referansınla aramıza katıldı. Hediye olarak 1 ÜCRETSİZ fal hakkı kazandın!",
+  "coffee_fortune_prompt": "Harika seçim! Kahve falı için fincanının fotoğrafını göndermen yeterli.",
+  "tarot_fortune_prompt": "Mükemmel! Senin için bir tarot kartı çekiyorum...",
+  "tarot_card_drawn": "İşte kartın: {card}. Şimdi senin için yorumluyorum, lütfen bekle...",
+  "dream_analysis_prompt": "Rüyaların gizemli dünyasına hoş geldin. Lütfen rüyanı detaylı bir şekilde yaz ve bana gönder.",
+  "daily_card_subscribe": "Harika! Artık her gün sana özel bir 'Günün Tarot Kartı' ve yorumunu göndereceğim.",
+  "daily_card_unsubscribe": "Anlaşıldı. Artık günlük kart gönderimi yapılmayacak.",
+  "daily_card_already_subscribed": "Zaten 'Günün Kartı' aboneliğin aktif. Her sabah kartın sana ulaşacak.",
+  "fortune_limit_reached": "Ücretsiz fal hakkını doldurdun. Falını görmek için lütfen {stars_count} Yıldız ile ödeme yap.",
+  "fortune_in_progress": "Yorumun hazırlanıyor, lütfen bekle...",
+  "dream_analysis_in_progress": "Rüyan analiz ediliyor, lütfen bekle...",
+  "fortune_error": "Üzgünüm, yorumunu hazırlarken bir sorunla karşılaştım.",
+  "language_selection": "Hangi dilde devam etmek istersin?",
+  "language_updated": "Dil tercihin {lang} olarak güncellendi."
+}

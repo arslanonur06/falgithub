@@ -1,0 +1,11 @@
+{
+  "start_message": "Bonjour! Je suis votre lecteur numérique de café et de tarot. Quelle lecture souhaitez-vous essayer?",
+  "coffee_fortune_prompt": "Excellent choix! Envoyez simplement une photo de votre tasse de café pour une lecture.",
+  "tarot_fortune_prompt": "Excellent! Je tire une carte de tarot pour vous...",
+  "tarot_card_drawn": "Voici votre carte: {card}. Je l'interprète maintenant pour vous, veuillez patienter...",
+  "fortune_limit_reached": "Vous avez utilisé vos lectures gratuites. Veuillez payer {stars_count} Étoiles pour voir votre avenir.",
+  "fortune_in_progress": "Je lis votre avenir, veuillez patienter...",
+  "fortune_error": "Désolé, j'ai rencontré un problème en lisant votre avenir.",
+  "language_selection": "Dans quelle langue souhaitez-vous continuer?",
+  "language_updated": "Votre préférence linguistique a été mise à jour vers {lang}."
+}
