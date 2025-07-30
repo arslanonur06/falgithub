@@ -1,8 +1,5 @@
-# Render.com Deployment Configuration for Fal Gram Bot
-# Version: 3.1.1
-
 services:
-  - type: web
+  - type: worker  # Worker service
     name: fal-gram-bot
     env: python
     plan: starter
@@ -25,17 +22,9 @@ services:
         sync: false
       - key: ENVIRONMENT
         value: production
-      - key: PORT
-        value: 8080
-    healthCheckPath: /health
-    healthCheckTimeout: 180
+    # REMOVED health check and PORT - not supported for workers
     autoDeploy: true
     numInstances: 1
     region: frankfurt
 
-# Optional: PostgreSQL Database (if not using Supabase)
-# databases:
-#   - name: fal-gram-db
-#     databaseName: falgram
-#     user: falgram_user
-#     plan: starter 
+# (Keep your database config if needed)
