@@ -135,6 +135,17 @@
             ]
           }
         }
+      },
+      
+      "compatibility_result": {
+        "title": "💕 **ANALISI COMPATIBILITÀ** 💕",
+        "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+        "signs_label": "**{first_sign} ↔️ {second_sign}**",
+        "footer": "✨ *La comprensione è l'elemento più importante nelle relazioni* ✨",
+        "buttons": {
+          "another_analysis": "🔄 Altra Analisi",
+          "main_menu": "🏠 Menu Principale"
+        }
       }
   
   }

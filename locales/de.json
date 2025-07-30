@@ -134,6 +134,16 @@
             ]
           }
         }
+      },
+      
+      "compatibility_result": {
+        "title": "💕 **KOMPATIBILITÄTSANALYSE** 💕",
+        "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+        "signs_label": "**{first_sign} ↔️ {second_sign}**",
+        "footer": "✨ *Verständnis ist das wichtigste Element in Beziehungen* ✨",
+        "buttons": {
+          "another_analysis": "🔄 Andere Analyse",
+          "main_menu": "🏠 Hauptmenü"
+        }
       }
-  }
-  
+  }  

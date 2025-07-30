@@ -25,7 +25,7 @@ Fal Gram, kullanıcılara **kahve falı**, **tarot okuma**, **rüya tabiri** ve 
 ### 💎 **Premium Abonelik Seviyeleri**
 
 #### 🆓 **Ücretsiz Plan**
-- 3 ücretsiz fal hakkı
+- 5  ücretsiz fal hakkı
 - Temel özellikler
 - Reklamlar
 
