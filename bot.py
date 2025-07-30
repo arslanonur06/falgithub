@@ -21,6 +21,7 @@ import time
 import concurrent.futures
 from concurrent.futures import ThreadPoolExecutor
 import asyncio
+from telegram.ext import ApplicationBuilder, CommandHandler
 
 # --- Başlangıç Kurulumu ---
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -456,3 +457,13 @@ def get_moon_energy_advice(energy, lang='tr'):
 @lru_cache(maxsize=32)
 def get_config_from_db(key):
     return supabase_manager.get_config(key)
+
+application = ApplicationBuilder().token(TELEGRAM_BOT_TOKEN).build()
+
+async def start(update, context):
+    await update.message.reply_text("Merhaba!")
+
+application.add_handler(CommandHandler("start", start))
+
+# BU ŞART!
+application.run_polling()
