@@ -3,6 +3,8 @@ services:
     name: fal-gram-bot
     env: python
     plan: starter
+    pythonVersion: 3.11.0
+
     buildCommand: PYTHON_VERSION=3.11.0 pip install -r requirements.txt
     startCommand: python bot.py
     envVars:
