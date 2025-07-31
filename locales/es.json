@@ -1,4 +1,8 @@
+
 {
+  "start": {
+    "welcome": "✨🔮 **BIENVENIDO A FAL GRAM** 🔮✨\n━━━━━━━━━━━━━━━━━━━━━━\n\n🌟 *Las puertas del mundo místico se están abriendo...*\n\n☕ **Lectura de Café** - Descubre el futuro en tu taza\n🃏 **Lectura de Tarot** - Las cartas tienen algo que decirte\n💭 **Análisis de Sueños** - Decodifica tus mensajes subconscientes\n⭐ **Astrología** - Guía de las estrellas\n🌅 **Carta Diaria** - Guía personal cada mañana\n👥 **Invitar Amigos** - Las bendiciones se multiplican cuando se comparten\n\n━━━━━━━━━━━━━━━━━━━━━━\n✨ *¿Estás listo para descubrir tu destino?* ✨"
+  },
   "start_message": "✨🔮 **BIENVENIDO A FAL GRAM** 🔮✨\n━━━━━━━━━━━━━━━━━━━━━━\n\n🌟 *Las puertas del mundo místico se están abriendo...*\n\n☕ **Lectura de Café** - Descubre el futuro en tu taza\n🃏 **Lectura de Tarot** - Las cartas tienen algo que decirte\n💭 **Análisis de Sueños** - Decodifica tus mensajes subconscientes\n⭐ **Astrología** - Guía de las estrellas\n🌅 **Carta Diaria** - Guía personal cada mañana\n👥 **Invitar Amigos** - Las bendiciones se multiplican cuando se comparten\n\n━━━━━━━━━━━━━━━━━━━━━━\n✨ *¿Estás listo para descubrir tu destino?* ✨",
   "main_menu_button": "🏠 Menú Principal",
   "referral_prompt": "¡Gana lecturas gratis compartiendo Fal Gram con tus amigos! Copia el enlace de abajo y envíalo. Obtendrás 1 LECTURA GRATIS por cada amigo que se una usando tu enlace.\n\nTu enlace especial: {referral_link}",
@@ -28,9 +32,36 @@
   "daily_card_already_subscribed": "Tu suscripción a 'Carta del Día' ya está activa. Recibirás tu carta cada mañana.",
   "referral": "👥 Invitar Amigos",
   "language": "🌐 Selección de Idioma",
-  "language_selection": "¿En qué idioma te gustaría continuar?",
+  "language_selection": {
+    "title": "🌐 **Selección de Idioma**",
+    "description": "Por favor selecciona tu idioma preferido:",
+    "buttons": {
+      "turkish": "🇹🇷 Türkçe",
+      "english": "🇺🇸 English",
+      "spanish": "🇪🇸 Español",
+      "french": "🇫🇷 Français",
+      "russian": "🇷🇺 Русский",
+      "german": "🇩🇪 Deutsch",
+      "arabic": "🇸🇦 العربية",
+      "italian": "🇮🇹 Italiano",
+      "portuguese": "🇵🇹 Português",
+      "back": "⬅️ Atrás"
+    }
+  },
   "language_detected": "🌐 Tu idioma detectado automáticamente como {lang}. Usa el botón de idioma para cambiar si es necesario.",
   "language_updated": "🌐 Idioma actualizado a {lang}.",
+  "language_change": {
+    "success_tr": "✅ Diliniz **Türkçe** olarak güncellendi!",
+    "success_en": "✅ Your language updated to **English**!",
+    "success_es": "✅ Tu idioma se actualizó a **Español**!",
+    "success_fr": "✅ Votre langue mise à jour vers **Français**!",
+    "success_ru": "✅ Ваш язык обновлён на **Русский**!",
+    "success_de": "✅ Ihre Sprache wurde auf **Deutsch** aktualisiert!",
+    "success_ar": "✅ تم تحديث لغتك إلى **العربية**!",
+    "success_it": "✅ La tua lingua è stata aggiornata a **Italiano**!",
+    "success_pt": "✅ Sua língua foi atualizada para **Português**!",
+    "success_default": "✅ Language updated successfully!"
+  },
   "fortune_request": "Envía una foto de tu taza de café...",
   "fortune_limit_reached": "Tu límite de lecturas gratis se ha alcanzado. Se requieren {stars_count} Estrellas de Telegram para continuar.",
   "fortune_in_progress": "🔮 Tu lectura se está preparando...",
@@ -46,7 +77,6 @@
   "premium_plan_basic": "✨ Plan Básico - 500 ⭐",
   "premium_plan_premium": "✨ Plan Premium - 1000 ⭐",
   "premium_plan_vip": "✨ Plan VIP - 2000 ⭐",
-  "plan_comparison": "📊 Comparación de Planes",
   "subscription_management": "💳 Gestionar Suscripción",
   "monthly_horoscope": "📅 Horóscopo Mensual",
   "purchase": "🛒 Comprar",
@@ -71,198 +101,512 @@
   "gift_subscription_title": "🎁 **REGALAR SUSCRIPCIÓN** 🎁",
   "cancel_subscription_title": "❌ **CANCELAR SUSCRIPCIÓN** ❌",
   "admin_panel_back": "🔙 Panel de Administración",
-  
+  "plan_comparison": {
+    "title": "📊 Comparación de Planes",
+    "plans": {
+      "free": {
+        "name": "Plan Gratis",
+        "price": "0",
+        "price_stars": "0",
+        "features": [
+          "5 lecturas gratis",
+          "Funciones básicas",
+          "Anuncios"
+        ]
+      },
+      "basic": {
+        "name": "Plan Básico",
+        "price": "2.99",
+        "price_stars": "500",
+        "features": [
+          "Lecturas de café ilimitadas",
+          "Lecturas de tarot ilimitadas",
+          "Interpretaciones de sueños ilimitadas",
+          "Horóscopo diario",
+          "Carta natal básica",
+          "Experiencia sin anuncios"
+        ]
+      },
+      "premium": {
+        "name": "Plan Premium",
+        "price": "4.99",
+        "price_stars": "1000",
+        "features": [
+          "Todas las funciones del Plan Básico",
+          "Horóscopo semanal",
+          "Horóscopo mensual",
+          "Análisis de compatibilidad detallado",
+          "Notificaciones del calendario lunar",
+          "Descargar informes en PDF",
+          "Tránsitos planetarios especiales",
+          "Contenido premium"
+        ]
+      },
+      "vip": {
+        "name": "Plan VIP",
+        "price": "9.99",
+        "price_stars": "2000",
+        "features": [
+          "Todas las funciones del Plan Premium",
+          "Chatbot de Astrología 24/7",
+          "Consultor de astrología personal",
+          "Informes mensuales detallados",
+          "Acceso a funciones sociales",
+          "Soporte prioritario",
+          "Contenido VIP exclusivo",
+          "Recomendaciones personalizadas"
+        ]
+      }
+    }
+  },
+  "admin_panel": {
+    "title": "🔧 *Panel de Administración*",
+    "buttons": {
+      "stats": "📊 Estadísticas",
+      "users": "👥 Lista de Usuarios",
+      "referrals": "👥 Relaciones de Referidos",
+      "premium": "💎 Gestión Premium",
+      "logs": "📋 Ver Registros",
+      "pdf": "📄 Descargar PDF",
+      "settings": "⚙️ Configuración",
+      "main_menu": "🏠 Menú Principal"
+    }
+  },
+  "admin_stats": {
+    "title": "**📊 Estadísticas del Bot**",
+    "user_stats": "**👥 Estadísticas de Usuarios:**",
+    "total_users": "• Total de Usuarios: **{count}**",
+    "daily_subscribers": "• Suscriptores de Carta Diaria: **{count}**",
+    "referral_stats": "**👤 Estadísticas de Referidos:**",
+    "total_referrers": "• Total de Referidores: **{count}** usuarios",
+    "total_referred": "• Total de Referidos: **{count}** personas",
+    "total_earnings": "• Ganancias Totales: **{count}** lecturas",
+    "referral_rate": "• Tasa de Referidos: **{rate:.1f}%**",
+    "buttons": {
+      "referral_details": "👥 Detalles de Referidos",
+      "back": "🔙 Panel de Administración"
+    }
+  },
+  "admin_logs": {
+    "title": "**📋 Últimos 50 Registros**",
+    "no_logs": "Aún no hay registros.",
+    "truncated": "... (más registros disponibles)"
+  },
+  "admin_settings": {
+    "title": "⚙️ *Configuración de Administración*",
+    "buttons": {
+      "daily_time": "🕐 Cambiar Hora de Carta Diaria",
+      "prompts": "📝 Editar Prompts",
+      "main_menu": "🏠 Menú Principal"
+    }
+  },
+  "admin_users": {
+    "title": "**👥 Lista de Usuarios**",
+    "no_users": "Aún no hay usuarios."
+  },
+  "admin_premium": {
+    "title": "💎 **PANEL DE GESTIÓN PREMIUM** 💎",
+    "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+    "stats_label": "📊 **Estadísticas:**",
+    "total_premium": "• Total de Usuarios Premium: **{count}**",
+    "active_subscriptions": "• Suscripciones Activas: **{count}**",
+    "management_label": "🎯 **Opciones de Gestión:**",
+    "buttons": {
+      "detailed_search": "🔍 Búsqueda Detallada",
+      "back": "🔙 Menú Premium"
+    }
+  },
+  "admin_premium_users": {
+    "user_template": "**{index}.** {name} (@{username})\n   📋 Plan: {plan}\n   📅 Expira: {expires}\n   🎯 Estado: {status}\n\n",
+    "more_users": "... y {count} usuarios más",
+    "statuses": {
+      "active": "✅ Activo",
+      "expired": "❌ Expirado",
+      "unlimited": "Ilimitado",
+      "unknown": "❓ Desconocido"
+    }
+  },
+  "admin_premium_stats": {
+    "title": "📊 **ESTADÍSTICAS PREMIUM** 📊",
+    "plan_distribution": "📈 **Distribución de Planes:**",
+    "revenue_stats": "💰 **Estadísticas de Ingresos:**",
+    "subscription_stats": "📊 **Estadísticas de Suscripción:**",
+    "monthly_growth": "📈 **Crecimiento Mensual:**",
+    "retention_rate": "🔄 **Tasa de Retención:**"
+  },
+  "admin_gift": {
+    "title": "🎁 **REGALAR SUSCRIPCIÓN** 🎁",
+    "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+    "description": "Para regalar una suscripción premium a un usuario:",
+    "steps": [
+      "1️⃣ Ingresar ID de Usuario",
+      "2️⃣ Seleccionar Plan",
+      "3️⃣ Establecer Duración"
+    ],
+    "example": "**Ejemplo:** `/gift 123456789 basic 30` (plan básico de 30 días)",
+    "available_plans": "**Planes Disponibles:**",
+    "plan_template": "• **{name}** - {price} Estrella",
+    "buttons": {
+      "examples": "📝 Ejemplos de Comandos de Regalo",
+      "back": "🔙 Gestión Premium"
+    }
+  },
+  "admin_cancel": {
+    "title": "❌ **CANCELAR SUSCRIPCIÓN** ❌",
+    "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+    "description": "Para cancelar la suscripción premium de un usuario:",
+    "command": "**Comando:** `/cancel 123456789`",
+    "effects": "Esta acción:",
+    "effects_list": [
+      "• Elimina el plan premium del usuario",
+      "• Reinicia la fecha de fin de suscripción",
+      "• Envía mensaje de notificación al usuario"
+    ],
+    "warning": "⚠️ **Advertencia:** ¡Esta acción no se puede deshacer!",
+    "buttons": {
+      "cancel_list": "📋 Usuarios a Cancelar",
+      "back": "🔙 Gestión Premium"
+    }
+  },
+  "moon_calendar": {
+    "title": "🌙 **CALENDARIO LUNAR** 🌙",
+    "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+    "today": "📅 **Hoy:** {date}",
+    "moon_phase": "🌙 **Fase Lunar:** {phase}",
+    "energy_label": "✨ **Energía Lunar de Hoy:**",
+    "suggestions_label": "🔮 **Sugerencias:**",
+    "suggestions": [
+      "• Meditación y trabajo de introspección",
+      "• Limpieza y purificación emocional",
+      "• Participar en proyectos creativos",
+      "• Conectar con la naturaleza"
+    ],
+    "footer": "🌟 *Vive en armonía con los ciclos lunares* 🌟",
+    "buttons": {
+      "notifications": "🔔 Notificaciones Lunares",
+      "weekly": "📅 Calendario Semanal",
+      "back": "🔙 Astrología"
+    },
+    "phases": [
+      "🌑 Luna Nueva",
+      "🌒 Luna Creciente",
+      "🌓 Cuarto Creciente",
+      "🌔 Gibosa Creciente",
+      "🌕 Luna Llena",
+      "🌖 Gibosa Menguante",
+      "🌗 Cuarto Menguante",
+      "🌘 Luna Menguante"
+    ],
+    "energy_effects": [
+      "La energía lunar de hoy potencia tu creatividad",
+      "Día perfecto para el equilibrio emocional",
+      "Energía ideal para nuevos comienzos",
+      "Período que fortalece tu intuición y perspicacia",
+      "Momento adecuado para el desarrollo espiritual",
+      "Período de profundización y unión en las relaciones"
+    ]
+  },
+  "astro_subscription": {
+    "title": "🌟 **SUSCRIPCIÓN AL HORÓSCOPO DIARIO** 🌟",
+    "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+    "already_subscribed": "✅ ¡Tu suscripción al horóscopo diario ya está activa!",
+    "subscribe_question": "¿📱 Iniciar suscripción al horóscopo diario?",
+    "features_label": "📅 **Características:**",
+    "features": [
+      "• Horóscopo personal cada mañana",
+      "• Resumen semanal de astrología",
+      "• Notificaciones especiales del ciclo lunar",
+      "• Contenido de astrología premium"
+    ],
+    "delivery_time": "⏰ **Entrega:** Cada mañana a las 08:00",
+    "status_label": "🔔 **Estado:**",
+    "status_active": "✅ Activo",
+    "status_inactive": "❌ Inactivo",
+    "buttons": {
+      "subscribe": "✅ Sí, Suscribir",
+      "unsubscribe": "❌ Cancelar Suscripción"
+    }
+  },
+  "astro_chatbot": {
+    "title": "🤖 **CHATBOT DE ASTROLOGÍA** 🤖",
+    "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+    "vip_only": "¡Esta función solo está disponible para suscriptores del **Plan VIP**!",
+    "features": [
+      "• Preguntas instantáneas de astrología",
+      "• Guía personalizada",
+      "• Interpretaciones de horóscopo en tiempo real",
+      "• Análisis planetario especial"
+    ],
+    "upgrade_message": "¡Actualiza al plan VIP para acceder a esta función!",
+    "active_title": "🤖 **CHATBOT DE ASTROLOGÍA ACTIVO** 🤖",
+    "greeting": "¡Hola! Soy tu consultor de astrología personal.",
+    "examples_label": "Puedes preguntar:",
+    "examples": [
+      "• \"¿Cómo está afectando Marte hoy?\"",
+      "• \"¿Cómo será la semana para Géminis?\"",
+      "• \"¿Cuándo es el tránsito de Venus?\"",
+      "• \"¿Dónde está Júpiter en mi carta natal?\""
+    ],
+    "instruction": "¡Pregúntame cualquier cosa sobre astrología!",
+    "footer": "💬 *Escribe tu pregunta...*",
+    "buttons": {
+      "upgrade_vip": "👑 Actualizar a VIP",
+      "back": "🔙 Astrología",
+      "close": "❌ Cerrar Chatbot"
+    }
+  },
+  "payment_system": {
+    "coffee_fortune": {
+      "title": "🔮 Lectura de Café",
+      "description": "Lectura detallada de la fortuna en la foto de tu taza de café"
+    },
+    "tarot_fortune": {
+      "title": "🎴 Lectura de Tarot",
+      "description": "Lectura personal de cartas de tarot"
+    },
+    "dream_fortune": {
+      "title": "💭 Interpretación de Sueños",
+      "description": "Análisis e interpretación personal de sueños"
+    },
+    "error": "❌ No se pudo crear la factura de pago. Por favor, inténtalo de nuevo más tarde.",
+    "success": "💫 ¡Pago exitoso!",
+    "coffee_success": "💫 ¡Pago exitoso! Ahora envía la foto de tu taza de café.",
+    "tarot_success": "💫 ¡Pago exitoso! Sacando tu carta de tarot...",
+    "dream_success": "💫 ¡Pago exitoso! Ahora cuéntame tu sueño."
+  },
+  "astrology_menu": {
+    "title": "⭐ **CENTRO DE ASTROLOGÍA** ⭐",
+    "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+    "features": [
+      "🌟 **Carta Natal** - Tu análisis astrológico personal",
+      "📅 **Horóscopo Diario** - Guía diaria para tu signo",
+      "💕 **Compatibilidad** - Análisis de energía entre dos signos",
+      "🌙 **Calendario Lunar Avanzado** - Fases lunares reales y sus efectos"
+    ],
+    "premium_active": "📊 ¡Funciones Premium Activas!",
+    "vip_active": "🤖 ¡Funciones VIP Activas!",
+    "footer": "✨ *Descubre lo que las estrellas te dicen* ✨",
+    "buttons": {
+      "advanced_moon": "🌙 Calendario Lunar Avanzado",
+      "weekly_report": "📊 Informe Semanal",
+      "planetary_transits": "🌟 Tránsitos Planetarios",
+      "chatbot": "🤖 Chatbot de Astrología 24/7",
+      "social_features": "👥 Funciones Sociales"
+    }
+  },
+  "premium_plans": {
+    "title": "💎 **SUSCRIPCIÓN PREMIUM**",
+    "subtitle": "Plan Actual: **{plan_name}**",
+    "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+    "description": "🌟 **¡Más Poder, Guía Más Profunda!**\n\nActualiza a nuestro plan premium para lecturas ilimitadas, astrología avanzada y una experiencia personalizada.",
+    "plan_details": {
+      "title": "✨ **{plan_name}** ✨",
+      "description_label": "📝 **Descripción:**",
+      "price_label": "💰 **Precio:**",
+      "monthly_label": "💵 **Suscripción Mensual:**",
+      "features_label": "🎯 **Características:**"
+    },
+    "buttons": {
+      "plan_template": "✨ {plan_name} - {price} ⭐",
+      "buy": "💳 Comprar Ahora",
+      "back": "🔙 Menú Premium"
+    }
+  },
+  "astrology_analysis": {
+    "daily_horoscope": {
+      "prompt_template": "Eres un astrólogo experimentado. Crea una interpretación astrológica detallada para el signo de {sign} para hoy.\n\nIncluye estos temas:\n1. **Energía General:** Atmósfera astrológica de hoy\n2. **Amor y Relaciones:** Qué esperar en la vida emocional\n3. **Carrera y Finanzas:** Guía sobre trabajo y dinero\n4. **Salud y Energía:** Recomendaciones de salud física y mental\n5. **Consejo Diario:** Una sugerencia práctica\n\n120-150 palabras, positivo y motivador.",
+      "final_prompt": "ERES UN ASTRÓLOGO. ESCRIBE SOLO INTERPRETACIÓN ASTROLÓGICA EN ESPAÑOL.\n\n{prompt}\n\nINTERPRETACIÓN EN ESPAÑOL:"
+    },
+    "compatibility": {
+      "prompt_template": "Eres un astrólogo experimentado. Analiza la compatibilidad entre los signos de {sign1} y {sign2}.\n\nIncluye estos temas:\n1. **Compatibilidad General:** Compatibilidad astrológica general\n2. **Amor y Relaciones:** Compatibilidad romántica\n3. **Comunicación:** Estilos de comunicación y armonía\n4. **Fortalezas:** Áreas donde son fuertes juntos\n5. **Desafíos:** Puntos a los que deben prestar atención\n\n150-200 palabras, equilibrado y constructivo.",
+      "final_prompt": "ERES UN ASTRÓLOGO. ESCRIBE SOLO ANÁLISIS DE COMPATIBILIDAD EN ESPAÑOL.\n\n{prompt}\n\nANÁLISIS EN ESPAÑOL:"
+    },
+    "birth_chart": {
+      "prompt_template": "Eres un astrólogo experimentado. Crea un análisis de carta natal para el signo de {sign}.\n\nIncluye estos temas:\n1. **Signo Solar:** Rasgos principales de personalidad\n2. **Signo Ascendente:** Apariencia externa y primera impresión\n3. **Signo Lunar:** Naturaleza emocional y mundo interior\n4. **Posiciones Planetarias:** Efectos de planetas importantes\n5. **Áreas de la Vida:** Carrera, amor, áreas de salud\n\n200-250 palabras, detallado y personalizado.",
+      "final_prompt": "ERES UN ASTRÓLOGO. ESCRIBE SOLO ANÁLISIS DE CARTA NATAL EN ESPAÑOL.\n\n{prompt}\n\nANÁLISIS EN ESPAÑOL:"
+    }
+  },
+  "birth_chart_info": {
+    "title": "🌟 **ANÁLISIS DE CARTA NATAL** 🌟",
+    "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+    "description": "Para crear tu carta natal, necesito la siguiente información:",
+    "format_label": "📅 **Formato:**",
+    "format_example": "DD.MM.AAAA HH:MM - Ciudad",
+    "example_label": "📍 **Ejemplo:**",
+    "example_text": "15.06.1990 14:30 - Madrid",
+    "note_label": "🔮 **Nota:**",
+    "note_text": "Cuanto más precisa sea la hora de nacimiento, más preciso será el análisis.",
+    "footer": "✨ *Por favor escribe tu información de nacimiento en el formato de arriba* ✨",
+    "buttons": {
+      "back": "🔙 Astrología"
+    }
+  },
+  "birth_chart_result": {
+    "title": "🌟 **ANÁLISIS DE CARTA NATAL** 🌟",
+    "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+    "birth_info_label": "📅 **Información de Nacimiento:**",
+    "footer": "✨ *Este análisis está preparado para proporcionarte guía personal* ✨",
+    "buttons": {
+      "another_analysis": "🔄 Otro Análisis",
+      "download_pdf": "📱 Descargar PDF",
+      "main_menu": "🏠 Menú Principal"
+    }
+  },
+  "language_selection": {
+    "title": "🌐 **Selección de Idioma**",
+    "description": "Por favor, selecciona tu idioma preferido:",
+    "buttons": {
+      "turkish": "🇹🇷 Türkçe",
+      "english": "🇺🇸 English",
+      "spanish": "🇪🇸 Español",
+      "french": "🇫🇷 Français",
+      "russian": "🇷🇺 Русский",
+      "german": "🇩🇪 Deutsch",
+      "arabic": "🇸🇦 العربية",
+      "italian": "🇮🇹 Italiano",
+      "portuguese": "🇵🇹 Português",
+      "back": "⬅️ Volver"
+    }
+  },
   "compatibility_result": {
     "title": "💕 **ANÁLISIS DE COMPATIBILIDAD** 💕",
     "separator": "━━━━━━━━━━━━━━━━━━━━━━",
-    "signs_label": "**{first_sign} ↔️ {second_sign}**",
+    "signs_template": "**{sign1} ↔️ {sign2}**",
     "footer": "✨ *El entendimiento es el elemento más importante en las relaciones* ✨",
     "buttons": {
       "another_analysis": "🔄 Otro Análisis",
       "main_menu": "🏠 Menú Principal"
     }
-  }
-  
-  "referral_system": {
-    "main_panel": {
-      "title": "🌟 **SISTEMA DE REFERIDOS FAL GRAM** 🌟",
-      "separator": "━━━━━━━━━━━━━━━━━━━━━━",
-      "status_label": "👤 **Tu Estado:**",
-      "stats_label": "📊 **Tus Estadísticas:**",
-      "stats_invites": "👥 Total de Invitaciones: **{count}** personas",
-      "stats_bonus": "🎁 Lecturas Bono: **{count}** lecturas",
-      "stats_earnings": "💰 Ganancias Totales: **{count}** lecturas",
-      "progress_label": "📈 **Barra de Progreso ({progress}/5):**",
-      "rewards_label": "🏆 **Sistema de Recompensas:**",
-      "rewards_list": [
-        "• 1 Invitación = 1 Lectura Gratis ✨",
-        "• 5 Invitaciones = 3 Lecturas Bono + Insignias Especiales 🏅",
-        "• 10 Invitaciones = Estado VIP + Cartas Diarias Ilimitadas 👑",
-        "• 25 Invitaciones = Miembro Elite + Soporte Prioritario 🌟",
-        "• 50 Invitaciones = Acceso a Lector Premium 💎"
-      ],
-      "goals_label": "🎯 **Tus Objetivos:**",
-      "goals_daily": "• Diario: {count} invitación",
-      "goals_weekly": "• Semanal: {count} invitaciones",
-      "link_label": "🔗 **Tu Enlace de Referido Especial:**",
-      "share_label": "📤 **Compartir Rápido:**",
-      "share_text": "🔮 ¡Obtén tu lectura gratis en Fal Gram!",
-      "statuses": {
-        "vip": "👑 VIP",
-        "elite": "🌟 Elite",
-        "premium": "💎 Premium",
-        "new": "🆕 Nuevo"
-      },
-      "buttons": {
-        "whatsapp": "📱 Compartir en WhatsApp",
-        "telegram": "📲 Compartir en Telegram",
-        "stats": "📊 Estadísticas Detalladas",
-        "rewards": "🎁 Mis Recompensas",
-        "copy": "📋 Copiar Enlace",
-        "refresh": "🔄 Actualizar",
-        "main_menu": "🏠 Menú Principal"
-      }
-    },
-    "stats_panel": {
-      "title": "📊 **ESTADÍSTICAS DETALLADAS DE REFERIDOS** 📊",
-      "back_button": "🔙 Panel de Referidos",
-      "performance_label": "📈 **Rendimiento General:**",
-      "total_invites": "• Total de Invitaciones: **{count}** personas",
-      "this_week": "• Esta Semana: **{count}** invitaciones",
-      "this_month": "• Este Mes: **{count}** invitaciones",
-      "last_invite": "• Última Invitación: {date}",
-      "earnings_label": "💰 **Ganancias:**",
-      "total_readings": "• Total de Lecturas Ganadas: **{count}**",
-      "avg_per_invite": "• Prom/Invitación: **{avg:.1f}** lecturas",
-      "potential_value": "• Valor Potencial: **{value}** ⭐",
-      "ranking_label": "🏆 **Ranking y Estado:**",
-      "global_rank": "• Ranking Global: **#{rank}**",
-      "percentile": "• Percentil: **Top %{perc:.0f}**",
-      "level": "• Nivel Activo: Nivel {level}",
-      "goals_label": "📊 **Objetivos Futuros:**",
-      "next_level": "• Próximo Nivel: {count} invitaciones",
-      "to_vip": "• A VIP: {count} invitaciones",
-      "to_elite": "• A Elite: {count} invitaciones",
-      "leaderboard_label": "🔥 **Top 5 del Ranking de Este Mes:**",
-      "no_data": "Aún no"
-    },
-    "rewards_panel": {
-      "title": "🎁 **TU COLECCIÓN DE RECOMPENSAS** 🎁",
-      "back_button": "🔙 Panel de Referidos",
-      "balance_label": "💰 **Saldo Activo:**",
-      "available_readings": "• Lecturas Disponibles: **{count}**",
-      "total_value": "• Valor Total: **{value}** ⭐",
-      "badges_label": "🏅 **Insignias Ganadas:**",
-      "no_badges": "• Aún no se han ganado insignias",
-      "perks_label": "✨ **Tus Beneficios Especiales:**",
-      "no_perks": "• Accede a beneficios especiales invitando más personas",
-      "next_rewards_label": "🎯 **Próximas Recompensas:**",
-      "next_reward_template": "• {remaining} invitaciones más → {reward_name}",
-      "offers_label": "🔮 **Ofertas Especiales:**",
-      "offers_list": [
-        "• 🌟 3+ invitaciones esta semana → 2 lecturas bono extra",
-        "• 💎 10+ invitaciones este mes → Sesión especial de lectura de tarot",
-        "• 👑 50% de descuento en membresía Premium (para VIPs)"
-      ],
-      "badges": {
-        "1": "🌟 Primera Invitación",
-        "5": "🏅 Constructor de Comunidad",
-        "10": "👑 Miembro VIP",
-        "25": "💎 Estado Elite",
-        "50": "🏆 Maestro de Referidos"
-      },
-      "perks": {
-        "5": ["• 🎁 Lecturas bono semanales", "• 🌈 Color de perfil especial"],
-        "10": ["• 🔓 Mazo de tarot VIP", "• ⚡ Respuestas AI prioritarias"],
-        "25": ["• 👨‍💼 Consultor de lecturas personal", "• 📞 Soporte prioritario 24/7"]
-      },
-      "buttons": {
-        "use_bonus": "💰 Usar Lecturas Bono"
-      }
-    }
   },
-  "plan_comparison": {
-    "title": "📊 **COMPARACIÓN DE PLANES** 📊",
+  "language_change": {
+    "success_tr": "✅ Diliniz **{lang_name}** olarak güncellendi!",
+    "success_en": "✅ Your language updated to **{lang_name}**!",
+    "success_es": "✅ ¡Tu idioma se actualizó a **{lang_name}**!",
+    "success_fr": "✅ Votre langue mise à jour vers **{lang_name}**!",
+    "success_ru": "✅ Ваш язык обновлён на **{lang_name}**!",
+    "success_default": "✅ Language updated to **{lang_name}**!"
+  },
+  "daily_subscription": {
+    "title": "🌅 **SUSCRIPCIÓN A LA CARTA DIARIA** 🌅",
     "separator": "━━━━━━━━━━━━━━━━━━━━━━",
-    "back_button": "🔙 Menú Premium",
-    "plans": {
-      "free": {
-        "title": "🆓 **PLAN GRATIS**",
-        "features": [
-          "5 créditos de lectura gratis",
-          "Horóscopo diario",
-          "Características básicas de astrología",
-          "Soporte básico de chatbot",
-          "Bonos de referidos"
-        ]
-      },
-      "basic": {
-        "title": "💎 **PLAN BÁSICO - 500 ⭐**",
-        "features": [
-          "♾️ Lecturas ilimitadas (Café, Tarot, Sueños)",
-          "📊 Reporte de horóscopo semanal",
-          "🔮 Análisis avanzado de astrología",
-          "💫 Interpretación de carta natal",
-          "🌙 Características de calendario lunar",
-          "💬 Chatbot avanzado",
-          "🎯 Recomendaciones personalizadas",
-          "📈 Historial detallado de lecturas",
-          "🔔 Notificaciones especiales"
-        ]
-      },
-      "premium": {
-        "title": "⭐ **PLAN PREMIUM - 1000 ⭐**",
-        "features": [
-          "✨ Características del Plan Básico",
-          "📅 Horóscopo mensual",
-          "🪐 Análisis de tránsitos planetarios",
-          "💕 Compatibilidad zodiacal",
-          "🌙 Calendario lunar avanzado",
-          "📈 Reportes detallados de astrología",
-          "🎯 Recomendaciones personalizadas",
-          "🔮 Tipos de lectura especiales",
-          "📊 Estadísticas de astrología",
-          "🎁 Contenido exclusivo",
-          "⚡ Soporte prioritario"
-        ]
-      },
-      "vip": {
-        "title": "👑 **PLAN VIP - 2000 ⭐**",
-        "features": [
-          "👑 Características del Plan Premium",
-          "🤖 Chatbot de Astrología 24/7",
-          "👥 Características de astrología social",
-          "🎁 Contenido VIP exclusivo",
-          "⚡ Soporte prioritario",
-          "📊 Analíticas avanzadas",
-          "🎯 Consultor de astrología personal",
-          "🌟 Tipos de lectura VIP exclusivos",
-          "💎 Contenido exclusivo ilimitado",
-          "🎪 Eventos especiales",
-          "📱 Interfaz VIP exclusiva",
-          "🔮 Guía personal con IA"
-        ]
-      }
-    }
-  },
-  "main_panel": {
-    "title": "🌟 **PANEL PRINCIPAL FAL GRAM** 🌟",
-    "share_label": "📤 Compartir Rápido:",
-    "share_text": "🔮 ¡Obtén tu lectura gratis en Fal Gram!",
+    "status_label": "📱 **Tu Estado Actual:**",
+    "delivery_label": "⏰ **Próxima Entrega:**",
+    "description": "🔮 **Sobre esta Función:**\nCon la suscripción a la Carta Diaria, recibes una carta de tarot especialmente preparada y su interpretación cada mañana. Esta carta presenta la energía del día, las oportunidades que puedes encontrar y los puntos a los que prestar atención desde una perspectiva mística.",
+    "features_label": "✨ **Qué Incluye:**",
+    "features_list": [
+      "• 🃏 Carta de tarot especial cada mañana a las 09:00",
+      "• 📜 Interpretación y significado actual de la carta",
+      "• 🎯 Consejos prácticos para el día",
+      "• 🌟 Guía de energía personal",
+      "• 💫 Conexiones y consejos astrológicos"
+    ],
+    "benefits_label": "🎁 **Beneficios Especiales:**",
+    "benefits_list": [
+      "• Servicio completamente GRATIS",
+      "• Una carta e interpretación diferente cada día",
+      "• Contenido personalizado",
+      "• Mensajes motivadores e inspiradores",
+      "• Capturar la energía positiva del día"
+    ],
+    "stats_label": "📊 **Estadísticas:**",
+    "stats_list": [
+      "• Más de 15,000 suscriptores diarios activos",
+      "• 94% de satisfacción del usuario",
+      "• Calificación promedio de 4.8/5"
+    ],
+    "how_it_works_label": "🔧 **Cómo Funciona:**",
+    "how_it_works_list": [
+      "1. Activar suscripción",
+      "2. Recibir mensaje automático cada mañana",
+      "3. Leer tu carta y planificar tu día",
+      "4. Cancelar en cualquier momento que desees"
+    ],
+    "settings_label": "⚙️ **Configuración:**",
+    "settings_list": [
+      "• Hora de entrega: 09:00 (configurable)",
+      "• Incluye fines de semana: Sí",
+      "• Tipo de notificación: Mensaje silencioso"
+    ],
     "statuses": {
-      "vip": "👑 VIP",
-      "elite": "🌟 Elite",
-      "premium": "💎 Premium",
-      "new": "🆕 Nuevo"
+      "active": "✅ ACTIVO",
+      "inactive": "❌ INACTIVO"
+    },
+    "delivery_times": {
+      "active": "Cada mañana a las 09:00",
+      "inactive": "Suscripción no activa"
     },
     "buttons": {
-      "whatsapp": "📱 Compartir en WhatsApp",
-      "telegram": "📲 Compartir en Telegram",
-      "stats": "📊 Estadísticas Detalladas",
-      "rewards": "🎁 Mis Recompensas",
-      "copy": "📋 Copiar Enlace",
-      "refresh": "🔄 Actualizar",
+      "start": "🔔 Iniciar Suscripción",
+      "stop": "🔕 Detener Suscripción",
+      "settings": "⚙️ Establecer Hora de Entrega",
+      "stats": "📊 Estadísticas de Suscripción",
       "main_menu": "🏠 Menú Principal"
     }
-  }
+  },
+  "weekly_horoscope": {
+    "title": "📊 **HORÓSCOPO SEMANAL** 📊",
+    "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+    "description": "¿Para qué signo quieres una lectura semanal?",
+    "features": [
+      "📈 Análisis de horóscopo semanal",
+      "🌟 Influencias planetarias",
+      "💫 Fechas importantes",
+      "🎯 Recomendaciones y consejos"
+    ],
+    "back_button": "🔙 Astrología"
+  },
+  "monthly_horoscope": {
+    "title": "📅 **HORÓSCOPO MENSUAL**",
+    "description": "Obtén horóscopo mensal detallado para tu signo",
+    "buttons": {
+      "back": "🔙 Astrología"
+    }
+  },
+  "coffee_reading": {
+    "limit_reached": {
+      "message": "Has alcanzado tu límite de lecturas gratuitas. ¡Actualiza a Premium para lecturas ilimitadas!",
+      "upgrade_button": "💎 Actualizar a Premium",
+      "back_button": "🔙 Volver"
+    },
+    "photo_prompt": {
+      "message": "Por favor envía una foto de tu taza de café para una lectura.",
+      "back_button": "🔙 Volver"
+    }
+  },
+  "tarot_reading": {
+    "limit_reached": {
+      "message": "Has alcanzado tu límite de lecturas de tarot gratuitas. ¡Actualiza a Premium para lecturas ilimitadas!",
+      "upgrade_button": "💎 Actualizar a Premium",
+      "back_button": "🔙 Volver"
+    }
+  },
+  "dream_reading": {
+    "limit_reached": {
+      "message": "Has alcanzado tu límite de lecturas de sueños gratuitas. ¡Actualiza a Premium para lecturas ilimitadas!",
+      "upgrade_button": "💎 Actualizar a Premium",
+      "back_button": "🔙 Volver"
+    }
+  },
+  "referral": {
+    "link": {
+      "title": "👥 **Tu Enlace de Referencia**",
+      "share_button": "📤 Compartir Enlace",
+      "back_button": "🔙 Volver"
+    },
+    "stats": {
+      "title": "📊 **Estadísticas de Referencia**",
+      "total_referrals": "Total de Referencias",
+      "total_rewards": "Total de Recompensas",
+      "back_button": "🔙 Volver"
+    }
+  },
+  "error_message": "❌ Ocurrió un error. Por favor intenta de nuevo.",
+  "main_menu": {
+    "title": "🏠 **Menú Principal**"
+  },
+  "subscription_management": "📊 Gestión de Suscripciones",
+  "monthly_horoscope": "📅 Horóscopo Mensual",
+  "purchase": "💳 Comprar",
+  "premium_menu_back": "🔙 Menú Premium",
+  "plan_comparison_button": "📊 Comparar Planes"
 }

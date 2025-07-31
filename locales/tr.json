@@ -1,4 +1,7 @@
 {
+  "start": {
+    "welcome": "✨🔮 **FAL GRAM'A HOŞ GELDİNİZ** 🔮✨\n━━━━━━━━━━━━━━━━━━━━━━\n\n🌟 *Mistik dünyanın kapıları açılıyor...*\n\n☕ **Kahve Falı** - Fincanınızda geleceği keşfedin\n🃏 **Tarot Falı** - Kartların size söyleyecekleri var\n💭 **Rüya Analizi** - Bilinçaltı mesajlarınızı çözün\n⭐ **Astroloji** - Yıldızlardan rehberlik\n🌅 **Günlük Kart** - Her sabah kişisel rehberlik\n👥 **Arkadaş Davet Et** - Paylaşıldıkça bereket çoğalır\n\n━━━━━━━━━━━━━━━━━━━━━━\n✨ *Kaderinizi keşfetmeye hazır mısınız?* ✨"
+  },
   "start_message": "✨🔮 **FAL GRAM'A HOŞ GELDİNİZ** 🔮✨\n━━━━━━━━━━━━━━━━━━━━━━\n\n🌟 *Mistik dünyanın kapıları açılıyor...*\n\n☕ **Kahve Falı** - Fincanınızda geleceği keşfedin\n🃏 **Tarot Falı** - Kartların size söyleyecekleri var\n💭 **Rüya Analizi** - Bilinçaltı mesajlarınızı çözün\n⭐ **Astroloji** - Yıldızlardan rehberlik\n🌅 **Günlük Kart** - Her sabah kişisel rehberlik\n👥 **Arkadaş Davet Et** - Paylaşıldıkça bereket çoğalır\n\n━━━━━━━━━━━━━━━━━━━━━━\n✨ *Kaderinizi keşfetmeye hazır mısınız?* ✨",
   "main_menu_button": "🏠 Ana Menü",
   "referral_prompt": "Fal Gram'ı arkadaşlarınızla paylaşarak ücretsiz fal kazanın! Aşağıdaki linki kopyalayıp onlara gönderin. Linkinizi kullanarak katılan her arkadaş için 1 ÜCRETSİZ fal kazanacaksınız.\n\nÖzel linkiniz: {referral_link}",
@@ -28,25 +31,150 @@
   "daily_card_already_subscribed": "Günün Kartı aboneliğiniz zaten aktif. Her sabah kartınızı alacaksınız.",
   "referral": "👥 Arkadaş Davet Et",
   "language": "🌐 Dil Seçimi",
-  "language_selection": "Hangi dilde devam etmek istiyorsunuz?",
+  "language_selection": {
+    "title": "🌐 **Dil Seçimi**",
+    "description": "Lütfen tercih ettiğiniz dili seçin:",
+    "buttons": {
+      "turkish": "🇹🇷 Türkçe",
+      "english": "🇺🇸 English",
+      "spanish": "🇪🇸 Español",
+      "french": "🇫🇷 Français",
+      "russian": "🇷🇺 Русский",
+      "german": "🇩🇪 Deutsch",
+      "arabic": "🇸🇦 العربية",
+      "italian": "🇮🇹 Italiano",
+      "portuguese": "🇵🇹 Português",
+      "back": "⬅️ Geri"
+    }
+  },
   "language_detected": "🌐 Diliniz otomatik olarak {lang} olarak tespit edildi. Gerekirse dil butonunu kullanarak değiştirebilirsiniz.",
   "language_updated": "🌐 Dil {lang} olarak güncellendi.",
+  "language_change": {
+    "success_tr": "✅ Diliniz **Türkçe** olarak güncellendi!",
+    "success_en": "✅ Your language updated to **English**!",
+    "success_es": "✅ Tu idioma se actualizó a **Español**!",
+    "success_fr": "✅ Votre langue mise à jour vers **Français**!",
+    "success_ru": "✅ Ваш язык обновлён на **Русский**!",
+    "success_de": "✅ Ihre Sprache wurde auf **Deutsch** aktualisiert!",
+    "success_ar": "✅ تم تحديث لغتك إلى **العربية**!",
+    "success_it": "✅ La tua lingua è stata aggiornata a **Italiano**!",
+    "success_pt": "✅ Sua língua foi atualizada para **Português**!",
+    "success_default": "✅ Language updated successfully!"
+  },
   "fortune_request": "Kahve fincanınızın fotoğrafını gönderin...",
   "fortune_limit_reached": "Ücretsiz fal limitiniz doldu. Devam etmek için {stars_count} Telegram Yıldızı gerekiyor.",
   "fortune_in_progress": "🔮 Falınız hazırlanıyor...",
   "fortune_error": "❌ Falınız oluşturulurken bir hata oluştu.",
   "admin_panel_message": "🔧 Admin Paneli",
   "admin_panel_title": "🔧 *Admin Paneli*",
+  "admin_panel": {
+    "title": "🔧 *Admin Paneli*",
+    "buttons": {
+      "stats": "📊 İstatistikler",
+      "users": "👥 Kullanıcı Listesi",
+      "referrals": "👥 Referral İlişkileri",
+      "premium": "💎 Premium Yönetimi",
+      "logs": "📋 Log Görüntüle",
+      "pdf": "📄 PDF İndir",
+      "settings": "⚙️ Ayarlar",
+      "main_menu": "🏠 Ana Menü"
+    }
+  },
   "no_logs_message": "Henüz log yok.",
+  "admin_stats": {
+    "title": "**📊 Bot İstatistikleri**",
+    "user_stats": "**👥 Kullanıcı İstatistikleri:**",
+    "total_users": "• Toplam Kullanıcı: **{count}**",
+    "daily_subscribers": "• Günlük Kart Aboneleri: **{count}**",
+    "referral_stats": "**👤 Referral İstatistikleri:**",
+    "total_referrers": "• Toplam Referral: **{count}** kullanıcı",
+    "total_referred": "• Toplam Davet Edilen: **{count}** kişi",
+    "total_earnings": "• Toplam Kazanç: **{count}** fal",
+    "referral_rate": "• Referral Oranı: **{rate:.1f}%**",
+    "buttons": {
+      "referral_details": "👥 Referral Detayları",
+      "back": "🔙 Admin Paneli"
+    }
+  },
   "admin_settings_title": "⚙️ *Ayarlar*",
   "edit_schedule_prompt": "Günlük kart gönderme saatini güncelleyin (SS:DD formatında):",
   "prompt_save_error": "❌ Prompt kaydedilirken hata oluştu.",
   "prompt_saved": "✅ {key} başarıyla güncellendi.",
-  "premium_menu": "💎 Premium",
+  "premium_menu": {
+    "title": "💎 Premium Menü",
+    "compare_plans": "📊 Plan Karşılaştırması",
+    "get_referral": "👥 Referral Linki",
+    "referral_stats": "📈 Referral İstatistikleri",
+    "my_rewards": "🎁 Ödüllerim",
+    "back_button": "🔙 Ana Menü"
+  },
   "premium_plan_basic": "✨ Temel Plan - 500 ⭐",
   "premium_plan_premium": "✨ Premium Plan - 1000 ⭐",
   "premium_plan_vip": "✨ VIP Plan - 2000 ⭐",
-  "plan_comparison": "📊 Plan Karşılaştırması",
+  "plan_comparison": {
+    "title": "📊 **PLAN KARŞILAŞTIRMASI** 📊",
+    "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+    "back_button": "🔙 Premium Menü",
+    "plans": {
+      "free": {
+        "title": "🆓 **ÜCRETSİZ PLAN**",
+        "features": [
+          "5 ücretsiz fal hakkı",
+          "Günlük burç yorumu",
+          "Temel astroloji özellikleri",
+          "Temel chatbot desteği",
+          "Referral bonusları"
+        ]
+      },
+      "basic": {
+        "title": "💎 **TEMEL PLAN - 500 ⭐**",
+        "features": [
+          "♾️ Sınırsız fal (Kahve, Tarot, Rüya)",
+          "📊 Haftalık burç raporu",
+          "🔮 Gelişmiş astroloji analizi",
+          "💫 Doğum haritası yorumu",
+          "🌙 Ay takvimi özellikleri",
+          "💬 Gelişmiş chatbot",
+          "🎯 Kişiselleştirilmiş öneriler",
+          "📈 Detaylı fal geçmişi",
+          "🔔 Özel bildirimler"
+        ]
+      },
+      "premium": {
+        "title": "⭐ **PREMIUM PLAN - 1000 ⭐**",
+        "features": [
+          "✨ Temel Plan özellikleri",
+          "📅 Aylık burç yorumu",
+          "🪐 Gezegen geçiş analizi",
+          "💕 Burç uyumluluğu",
+          "🌙 Gelişmiş ay takvimi",
+          "📈 Detaylı astroloji raporları",
+          "🎯 Kişiselleştirilmiş öneriler",
+          "🔮 Özel fal türleri",
+          "📊 Astroloji istatistikleri",
+          "🎁 Özel içerik",
+          "⚡ Öncelikli destek"
+        ]
+      },
+      "vip": {
+        "title": "👑 **VIP PLAN - 2000 ⭐**",
+        "features": [
+          "👑 Premium Plan özellikleri",
+          "🤖 24/7 Astroloji Chatbot",
+          "👥 Sosyal astroloji özellikleri",
+          "🎁 Özel VIP içerik",
+          "⚡ Öncelikli destek",
+          "📊 Gelişmiş analitikler",
+          "🎯 Kişisel astroloji danışmanı",
+          "🌟 Özel VIP fal türleri",
+          "💎 Sınırsız özel içerik",
+          "🎪 Özel etkinlikler",
+          "📱 Özel VIP arayüzü",
+          "🔮 AI destekli kişisel rehberlik"
+        ]
+      }
+    }
+  },
   "subscription_management": "💳 Abonelik Yönetimi",
   "monthly_horoscope": "📅 Aylık Burç",
   "purchase": "🛒 Satın Al",
@@ -577,70 +705,6 @@
             }
         }
     },
-    "plan_comparison": {
-      "title": "📊 **PLAN KARŞILAŞTIRMASI** 📊",
-      "separator": "━━━━━━━━━━━━━━━━━━━━━━",
-      "back_button": "🔙 Premium Menü",
-      "plans": {
-        "free": {
-          "title": "🆓 **ÜCRETSİZ PLAN**",
-          "features": [
-            "5 ücretsiz fal kredisi",
-            "Günlük burç",
-            "Temel astroloji özellikleri",
-            "Temel chatbot desteği",
-            "Davet bonusları"
-          ]
-        },
-        "basic": {
-          "title": "💎 **TEMEL PLAN - 500 ⭐**",
-          "features": [
-            "♾️ Sınırsız fal (Kahve, Tarot, Rüya)",
-            "📊 Haftalık burç raporu",
-            "🔮 Gelişmiş astroloji analizi",
-            "💫 Doğum haritası yorumu",
-            "🌙 Ay takvimi özellikleri",
-            "💬 Gelişmiş chatbot",
-            "🎯 Kişiselleştirilmiş öneriler",
-            "📈 Detaylı fal geçmişi",
-            "🔔 Özel bildirimler"
-          ]
-        },
-        "premium": {
-          "title": "⭐ **PREMIUM PLAN - 1000 ⭐**",
-          "features": [
-            "✨ Temel Plan özellikleri",
-            "📅 Aylık burç",
-            "🪐 Gezegen geçişleri analizi",
-            "💕 Burç uyumluluğu",
-            "🌙 Gelişmiş ay takvimi",
-            "📈 Detaylı astroloji raporları",
-            "🎯 Kişiselleştirilmiş öneriler",
-            "🔮 Özel fal türleri",
-            "📊 Astroloji istatistikleri",
-            "🎁 Özel içerik",
-            "⚡ Öncelikli destek"
-          ]
-        },
-        "vip": {
-          "title": "👑 **VIP PLAN - 2000 ⭐**",
-          "features": [
-            "👑 Premium Plan özellikleri",
-            "🤖 24/7 Astroloji Chatbot",
-            "👥 Sosyal astroloji özellikleri",
-            "🎁 Özel VIP içerik",
-            "⚡ Öncelikli destek",
-            "📊 Gelişmiş analitikler",
-            "🎯 Kişisel astroloji danışmanı",
-            "🌟 Özel VIP fal türleri",
-            "💎 Sınırsız özel içerik",
-            "🎪 Özel etkinlikler",
-            "📱 Özel VIP arayüzü",
-            "🔮 AI destekli kişisel rehberlik"
-          ]
-        }
-      }
-    },
     "main_panel": {
         "title": "🌟 **FAL GRAM ANA PANEL** 🌟",
         "share_label": "📤 Hızlı Paylaşım:",
@@ -673,5 +737,288 @@
             "🎯 Öneriler ve tavsiyeler"
         ],
         "back_button": "🔙 Astroloji"
-    }
+    },
+    "premium_menu_title": "💎 Premium Menü",
+    "premium_compare_plans": "📊 Plan Karşılaştırması",
+    "premium_get_referral": "👥 Referral Linki",
+    "premium_referral_stats": "📈 Referral İstatistikleri",
+    "premium_my_rewards": "🎁 Ödüllerim",
+    "premium_back_button": "🔙 Ana Menü",
+    "admin_users": {
+        "title": "👥 **KULLANICI LİSTESİ**",
+        "user_info": "👤 **{username}** - {plan}",
+        "registration_date": "📅 Kayıt: {date}",
+        "total_spent": "💰 Toplam Harcama: {amount} ⭐",
+        "reading_count": "📊 Fal Sayısı: {count}",
+        "buttons": {
+            "user_details": "👤 Kullanıcı Detayları",
+            "back": "🔙 Admin Paneli"
+        }
+    },
+    "admin_premium": {
+        "title": "💎 **PREMIUM YÖNETİMİ**",
+        "buttons": {
+            "premium_users": "👥 Premium Kullanıcılar",
+            "premium_stats": "📊 Premium İstatistikleri",
+            "gift_subscription": "🎁 Hediye Abonelik",
+            "cancel_subscription": "❌ Abonelik İptal",
+            "premium_pdf": "📄 Premium PDF Raporu",
+            "back": "🔙 Admin Paneli"
+        }
+    },
+    "admin_premium_users": {
+        "title": "💎 **PREMIUM KULLANICILAR**",
+        "vip_users": "👑 VIP Plan ({count} kullanıcı):",
+        "premium_users": "⭐ Premium Plan ({count} kullanıcı):",
+        "basic_users": "💎 Temel Plan ({count} kullanıcı):",
+        "user_info": "👤 @{username} - {date} tarihine kadar",
+        "buttons": {
+            "premium_stats": "📊 İstatistikler",
+            "gift_subscription": "🎁 Hediye Abonelik",
+            "cancel_subscription": "❌ Abonelik İptal",
+            "back": "🔙 Premium Yönetimi"
+        }
+    },
+    "admin_premium_stats": {
+        "title": "📊 **PREMIUM İSTATİSTİKLERİ**",
+        "user_distribution": "👥 **Kullanıcı Dağılımı:**",
+        "revenue_stats": "💰 **Gelir İstatistikleri:**",
+        "active_subscriptions": "📈 **Aktif Abonelikler:**",
+        "buttons": {
+            "back": "🔙 Premium Yönetimi"
+        }
+    },
+    "admin_gift_subscription": {
+        "title": "🎁 **HEDİYE ABONELİK**",
+        "enter_user_id": "Kullanıcı ID'sini girin:",
+        "example": "(Örnek: 123456789)",
+        "select_plan": "Plan Seçin:",
+        "select_duration": "Süre Seçin:",
+        "buttons": {
+            "basic_plan": "💎 Temel Plan (500 ⭐)",
+            "premium_plan": "⭐ Premium Plan (1000 ⭐)",
+            "vip_plan": "👑 VIP Plan (2000 ⭐)",
+            "one_month": "📅 1 Ay",
+            "three_months": "📅 3 Ay",
+            "six_months": "📅 6 Ay",
+            "one_year": "📅 1 Yıl",
+            "confirm": "✅ Onayla",
+            "back": "🔙 Premium Yönetimi"
+        }
+    },
+    "admin_cancel_subscription": {
+        "title": "❌ **ABONELİK İPTAL**",
+        "enter_user_id": "Kullanıcı ID'sini girin:",
+        "example": "(Örnek: 123456789)",
+        "warning": "⚠️ DİKKAT: Bu işlem geri alınamaz!",
+        "user_info": "Kullanıcı: @{username}",
+        "current_plan": "Mevcut Plan: {plan}",
+        "end_date": "Bitiş Tarihi: {date}",
+        "buttons": {
+            "cancel": "❌ İptal Et",
+            "back": "🔙 Premium Yönetimi"
+        }
+    },
+    "admin_fortune_stats": {
+        "title": "🔮 **FAL İSTATİSTİKLERİ**",
+        "coffee_readings": "☕ Kahve Falları: {count}",
+        "tarot_readings": "🎴 Tarot Falları: {count}",
+        "dream_readings": "💭 Rüya Falları: {count}",
+        "total_readings": "📊 Toplam Fallar: {count}",
+        "buttons": {
+            "back": "🔙 Admin Paneli"
+        }
+    },
+    "admin_payment_stats": {
+        "title": "💰 **ÖDEME İSTATİSTİKLERİ**",
+        "total_revenue": "💰 Toplam Gelir: {amount} ⭐",
+        "today_revenue": "📅 Bugünkü Gelir: {amount} ⭐",
+        "month_revenue": "📊 Bu Ay Gelir: {amount} ⭐",
+        "basic_plan_sales": "💎 Temel Plan Satışları: {count}",
+        "premium_plan_sales": "⭐ Premium Plan Satışları: {count}",
+        "vip_plan_sales": "👑 VIP Plan Satışları: {count}",
+        "buttons": {
+            "back": "🔙 Admin Paneli"
+        }
+    },
+    "admin_user_details": {
+        "title": "👤 **KULLANICI DETAYLARI**",
+        "user_info": "👤 Kullanıcı: @{username}",
+        "user_id": "🆔 ID: {id}",
+        "language": "🌐 Dil: {lang}",
+        "plan": "💎 Plan: {plan}",
+        "subscription_end": "📅 Abonelik Bitiş: {date}",
+        "total_spent": "💰 Toplam Harcama: {amount} ⭐",
+        "usage_stats": "📊 **KULLANIM İSTATİSTİKLERİ**",
+        "coffee_readings": "☕ Kahve Falları: {count}",
+        "tarot_readings": "🎴 Tarot Falları: {count}",
+        "dream_readings": "💭 Rüya Falları: {count}",
+        "daily_horoscope": "📅 Günlük Burç: {count}",
+        "buttons": {
+            "download_pdf": "📱 PDF İndir",
+            "back": "🔙 Geri"
+        }
+    },
+    "admin_prompt_management": {
+        "title": "📝 **PROMPT YÖNETİMİ**",
+        "description": "Farklı özellikler için AI promptlarını yönetin",
+        "buttons": {
+            "edit_prompts": "✏️ Promptları Düzenle",
+            "back": "🔙 Admin Paneli"
+        }
+    },
+    "admin_database_management": {
+        "title": "🗄️ **VERİTABANI YÖNETİMİ**",
+        "description": "Veritabanı işlemleri ve bakım",
+        "buttons": {
+            "backup": "💾 Veritabanı Yedekle",
+            "optimize": "⚡ Veritabanı Optimize Et",
+            "back": "🔙 Admin Paneli"
+        }
+    },
+    "payment_system": {
+        "title": "💳 **ÖDEME SİSTEMİ**",
+        "invalid_plan": "❌ Geçersiz plan!",
+        "error": "❌ Ödeme başlatılamadı. Lütfen tekrar deneyin.",
+        "success": "✅ Ödeme başarılı!",
+        "buttons": {
+            "back": "🔙 Geri"
+        }
+    },
+    "astrology_menu": {
+        "title": "⭐ **ASTROLOJİ MENÜSÜ**",
+        "buttons": {
+            "daily_horoscope": "📅 Günlük Burç",
+            "weekly_horoscope": "📊 Haftalık Burç",
+            "monthly_horoscope": "📅 Aylık Burç",
+            "birth_chart": "🌟 Doğum Haritası",
+            "compatibility": "💕 Uyumluluk",
+            "moon_calendar": "🌙 Ay Takvimi",
+            "astro_chatbot": "🤖 Astroloji Chatbot",
+            "back": "🔙 Ana Menü"
+        }
+    },
+    "premium_plans": {
+        "title": "💎 **PREMIUM PLANLAR**",
+        "buttons": {
+            "basic": "💎 Temel Plan",
+            "premium": "⭐ Premium Plan",
+            "vip": "👑 VIP Plan",
+            "back": "🔙 Ana Menü"
+        }
+    },
+    "astrology_analysis": {
+        "title": "🔮 **ASTROLOJİ ANALİZİ**",
+        "buttons": {
+            "back": "🔙 Astroloji"
+        }
+    },
+    "birth_chart_info": {
+        "title": "🌟 **DOĞUM HARİTASI BİLGİSİ**",
+        "enter_birth_info": "📅 Doğum bilgilerinizi girin (GG.AA.YYYY SS:DD - Şehir):",
+        "buttons": {
+            "back": "🔙 Astroloji"
+        }
+    },
+    "birth_chart_result": {
+        "title": "🌟 **DOĞUM HARİTASI SONUCU**",
+        "birth_info_label": "📅 **Doğum Bilgileri:**",
+        "footer": "✨ *Astrolojik yolculuğunuz burada başlıyor* ✨",
+        "buttons": {
+            "another_analysis": "🔄 Başka Analiz",
+            "download_pdf": "📄 PDF İndir",
+            "main_menu": "🏠 Ana Menü"
+        }
+    },
+    "coffee_reading": {
+        "limit_reached": {
+            "message": "Ücretsiz fal hakkınız bitti. Sınırsız fal için Premium'a yükseltin!",
+            "upgrade_button": "💎 Premium'a Yükselt",
+            "back_button": "🔙 Geri"
+        },
+        "photo_prompt": {
+            "message": "Fal için kahve fincanınızın fotoğrafını gönderin.",
+            "back_button": "🔙 Geri"
+        }
+    },
+    "tarot_reading": {
+        "limit_reached": {
+            "message": "Ücretsiz tarot fal hakkınız bitti. Sınırsız fal için Premium'a yükseltin!",
+            "upgrade_button": "💎 Premium'a Yükselt",
+            "back_button": "🔙 Geri"
+        }
+    },
+    "dream_reading": {
+        "limit_reached": {
+            "message": "Ücretsiz rüya fal hakkınız bitti. Sınırsız fal için Premium'a yükseltin!",
+            "upgrade_button": "💎 Premium'a Yükselt",
+            "back_button": "🔙 Geri"
+        }
+    },
+    "referral": {
+        "link": {
+            "title": "👥 **Referral Linkiniz**",
+            "share_button": "📤 Linki Paylaş",
+            "back_button": "🔙 Geri"
+        },
+        "stats": {
+            "title": "📊 **Referral İstatistikleri**",
+            "total_referrals": "Toplam Referral",
+            "total_rewards": "Toplam Ödül",
+            "back_button": "🔙 Geri"
+        }
+    },
+    "error_message": "❌ Bir hata oluştu. Lütfen tekrar deneyin.",
+    "main_menu": {
+        "title": "🏠 **Ana Menü**"
+    },
+    "buttons": {
+        "advanced_moon_calendar": "🌙 Gelişmiş Ay Takvimi",
+        "weekly_report": "📊 Haftalık Rapor",
+        "planetary_transits": "🌟 Gezegen Geçişleri",
+        "astro_chatbot": "🤖 7/24 Astroloji Chatbot",
+        "social_features": "👥 Sosyal Özellikler",
+        "find_friends": "🤝 Arkadaş Bul",
+        "community": "🌍 Topluluk",
+        "moon_notifications": "🔔 Ay Bildirimleri",
+        "personal_moon_analysis": "📱 Kişisel Ay Analizi",
+        "new_moon": "🌑 Yeni Ay",
+        "full_moon": "🌕 Dolunay",
+        "quarters": "🌓 Dördünler",
+        "moon_calendar": "🔙 Ay Takvimi",
+        "upgrade_to_vip": "👑 VIP'e Geç",
+        "astrology": "🔙 Astroloji",
+        "close_chatbot": "❌ Chatbot'u Kapat",
+        "analyzing": "🤖 Analizinizi yapıyorum...",
+        "sorry_cant_respond": "❌ Üzgünüm, şu anda yanıt veremiyorum. Lütfen tekrar deneyin.",
+        "chatbot_closed": "🤖 Chatbot kapatıldı. İyi günler!",
+        "unlimited": "Süresiz",
+        "more_users": "... ve {count} kullanıcı daha",
+        "unknown": "Bilinmiyor",
+        "payment_error": "Ödeme oluşturulurken hata oluştu.",
+        "subscription_success": "✨ **{plan_name}** planına başarıyla abone oldunuz!",
+        "subscription_description": "Premium plan subscription for 1 month"
+    },
+      "messages": {
+    "moon_energy_advice": "Ay enerjisi ile uyum halinde olun",
+    "fortune_limit_reached": "Ücretsiz fal limitiniz doldu. Devam etmek için {stars_count} Telegram Yıldızı gerekiyor.",
+    "fortune_in_progress": "🔮 Falınız hazırlanıyor...",
+    "fortune_error": "❌ Falınız oluşturulurken bir hata oluştu.",
+    "dream_analyzing": "💭 Rüyanız analiz ediliyor...",
+    "tarot_drawing": "🎴 Tarot kartınız çekiliyor...",
+    "astro_calculating": "⭐ Astrolojik hesaplamalar yapılıyor...",
+    "birth_chart_calculating": "🌟 Doğum haritanız hesaplanıyor...",
+    "compatibility_calculating": "💕 Uyumluluk analizi yapılıyor...",
+    "daily_horoscope_generating": "📅 Günlük burç yazınız hazırlanıyor...",
+    "weekly_horoscope_generating": "📊 Haftalık burç raporunuz hazırlanıyor...",
+    "monthly_horoscope_generating": "📅 Aylık burç raporunuz hazırlanıyor...",
+    "moon_phase_calculating": "🌙 Ay fazı hesaplanıyor...",
+    "premium_required": "Bu özellik için Premium plan gereklidir.",
+    "premium_upgrade_required": "Bu özelliği kullanmak için Premium plana yükseltmeniz gerekiyor."
+  },
+  "subscription_management": "📊 Abonelik Yönetimi",
+  "monthly_horoscope": "📅 Aylık Burç",
+  "purchase": "💳 Satın Al",
+  "premium_menu_back": "🔙 Premium Menü",
+  "plan_comparison_button": "📊 Plan Karşılaştırması"
 } 

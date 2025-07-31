@@ -1,4 +1,7 @@
 {
+  "start": {
+    "welcome": "✨🔮 **BIENVENUE SUR FAL GRAM** 🔮✨\n━━━━━━━━━━━━━━━━━━━━━━\n\n🌟 *Les portes du monde mystique s'ouvrent...*\n\n☕ **Lecture de Café** - Découvrez l'avenir dans votre tasse\n🃏 **Lecture de Tarot** - Les cartes ont quelque chose à vous dire\n💭 **Analyse de Rêves** - Décodez vos messages subconscients\n⭐ **Astrologie** - Guide des étoiles\n🌅 **Carte Quotidienne** - Guide personnel chaque matin\n👥 **Inviter des Amis** - Les bénédictions se multiplient quand on partage\n\n━━━━━━━━━━━━━━━━━━━━━━\n✨ *Êtes-vous prêt à découvrir votre destinée ?* ✨"
+  },
   "start_message": "✨🔮 **BIENVENUE SUR FAL GRAM** 🔮✨\n━━━━━━━━━━━━━━━━━━━━━━\n\n🌟 *Les portes du monde mystique s'ouvrent...*\n\n☕ **Lecture de Café** - Découvrez l'avenir dans votre tasse\n🃏 **Lecture de Tarot** - Les cartes ont quelque chose à vous dire\n💭 **Analyse de Rêves** - Décodez vos messages subconscients\n⭐ **Astrologie** - Guide des étoiles\n🌅 **Carte Quotidienne** - Guide personnel chaque matin\n👥 **Inviter des Amis** - Les bénédictions se multiplient quand on partage\n\n━━━━━━━━━━━━━━━━━━━━━━\n✨ *Êtes-vous prêt à découvrir votre destinée ?* ✨",
   "main_menu_button": "🏠 Menu Principal",
   "referral_prompt": "Gagnez des lectures gratuites en partageant Fal Gram avec vos amis ! Copiez le lien ci-dessous et envoyez-le. Vous obtiendrez 1 LECTURE GRATUITE pour chaque ami qui rejoint en utilisant votre lien.\n\nVotre lien spécial : {referral_link}",
@@ -28,9 +31,36 @@
   "daily_card_already_subscribed": "Votre abonnement 'Carte du Jour' est déjà actif. Vous recevrez votre carte chaque matin.",
   "referral": "👥 Inviter des Amis",
   "language": "🌐 Sélection de Langue",
-  "language_selection": "Dans quelle langue souhaitez-vous continuer ?",
+  "language_selection": {
+    "title": "🌐 **Sélection de Langue**",
+    "description": "Veuillez sélectionner votre langue préférée :",
+    "buttons": {
+      "turkish": "🇹🇷 Türkçe",
+      "english": "🇺🇸 English",
+      "spanish": "🇪🇸 Español",
+      "french": "🇫🇷 Français",
+      "russian": "🇷🇺 Русский",
+      "german": "🇩🇪 Deutsch",
+      "arabic": "🇸🇦 العربية",
+      "italian": "🇮🇹 Italiano",
+      "portuguese": "🇵🇹 Português",
+      "back": "⬅️ Retour"
+    }
+  },
   "language_detected": "🌐 Votre langue détectée automatiquement comme {lang}. Utilisez le bouton langue pour changer si nécessaire.",
   "language_updated": "🌐 Langue mise à jour vers {lang}.",
+  "language_change": {
+    "success_tr": "✅ Diliniz **Türkçe** olarak güncellendi!",
+    "success_en": "✅ Your language updated to **English**!",
+    "success_es": "✅ Tu idioma se actualizó a **Español**!",
+    "success_fr": "✅ Votre langue mise à jour vers **Français**!",
+    "success_ru": "✅ Ваш язык обновлён на **Русский**!",
+    "success_de": "✅ Ihre Sprache wurde auf **Deutsch** aktualisiert!",
+    "success_ar": "✅ تم تحديث لغتك إلى **العربية**!",
+    "success_it": "✅ La tua lingua è stata aggiornata a **Italiano**!",
+    "success_pt": "✅ Sua língua foi atualizada para **Português**!",
+    "success_default": "✅ Language updated successfully!"
+  },
   "fortune_request": "Envoyez une photo de votre tasse de café...",
   "fortune_limit_reached": "Votre limite de lectures gratuites est atteinte. {stars_count} Étoiles Telegram requises pour continuer.",
   "fortune_in_progress": "🔮 Votre lecture est en cours de préparation...",
@@ -71,6 +101,125 @@
   "gift_subscription_title": "🎁 **OFFRIR UN ABONNEMENT** 🎁",
   "cancel_subscription_title": "❌ **ANNULER L'ABONNEMENT** ❌",
   "admin_panel_back": "🔙 Panel d'Administration",
+  
+  "admin_panel": {
+      "title": "🔧 *Panel d'Administration*",
+      "buttons": {
+          "stats": "📊 Statistiques",
+          "users": "👥 Liste des Utilisateurs",
+          "referrals": "👥 Relations de Parrainage",
+          "premium": "💎 Gestion Premium",
+          "logs": "📋 Voir les Logs",
+          "pdf": "📄 Télécharger PDF",
+          "settings": "⚙️ Paramètres",
+          "main_menu": "🏠 Menu Principal"
+      }
+  },
+  
+  "admin_stats": {
+      "title": "**📊 Statistiques du Bot**",
+      "user_stats": "**👥 Statistiques des Utilisateurs:**",
+      "total_users": "• Total des Utilisateurs: **{count}**",
+      "daily_subscribers": "• Abonnés Carte Quotidienne: **{count}**",
+      "referral_stats": "**👤 Statistiques de Parrainage:**",
+      "total_referrers": "• Total des Parrains: **{count}** utilisateurs",
+      "total_referred": "• Total des Parrainés: **{count}** personnes",
+      "total_earnings": "• Gains Totaux: **{count}** lectures",
+      "referral_rate": "• Taux de Parrainage: **{rate:.1f}%**",
+      "buttons": {
+          "referral_details": "👥 Détails du Parrainage",
+          "back": "🔙 Panel d'Administration"
+      }
+  },
+  
+  "admin_logs": {
+      "title": "**📋 50 Derniers Logs**",
+      "no_logs": "Aucun log pour le moment.",
+      "truncated": "... (plus de logs disponibles)"
+  },
+  
+  "admin_settings": {
+      "title": "⚙️ *Paramètres d'Administration*",
+      "buttons": {
+          "daily_time": "🕐 Changer l'Heure de la Carte Quotidienne",
+          "prompts": "📝 Modifier les Prompts",
+          "main_menu": "🏠 Menu Principal"
+      }
+  },
+  
+  "admin_users": {
+      "title": "**👥 Liste des Utilisateurs**",
+      "no_users": "Aucun utilisateur pour le moment."
+  },
+  
+  "admin_premium": {
+      "title": "💎 **PANEL DE GESTION PREMIUM** 💎",
+      "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+      "stats_label": "📊 **Statistiques:**",
+      "total_premium": "• Total des Utilisateurs Premium: **{count}**",
+      "active_subscriptions": "• Abonnements Actifs: **{count}**",
+      "management_label": "🎯 **Options de Gestion:**",
+      "buttons": {
+          "detailed_search": "🔍 Recherche Détaillée",
+          "back": "🔙 Menu Premium"
+      }
+  },
+  
+  "admin_premium_users": {
+      "user_template": "**{index}.** {name} (@{username})\n   📋 Plan: {plan}\n   📅 Expire: {expires}\n   🎯 Statut: {status}\n\n",
+      "more_users": "... et {count} autres utilisateurs",
+      "statuses": {
+          "active": "✅ Actif",
+          "expired": "❌ Expiré",
+          "unlimited": "Illimité",
+          "unknown": "❓ Inconnu"
+      }
+  },
+  
+  "admin_premium_stats": {
+      "title": "📊 **STATISTIQUES PREMIUM** 📊",
+      "plan_distribution": "📈 **Distribution des Plans:**",
+      "revenue_stats": "💰 **Statistiques de Revenus:**",
+      "subscription_stats": "📊 **Statistiques d'Abonnement:**",
+      "monthly_growth": "📈 **Croissance Mensuelle:**",
+      "retention_rate": "🔄 **Taux de Rétention:**"
+  },
+  
+  "admin_gift": {
+      "title": "🎁 **OFFRIR UN ABONNEMENT** 🎁",
+      "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+      "description": "Pour offrir un abonnement premium à un utilisateur:",
+      "steps": [
+          "1️⃣ Entrer l'ID Utilisateur",
+          "2️⃣ Sélectionner le Plan", 
+          "3️⃣ Définir la Durée"
+      ],
+      "example": "**Exemple:** `/gift 123456789 basic 30` (plan basique de 30 jours)",
+      "available_plans": "**Plans Disponibles:**",
+      "plan_template": "• **{name}** - {price} Étoile",
+      "buttons": {
+          "examples": "📝 Exemples de Commandes de Cadeau",
+          "back": "🔙 Gestion Premium"
+      }
+  },
+  
+  "admin_cancel": {
+      "title": "❌ **ANNULER L'ABONNEMENT** ❌",
+      "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+      "description": "Pour annuler l'abonnement premium d'un utilisateur:",
+      "command": "**Commande:** `/cancel 123456789`",
+      "effects": "Cette action:",
+      "effects_list": [
+          "• Supprime le plan premium de l'utilisateur",
+          "• Remet à zéro la date de fin d'abonnement", 
+          "• Envoie un message de notification à l'utilisateur"
+      ],
+      "warning": "⚠️ **Avertissement:** Cette action ne peut pas être annulée!",
+      "buttons": {
+          "cancel_list": "📋 Utilisateurs à Annuler",
+          "back": "🔙 Gestion Premium"
+      }
+  },
   
   "compatibility_result": {
     "title": "💕 **ANALYSE DE COMPATIBILITÉ** 💕",
@@ -264,5 +413,11 @@
       "refresh": "🔄 Actualiser",
       "main_menu": "🏠 Menu Principal"
     }
-  }
+  },
+  "premium_menu_title": "💎 Menu Premium",
+  "premium_compare_plans": "📊 Comparaison des Plans",
+  "premium_get_referral": "👥 Lien de Parrainage",
+  "premium_referral_stats": "📈 Statistiques de Parrainage",
+  "premium_my_rewards": "🎁 Mes Récompenses",
+  "premium_back_button": "�� Menu Principal"
 }

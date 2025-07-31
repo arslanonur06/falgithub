@@ -1,149 +1,250 @@
 {
-    "start_message": "✨🔮 **WILLKOMMEN BEI FAL GRAM** 🔮✨\n━━━━━━━━━━━━━━━━━━━━━━\n\n🌟 *Die Türen der mystischen Welt öffnen sich...*\n\n☕ **Kaffeewahrsagung** - Entdecken Sie die Zukunft in Ihrer Tasse\n🃏 **Tarot-Lesung** - Die Karten haben Ihnen etwas zu sagen\n💭 **Traumdeutung** - Entschlüsseln Sie die Botschaften Ihres Unterbewusstseins\n⭐ **Astrologie** - Führung der Sterne\n🌅 **Tägliche Karte** - Persönliche Führung jeden Morgen\n👥 **Freunde Einladen** - Segen vervielfachen sich beim Teilen\n\n━━━━━━━━━━━━━━━━━━━━━━\n✨ *Sind Sie bereit, Ihr Schicksal zu entdecken?* ✨",
-    "main_menu_button": "🏠 Hauptmenü",
-    "referral_prompt": "Verdienen Sie kostenlose Lesungen, indem Sie Fal Gram mit Freunden teilen! Kopieren Sie den Link unten und senden Sie ihn weiter. Sie erhalten 1 KOSTENLOSE Lesung für jeden Freund, der über Ihren Link beitritt.\n\nIhr persönlicher Link: {referral_link}",
-    "referral_success": "Toll! Ein Freund ist über Ihren Link beigetreten. Sie haben 1 KOSTENLOSE Lesung verdient!",
-    "coffee_fortune": "☕ Kaffeewahrsagung",
-    "coffee_fortune_prompt": "Ausgezeichnete Wahl! Senden Sie einfach ein Foto Ihrer Kaffeetasse für eine Lesung.",
-    "tarot_fortune": "🎴 Tarot-Lesung",
-    "tarot_fortune_prompt": "Ausgezeichnet! Ich ziehe eine Tarotkarte für Sie...",
-    "tarot_card_drawn": "Hier ist Ihre Karte: {card}. Ich interpretiere sie jetzt für Sie, bitte warten Sie...",
-    "tarot_drawing": "🎴 Tarot-Karte ziehen",
-    "dream_analysis": "💭 Traumdeutung",
-    "dream_analysis_prompt": "Willkommen in der geheimnisvollen Welt der Träume. Bitte beschreiben Sie Ihren Traum detailliert und senden Sie ihn mir.",
-    "dream_analyzing": "💭 Traumanalyse...",
-    "astrology": "⭐ Astrologie",
-    "astrology_calculating": "⭐ Astrologische Berechnungen werden durchgeführt...",
-    "birth_chart": "🌟 Geburtshoroskop",
-    "daily_horoscope": "📅 Tageshoroskop",
-    "compatibility": "💕 Kompatibilität",
-    "moon_calendar": "🌙 Mondkalender",
-    "enter_birth_info": "📅 Geburtsdaten eingeben (TT.MM.JJJJ TT:MM - Stadt):",
-    "enter_your_sign": "⭐ Wählen Sie Ihr Sternzeichen aus:",
-    "compatibility_prompt": "💕 Wählen Sie ein Sternzeichen aus, um die Kompatibilität zwischen zwei Sternzeichen zu sehen:",
-    "daily_card": "🔔 Tägliche Karte abonnieren",
-    "daily_card_subscribed": "✅ Tägliche Karte abonniert",
-    "daily_card_subscribe": "Großartig! Sie erhalten nun täglich eine besondere 'Karte des Tages' mit Interpretation.",
-    "daily_card_unsubscribe": "Verstanden. Die tägliche Kartenzustellung wird deaktiviert.",
-    "daily_card_already_subscribed": "Ihr 'Karte des Tages'-Abonnement ist bereits aktiv. Sie erhalten Ihre Karte jeden Morgen.",
-    "referral": "👥 Freunde einladen",
-    "language": "🌐 Sprache auswählen",
-    "language_selection": "In welcher Sprache möchten Sie fortfahren?",
-    "language_detected": "🌐 Ihre Sprache wurde automatisch als {lang} erkannt. Verwenden Sie die Sprach-Schaltfläche zum Ändern, falls nötig.",
-    "language_updated": "🌐 Sprache auf {lang} aktualisiert.",
-    "fortune_request": "Senden Sie ein Foto Ihrer Kaffee-Tasse...",
-    "fortune_limit_reached": "Ihr kostenloses Lesungslimit ist erreicht. {stars_count} Telegram Stars sind erforderlich, um fortzufahren.",
-    "fortune_in_progress": "🔮 Ihre Lesung wird vorbereitet...",
-    "fortune_error": "❌ Ein Fehler ist bei der Erstellung Ihrer Lesung aufgetreten.",
-    "admin_panel_message": "🔧 Admin-Panel",
-    "admin_panel_title": "🔧 *Admin-Panel*",
-    "no_logs_message": "Noch keine Protokoll-Einträge.",
-    "admin_settings_title": "⚙️ *Einstellungen*",
-    "edit_schedule_prompt": "Lieferzeit für tägliche Karte ändern (HH:MM-Format):",
-    "prompt_save_error": "❌ Fehler beim Speichern des Prompts.",
-    "prompt_saved": "✅ {key} erfolgreich aktualisiert.",
-    "premium_menu": "💎 Premium",
-    "premium_plan_basic": "✨ Basis-Plan - 500 ⭐",
-    "premium_plan_premium": "✨ Premium-Plan - 1000 ⭐",
-    "premium_plan_vip": "✨ VIP-Plan - 2000 ⭐",
-    "plan_comparison": "📊 Plan-Vergleich",
-    "subscription_management": "💳 Abonnement-Verwaltung",
-    "monthly_horoscope": "📅 Monatshoroskop",
-    "purchase": "🛒 Kaufen",
-    "premium_menu_back": "🔙 Premium-Menü",
-    "premium_feature": "💎 PREMIUM-FUNKTION",
-    "premium_upgrade": "✨ Zum Basis-Plan upgraden",
-    "premium_upgrade_premium": "✨ Zum Premium-Plan upgraden",
-    "premium_upgrade_vip": "✨ Zum VIP-Plan upgraden",
-    "back_to_premium": "🔙 Premium-Menü",
-    "premium_management": "💎 Premium-Verwaltung",
-    "premium_users": "👥 Premium-Benutzer",
-    "premium_stats": "📊 Abonnement-Statistiken",
-    "gift_subscription": "🎁 Abonnement verschenken",
-    "cancel_subscription": "❌ Abonnement kündigen",
-    "premium_report": "📄 Premium-Bericht herunterladen",
-    "no_premium_users": "❌ Noch keine Premium-Benutzer.",
-    "premium_user_details": "💎 **PREMIUM-BENUTZER** 💎",
-    "premium_statistics": "📊 **PREMIUM-STATISTIKEN** 📊",
-    "user_distribution": "👥 **Benutzerverteilung:**",
-    "revenue_stats": "💰 **Einnahmen-Statistiken:**",
-    "active_subscriptions": "📈 **Aktive Abonnements:**",
-    "gift_subscription_title": "🎁 **ABONNEMENT VERSCHENKEN** 🎁",
-    "cancel_subscription_title": "❌ **ABONNEMENT KÜNDIGEN** ❌",
-    "admin_panel_back": "🔙 Admin-Panel",
-          "plan_comparison": {
-        "title": "📊 **PLANVERGLEICH** 📊",
-        "separator": "━━━━━━━━━━━━━━━━━━━━━━",
-        "back_button": "🔙 Premium-Menü",
-        "plans": {
-          "free": {
-            "title": "🆓 **KOSTENLOSER PLAN**",
-            "features": [
-              "5 kostenlose Wahrsagungen",
-              "Tageshoroskop",
-              "Grundlegende Astrologie-Funktionen",
-              "Grundlegende Chatbot-Unterstützung",
-              "Empfehlungsboni"
-            ]
-          },
-          "basic": {
-            "title": "💎 **BASISPLAN - 500 ⭐**",
-            "features": [
-              "♾️ Unbegrenzte Wahrsagungen (Kaffee, Tarot, Träume)",
-              "📊 Wöchentlicher Horoskop-Bericht",
-              "🔮 Erweiterte Astrologie-Analyse",
-              "💫 Geburtshoroskop-Interpretation",
-              "🌙 Mondkalender-Funktionen",
-              "💬 Erweiterter Chatbot",
-              "🎯 Personalisierte Empfehlungen",
-              "📈 Detaillierte Wahrsagungs-Historie",
-              "🔔 Spezielle Benachrichtigungen"
-            ]
-          },
-          "premium": {
-            "title": "⭐ **PREMIUM-PLAN - 1000 ⭐**",
-            "features": [
-              "✨ Basisplan-Funktionen",
-              "📅 Monatshoroskop",
-              "🪐 Planeten-Transit-Analyse",
-              "💕 Tierkreis-Kompatibilität",
-              "🌙 Erweiterter Mondkalender",
-              "📈 Detaillierte Astrologie-Berichte",
-              "🎯 Personalisierte Empfehlungen",
-              "🔮 Spezielle Wahrsagungs-Typen",
-              "📊 Astrologie-Statistiken",
-              "🎁 Exklusiver Inhalt",
-              "⚡ Prioritäts-Support"
-            ]
-          },
-          "vip": {
-            "title": "👑 **VIP-PLAN - 2000 ⭐**",
-            "features": [
-              "👑 Premium-Plan-Funktionen",
-              "🤖 24/7 Astrologie-Chatbot",
-              "👥 Soziale Astrologie-Funktionen",
-              "🎁 Exklusiver VIP-Inhalt",
-              "⚡ Prioritäts-Support",
-              "📊 Erweiterte Analysen",
-              "🎯 Persönlicher Astrologie-Berater",
-              "🌟 Exklusive VIP-Wahrsagungs-Typen",
-              "💎 Unbegrenzter exklusiver Inhalt",
-              "🎪 Spezielle Events",
-              "📱 Exklusive VIP-Oberfläche",
-              "🔮 KI-gestützte persönliche Führung"
-            ]
-          }
+    "start": {
+        "welcome": "✨🔮 **WILLKOMMEN BEI FAL GRAM** 🔮✨\n\n🌟 *Die Tore zur mystischen Welt öffnen sich...*",
+        "buttons": {
+            "main_menu": "🏠 Hauptmenü"
         }
-      },
-      
-      "compatibility_result": {
+    },
+    "main_menu": {
+        "title": "🏠 **Hauptmenü**",
+        "buttons": {
+            "coffee_reading": "☕ Kaffeesatzlesen",
+            "tarot_reading": "🎴 Tarot-Lesung",
+            "dream_interpretation": "💭 Traumdeutung",
+            "astrology": "⭐ Astrologie",
+            "premium": "💎 Premium",
+            "language": "🌐 Sprache"
+        }
+    },
+    "select_coffee": "☕ Kaffeesatzlesen",
+    "select_tarot": "🎴 Tarot-Lesung",
+    "select_dream": "💭 Traumdeutung",
+    "select_astrology": "⭐ Astrologie",
+    "premium_buy": "💎 Premium",
+    "change_language": "🌐 Sprache",
+    "coffee_reading": {
+        "limit_reached": {
+            "message": "Dein kostenloses Leselimit ist erreicht. Wechsle zu Premium für unbegrenzte Lesungen!",
+            "buy_one_button": "☕ 1 Lesung kaufen ({stars} Sterne)",
+            "upgrade_button": "💎 Zu Premium wechseln",
+            "back_button": "🔙 Zurück"
+        },
+        "photo_prompt": {
+            "message": "Bitte sende ein Foto deiner Kaffeetasse für eine Lesung.",
+            "back_button": "🔙 Zurück"
+        }
+    },
+    "tarot_reading": {
+        "limit_reached": {
+            "message": "Dein kostenloses Tarot-Leselimit ist erreicht. Wechsle zu Premium für unbegrenzte Lesungen!",
+            "buy_one_button": "🎴 1 Lesung kaufen ({stars} Sterne)",
+            "upgrade_button": "💎 Zu Premium wechseln",
+            "back_button": "🔙 Zurück"
+        }
+    },
+    "dream_reading": {
+        "limit_reached": {
+            "message": "Dein kostenloses Traumdeutungs-Limit ist erreicht. Wechsle zu Premium für unbegrenzte Lesungen!",
+            "buy_one_button": "💭 1 Lesung kaufen ({stars} Sterne)",
+            "upgrade_button": "💎 Zu Premium wechseln",
+            "back_button": "🔙 Zurück"
+        }
+    },
+    "payment_system": {
+        "title": "💳 **ZAHLUNGSSYSTEM**",
+        "invalid_plan": "❌ Ungültiger Plan!",
+        "error": "❌ Zahlung konnte nicht gestartet werden. Bitte versuche es erneut.",
+        "success": "✅ Zahlung erfolgreich!",
+        "coffee_fortune": {
+            "title": "☕ Kaffee-Wahrsagung",
+            "description": "Eine einzelne Kaffee-Wahrsagung.",
+            "price_label": "Preis"
+        },
+        "tarot_reading": {
+            "title": "🎴 Tarot-Lesung",
+            "description": "Eine einzelne Tarot-Lesung.",
+            "price_label": "Preis"
+        },
+        "dream_interpretation": {
+            "title": "💭 Traumdeutung",
+            "description": "Eine einzelne Traumdeutung.",
+            "price_label": "Preis"
+        },
+        "buttons": {
+            "back": "🔙 Zurück"
+        }
+    },
+    "astrology_menu": {
+        "title": "⭐ **ASTROLOGIE-MENÜ**",
+        "buttons": {
+            "daily_horoscope": "📅 Tageshoroskop",
+            "weekly_horoscope": "📊 Wochenhoroskop",
+            "monthly_horoscope": "📅 Monatshoroskop",
+            "birth_chart": "🌟 Geburtshoroskop",
+            "compatibility": "💕 Kompatibilität",
+            "moon_calendar": "🌙 Mondkalender",
+            "astro_chatbot": "🤖 Astrologie-Chatbot",
+            "back": "🔙 Hauptmenü"
+        }
+    },
+    "premium_plans": {
+        "title": "💎 **PREMIUM-PLÄNE**",
+        "buttons": {
+            "basic": "💎 Basis-Plan",
+            "premium": "⭐ Premium-Plan",
+            "vip": "👑 VIP-Plan",
+            "back": "🔙 Hauptmenü"
+        }
+    },
+    "astrology_analysis": {
+        "title": "🔮 **ASTROLOGIE-ANALYSE**",
+        "buttons": {
+            "back": "🔙 Astrologie"
+        }
+    },
+    "birth_chart_info": {
+        "title": "🌟 **GEBURTSDATUMS-INFO**",
+        "enter_birth_info": "📅 Gib deine Geburtsdaten ein (TT.MM.JJJJ HH:MM - Stadt):",
+        "buttons": {
+            "back": "🔙 Astrologie"
+        }
+    },
+    "birth_chart_result": {
+        "title": "🌟 **GEBURTSDATUMS-ERGEBNIS**",
+        "birth_info_label": "📅 **Geburtsinformationen:**",
+        "footer": "✨ *Deine astrologische Reise beginnt hier* ✨",
+        "buttons": {
+            "another_analysis": "🔄 Weitere Analyse",
+            "download_pdf": "📄 PDF herunterladen",
+            "main_menu": "🏠 Hauptmenü"
+        }
+    },
+    "language_selection": {
+        "title": "🌐 **Sprachauswahl**",
+        "description": "Bitte wähle deine bevorzugte Sprache:",
+        "buttons": {
+            "turkish": "🇹🇷 Türkçe",
+            "english": "🇺🇸 English",
+            "spanish": "🇪🇸 Español",
+            "french": "🇫🇷 Français",
+            "russian": "🇷🇺 Русский",
+            "german": "🇩🇪 Deutsch",
+            "arabic": "🇸🇦 العربية",
+            "italian": "🇮🇹 Italiano",
+            "portuguese": "🇵🇹 Português",
+            "back": "⬅️ Zurück"
+        }
+    },
+    "language_change": {
+        "success_tr": "✅ Diliniz **Türkçe** olarak güncellendi!",
+        "success_en": "✅ Your language updated to **English**!",
+        "success_es": "✅ Tu idioma se actualizó a **Español**!",
+        "success_fr": "✅ Votre langue mise à jour vers **Français**!",
+        "success_ru": "✅ Ваш язык обновлён на **Русский**!",
+        "success_de": "✅ Ihre Sprache wurde auf **Deutsch** aktualisiert!",
+        "success_ar": "✅ تم تحديث لغتك إلى **العربية**!",
+        "success_it": "✅ La tua lingua è stata aggiornata a **Italiano**!",
+        "success_pt": "✅ Sua língua foi atualizada para **Português**!",
+        "success_default": "✅ Sprache erfolgreich aktualisiert!"
+    },
+    "daily_subscription": {
+        "title": "🌅 **ABO FÜR TAGESKARTE** 🌅",
+        "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+        "status_label": "📱 **Dein aktueller Status:**",
+        "delivery_label": "⏰ **Nächste Lieferung:**",
+        "description": "🔮 **Über diese Funktion:**\nMit dem Tageskarten-Abonnement erhältst du jeden Morgen eine speziell vorbereitete Tarotkarte und ihre Deutung. Diese Karte stellt die Energie des Tages, mögliche Begegnungen und zu beachtende Punkte aus einer mystischen Perspektive dar.",
+        "features_label": "✨ **Was ist enthalten:**",
+        "features_list": [
+            "• 🃏 Jeden Morgen um 09:00 Uhr eine spezielle Tarotkarte",
+            "• 📜 Aktuelle Deutung und Bedeutung der Karte",
+            "• 🎯 Praktische Ratschläge für den Tag",
+            "• 🌟 Persönliche Energieführung",
+            "• 💫 Astrologische Verbindungen und Tipps"
+        ],
+        "benefits_label": "🎁 **Besondere Vorteile:**",
+        "benefits_list": [
+            "• Völlig KOSTENLOSER Service",
+            "• Jeden Tag eine andere Karte und Deutung",
+            "• Personalisierter Inhalt",
+            "• Motivierende und inspirierende Nachrichten",
+            "• Die positive Energie des Tages einfangen"
+        ],
+        "stats_label": "📊 **Statistiken:**",
+        "stats_list": [
+            "• 15.000+ aktive tägliche Abonnenten",
+            "• 94% Benutzerzufriedenheit",
+            "• Durchschnittliche Bewertung von 4,8/5"
+        ],
+        "how_it_works_label": "🔧 **Wie es funktioniert:**",
+        "how_it_works_list": [
+            "1. Abonnement aktivieren",
+            "2. Jeden Morgen eine automatische Nachricht erhalten",
+            "3. Deine Karte lesen und deinen Tag planen",
+            "4. Jederzeit kündbar"
+        ],
+        "settings_label": "⚙️ **Einstellungen:**",
+        "settings_list": [
+            "• Lieferzeit: 09:00 (änderbar)",
+            "• Inklusive Wochenenden: Ja",
+            "• Benachrichtigungstyp: Stille Nachricht"
+        ],
+        "statuses": {
+            "active": "✅ AKTIV",
+            "inactive": "❌ INAKTIV"
+        },
+        "delivery_times": {
+            "active": "Jeden Morgen um 09:00 Uhr",
+            "inactive": "Abonnement nicht aktiv"
+        },
+        "buttons": {
+            "start": "🔔 Abonnement starten",
+            "stop": "🔕 Abonnement beenden",
+            "settings": "⚙️ Lieferzeit einstellen",
+            "stats": "📊 Abonnement-Statistiken",
+            "main_menu": "🏠 Hauptmenü"
+        }
+    },
+    "weekly_horoscope": {
+        "title": "📊 **WOCHENHOROSKOP**",
+        "description": "Erhalte ein detailliertes Wochenhoroskop für dein Sternzeichen",
+        "buttons": {
+            "back": "🔙 Astrologie"
+        }
+    },
+    "monthly_horoscope": {
+        "title": "📅 **MONATSHOROSKOP**",
+        "description": "Erhalte ein umfassendes Monatshoroskop für dein Sternzeichen",
+        "buttons": {
+            "back": "🔙 Astrologie"
+        }
+    },
+    "compatibility_result": {
         "title": "💕 **KOMPATIBILITÄTSANALYSE** 💕",
         "separator": "━━━━━━━━━━━━━━━━━━━━━━",
-        "signs_label": "**{first_sign} ↔️ {second_sign}**",
+        "signs_template": "**{sign1} ↔️ {sign2}**",
         "footer": "✨ *Verständnis ist das wichtigste Element in Beziehungen* ✨",
         "buttons": {
-          "another_analysis": "🔄 Andere Analyse",
-          "main_menu": "🏠 Hauptmenü"
+            "another_analysis": "🔄 Weitere Analyse",
+            "main_menu": "🏠 Hauptmenü"
         }
-      }
-  }  
+    },
+    "referral": {
+        "link": {
+            "title": "👥 **Dein Empfehlungslink**",
+            "share_button": "📤 Link teilen",
+            "back_button": "🔙 Zurück"
+        },
+        "stats": {
+            "title": "📊 **Empfehlungsstatistiken**",
+            "total_referrals": "Gesamte Empfehlungen",
+            "total_rewards": "Gesamte Belohnungen",
+            "back_button": "🔙 Zurück"
+        }
+    },
+    "error_message": "❌ Ein Fehler ist aufgetreten. Bitte versuche es erneut.",
+    "subscription_management": "📊 Abonnementverwaltung",
+    "monthly_horoscope": "📅 Monatshoroskop",
+    "purchase": "💳 Kaufen",
+    "premium_menu_back": "🔙 Premium-Menü",
+    "plan_comparison_button": "📊 Pläne vergleichen"
+}

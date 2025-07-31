@@ -1,4 +1,7 @@
 {
+  "start": {
+    "welcome": "✨🔮 **BENVENUTO IN FAL GRAM** 🔮✨\n━━━━━━━━━━━━━━━━━━━━━━\n\n🌟 *Le porte del mondo mistico si stanno aprendo...*\n\n☕ **Lettura del Caffè** - Scopri il futuro nella tua tazza\n🃏 **Lettura dei Tarocchi** - Le carte hanno qualcosa da dirti\n💭 **Analisi dei Sogni** - Decodifica i messaggi del tuo subconscio\n⭐ **Astrologia** - Guida delle stelle\n🌅 **Carta Quotidiana** - Guida personale ogni mattina\n👥 **Invita Amici** - Le benedizioni si moltiplicano quando condivise\n\n━━━━━━━━━━━━━━━━━━━━━━\n✨ *Sei pronto a scoprire il tuo destino?* ✨"
+  },
     "start_message": "✨🔮 **BENVENUTO IN FAL GRAM** 🔮✨\n━━━━━━━━━━━━━━━━━━━━━━\n\n🌟 *Le porte del mondo mistico si stanno aprendo...*\n\n☕ **Lettura del Caffè** - Scopri il futuro nella tua tazza\n🃏 **Lettura dei Tarocchi** - Le carte hanno qualcosa da dirti\n💭 **Analisi dei Sogni** - Decodifica i messaggi del tuo subconscio\n⭐ **Astrologia** - Guida delle stelle\n🌅 **Carta Quotidiana** - Guida personale ogni mattina\n👥 **Invita Amici** - Le benedizioni si moltiplicano quando condivise\n\n━━━━━━━━━━━━━━━━━━━━━━\n✨ *Sei pronto a scoprire il tuo destino?* ✨",
     "main_menu_button": "🏠 Menu Principale",
     "referral_prompt": "Ottieni letture gratuite condividendo Fal Gram con gli amici! Copia il link qui sotto e invialo loro. Riceverai 1 lettura GRATUITA per ogni amico che si unisce usando il tuo link.\n\nIl tuo link speciale: {referral_link}",
@@ -28,9 +31,36 @@
     "daily_card_already_subscribed": "Il tuo abbonamento alla 'Carta del Giorno' è già attivo. Riceverai la tua carta ogni mattina.",
     "referral": "👥 Invita Amici",
     "language": "🌐 Selezione della Lingua",
-    "language_selection": "In quale lingua vuoi continuare?",
+    "language_selection": {
+      "title": "🌐 **Selezione della Lingua**",
+      "description": "Per favore seleziona la tua lingua preferita:",
+      "buttons": {
+        "turkish": "🇹🇷 Türkçe",
+        "english": "🇺🇸 English",
+        "spanish": "🇪🇸 Español",
+        "french": "🇫🇷 Français",
+        "russian": "🇷🇺 Русский",
+        "german": "🇩🇪 Deutsch",
+        "arabic": "🇸🇦 العربية",
+        "italian": "🇮🇹 Italiano",
+        "portuguese": "🇵🇹 Português",
+        "back": "⬅️ Indietro"
+      }
+    },
     "language_detected": "🌐 La tua lingua è stata automaticamente rilevata come {lang}. Usa il pulsante lingua per cambiare se necessario.",
     "language_updated": "🌐 Lingua aggiornata a {lang}.",
+    "language_change": {
+      "success_tr": "✅ Diliniz **Türkçe** olarak güncellendi!",
+      "success_en": "✅ Your language updated to **English**!",
+      "success_es": "✅ Tu idioma se actualizó a **Español**!",
+      "success_fr": "✅ Votre langue mise à jour vers **Français**!",
+      "success_ru": "✅ Ваш язык обновлён на **Русский**!",
+      "success_de": "✅ Ihre Sprache wurde auf **Deutsch** aktualisiert!",
+      "success_ar": "✅ تم تحديث لغتك إلى **العربية**!",
+      "success_it": "✅ La tua lingua è stata aggiornata a **Italiano**!",
+      "success_pt": "✅ Sua língua foi atualizada para **Português**!",
+      "success_default": "✅ Language updated successfully!"
+    },
     "fortune_request": "Invia una foto della tua tazza di caffè...",
     "fortune_limit_reached": "Hai raggiunto il limite di letture gratuite. Sono necessari {stars_count} Telegram Stars per continuare.",
     "fortune_in_progress": "🔮 La tua lettura è in preparazione...",
@@ -71,6 +101,125 @@
     "gift_subscription_title": "🎁 **REGALA ABBONAMENTO** 🎁",
     "cancel_subscription_title": "❌ **CANCELLA ABBONAMENTO** ❌",
     "admin_panel_back": "🔙 Pannello di Amministrazione",
+  
+  "admin_panel": {
+      "title": "🔧 *Pannello di Amministrazione*",
+      "buttons": {
+          "stats": "📊 Statistiche",
+          "users": "👥 Lista Utenti",
+          "referrals": "👥 Relazioni di Referral",
+          "premium": "💎 Gestione Premium",
+          "logs": "📋 Visualizza Log",
+          "pdf": "📄 Scarica PDF",
+          "settings": "⚙️ Impostazioni",
+          "main_menu": "🏠 Menu Principale"
+      }
+  },
+  
+  "admin_stats": {
+      "title": "**📊 Statistiche del Bot**",
+      "user_stats": "**👥 Statistiche Utenti:**",
+      "total_users": "• Totale Utenti: **{count}**",
+      "daily_subscribers": "• Abbonati Carta Giornaliera: **{count}**",
+      "referral_stats": "**👤 Statistiche Referral:**",
+      "total_referrers": "• Totale Referrer: **{count}** utenti",
+      "total_referred": "• Totale Referred: **{count}** persone",
+      "total_earnings": "• Guadagni Totali: **{count}** letture",
+      "referral_rate": "• Tasso di Referral: **{rate:.1f}%**",
+      "buttons": {
+          "referral_details": "👥 Dettagli Referral",
+          "back": "🔙 Pannello di Amministrazione"
+      }
+  },
+  
+  "admin_logs": {
+      "title": "**📋 Ultimi 50 Log**",
+      "no_logs": "Nessun log ancora.",
+      "truncated": "... (più log disponibili)"
+  },
+  
+  "admin_settings": {
+      "title": "⚙️ *Impostazioni Amministrazione*",
+      "buttons": {
+          "daily_time": "🕐 Cambia Ora Carta Giornaliera",
+          "prompts": "📝 Modifica Prompts",
+          "main_menu": "🏠 Menu Principale"
+      }
+  },
+  
+  "admin_users": {
+      "title": "**👥 Lista Utenti**",
+      "no_users": "Nessun utente ancora."
+  },
+  
+  "admin_premium": {
+      "title": "💎 **PANNELLO GESTIONE PREMIUM** 💎",
+      "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+      "stats_label": "📊 **Statistiche:**",
+      "total_premium": "• Totale Utenti Premium: **{count}**",
+      "active_subscriptions": "• Abbonamenti Attivi: **{count}**",
+      "management_label": "🎯 **Opzioni di Gestione:**",
+      "buttons": {
+          "detailed_search": "🔍 Ricerca Dettagliata",
+          "back": "🔙 Menu Premium"
+      }
+  },
+  
+  "admin_premium_users": {
+      "user_template": "**{index}.** {name} (@{username})\n   📋 Piano: {plan}\n   📅 Scade: {expires}\n   🎯 Stato: {status}\n\n",
+      "more_users": "... e {count} altri utenti",
+      "statuses": {
+          "active": "✅ Attivo",
+          "expired": "❌ Scaduto",
+          "unlimited": "Illimitato",
+          "unknown": "❓ Sconosciuto"
+      }
+  },
+  
+  "admin_premium_stats": {
+      "title": "📊 **STATISTICHE PREMIUM** 📊",
+      "plan_distribution": "📈 **Distribuzione Piani:**",
+      "revenue_stats": "💰 **Statistiche Entrate:**",
+      "subscription_stats": "📊 **Statistiche Abbonamenti:**",
+      "monthly_growth": "📈 **Crescita Mensile:**",
+      "retention_rate": "🔄 **Tasso di Ritenzione:**"
+  },
+  
+  "admin_gift": {
+      "title": "🎁 **REGALA ABBONAMENTO** 🎁",
+      "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+      "description": "Per regalare un abbonamento premium a un utente:",
+      "steps": [
+          "1️⃣ Inserisci ID Utente",
+          "2️⃣ Seleziona Piano", 
+          "3️⃣ Imposta Durata"
+      ],
+      "example": "**Esempio:** `/gift 123456789 basic 30` (piano base 30 giorni)",
+      "available_plans": "**Piani Disponibili:**",
+      "plan_template": "• **{name}** - {price} Stella",
+      "buttons": {
+          "examples": "📝 Esempi Comandi Regalo",
+          "back": "🔙 Gestione Premium"
+      }
+  },
+  
+  "admin_cancel": {
+      "title": "❌ **CANCELLA ABBONAMENTO** ❌",
+      "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+      "description": "Per cancellare l'abbonamento premium di un utente:",
+      "command": "**Comando:** `/cancel 123456789`",
+      "effects": "Questa azione:",
+      "effects_list": [
+          "• Rimuove il piano premium dell'utente",
+          "• Resetta la data di fine abbonamento", 
+          "• Invia messaggio di notifica all'utente"
+      ],
+      "warning": "⚠️ **Attenzione:** Questa azione non può essere annullata!",
+      "buttons": {
+          "cancel_list": "📋 Utenti da Cancellare",
+          "back": "🔙 Gestione Premium"
+      }
+  },
     
       "plan_comparison": {
         "title": "📊 **CONFRONTO PIANI** 📊",
@@ -146,6 +295,17 @@
           "another_analysis": "🔄 Altra Analisi",
           "main_menu": "🏠 Menu Principale"
         }
-      }
+      },
+      "premium_menu_title": "💎 Menu Premium",
+      "premium_compare_plans": "📊 Confronto Piani",
+      "premium_get_referral": "👥 Link di Referral",
+      "premium_referral_stats": "📈 Statistiche Referral",
+      "premium_my_rewards": "🎁 Le Mie Ricompense",
+      "premium_back_button": "🔙 Menu Principale",
+      "subscription_management": "📊 Gestione Abbonamenti",
+      "monthly_horoscope": "📅 Oroscopo Mensile",
+      "purchase": "💳 Acquista",
+      "premium_menu_back": "🔙 Menu Premium",
+      "plan_comparison_button": "📊 Confronta Piani"
   
   }
