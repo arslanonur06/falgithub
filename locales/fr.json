@@ -83,6 +83,174 @@
     }
   },
   
+  "admin_panel": {
+    "title": "🔧 *Panel d'Administration*",
+    "buttons": {
+      "stats": "📊 Statistiques",
+      "users": "👥 Liste des Utilisateurs",
+      "referrals": "👥 Relations de Parrainage",
+      "premium": "💎 Gestion Premium",
+      "logs": "📋 Voir les Logs",
+      "pdf": "📄 Télécharger PDF",
+      "settings": "⚙️ Paramètres",
+      "main_menu": "🏠 Menu Principal"
+    }
+  },
+  
+  "admin_stats": {
+    "title": "**📊 Statistiques du Bot**",
+    "user_stats": "**👥 Statistiques des Utilisateurs:**",
+    "total_users": "• Total des Utilisateurs: **{count}**",
+    "daily_subscribers": "• Abonnés à la Carte Quotidienne: **{count}**",
+    "referral_stats": "**👤 Statistiques de Parrainage:**",
+    "total_referrers": "• Total des Parrains: **{count}** utilisateurs",
+    "total_referred": "• Total des Filleuls: **{count}** personnes",
+    "total_earnings": "• Gains Totaux: **{count}** lectures",
+    "referral_rate": "• Taux de Parrainage: **{rate:.1f}%**",
+    "buttons": {
+      "referral_details": "👥 Détails des Parrainages",
+      "back": "🔙 Panel d'Administration"
+    }
+  },
+  
+  "admin_logs": {
+    "title": "**📋 50 Derniers Logs**",
+    "no_logs": "Aucun log pour le moment.",
+    "truncated": "... (plus de logs disponibles)"
+  },
+  
+  "admin_settings": {
+    "title": "⚙️ *Paramètres d'Administrateur*",
+    "buttons": {
+      "daily_time": "🕐 Changer l'Heure de la Carte Quotidienne",
+      "prompts": "📝 Modifier les Prompts",
+      "main_menu": "🏠 Menu Principal"
+    }
+  },
+  
+  "admin_users": {
+    "title": "**👥 Liste des Utilisateurs**",
+    "no_users": "Aucun utilisateur pour le moment."
+  },
+  
+  "admin_premium": {
+    "title": "💎 **PANEL DE GESTION PREMIUM** 💎",
+    "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+    "stats_label": "📊 **Statistiques:**",
+    "total_premium": "• Total des Utilisateurs Premium: **{count}**",
+    "active_subscriptions": "• Abonnements Actifs: **{count}**",
+    "management_label": "🎯 **Options de Gestion:**",
+    "buttons": {
+      "detailed_search": "🔍 Recherche Détaillée",
+      "back": "🔙 Menu Premium"
+    }
+  },
+  
+  "admin_premium_users": {
+    "user_template": "**{index}.** {name} (@{username})\n   📋 Plan: {plan}\n   📅 Expire: {expires}\n   🎯 Statut: {status}\n\n",
+    "more_users": "... et {count} utilisateurs de plus",
+    "statuses": {
+      "active": "✅ Actif",
+      "expired": "❌ Expiré",
+      "unlimited": "Illimité",
+      "unknown": "❓ Inconnu"
+    }
+  },
+  
+  "admin_premium_stats": {
+    "title": "📊 **STATISTIQUES PREMIUM** 📊",
+    "plan_distribution": "📈 **Distribution des Plans:**",
+    "revenue_stats": "💰 **Statistiques de Revenus:**",
+    "subscription_stats": "📊 **Statistiques d'Abonnement:**",
+    "monthly_growth": "📈 **Croissance Mensuelle:**",
+    "retention_rate": "🔄 **Taux de Rétention:**"
+  },
+  
+  "admin_gift": {
+    "title": "🎁 **OFFRIR UN ABONNEMENT** 🎁",
+    "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+    "description": "Pour offrir un abonnement premium à un utilisateur:",
+    "steps": [
+      "1️⃣ Entrez l'ID Utilisateur",
+      "2️⃣ Sélectionnez le Plan", 
+      "3️⃣ Définissez la Durée"
+    ],
+    "example": "**Exemple:** `/gift 123456789 basic 30` (plan basique de 30 jours)",
+    "available_plans": "**Plans Disponibles:**",
+    "plan_template": "• **{name}** - {price} Étoile",
+    "buttons": {
+      "examples": "📝 Exemples de Commandes de Cadeau",
+      "back": "🔙 Gestion Premium"
+    }
+  },
+  
+  "admin_cancel": {
+    "title": "❌ **ANNULER L'ABONNEMENT** ❌",
+    "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+    "description": "Pour annuler l'abonnement premium d'un utilisateur:",
+    "command": "**Commande:** `/cancel 123456789`",
+    "effects": "Cette action:",
+    "effects_list": [
+      "• Supprime le plan premium de l'utilisateur",
+      "• Réinitialise la date d'expiration de l'abonnement", 
+      "• Envoie un message de notification à l'utilisateur"
+    ],
+    "warning": "⚠️ **Avertissement:** Cette action ne peut pas être annulée!",
+    "buttons": {
+      "cancel_list": "📋 Utilisateurs à Annuler",
+      "back": "🔙 Gestion Premium"
+    }
+  },
+  
+  "moon_calendar": {
+    "title": "🌙 **CALENDRIER LUNAIRE** 🌙",
+    "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+    "today": "📅 **Aujourd'hui:** {date}",
+    "moon_phase": "🌙 **Phase Lunaire:** {phase}",
+    "energy_label": "✨ **Énergie Lunaire d'Aujourd'hui:**",
+    "suggestions_label": "🔮 **Suggestions:**",
+    "buttons": {
+      "back": "🔙 Astrologie"
+    }
+  },
+  
+  "birth_chart": {
+    "title": "🌟 **THÈME ASTRAL** 🌟",
+    "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+    "description": "Entrez votre date et heure de naissance pour obtenir votre thème astral détaillé.",
+    "format_example": "**Format:** JJ.MM.AAAA HH:MM - Ville",
+    "example": "**Exemple:** 15.03.1990 14:30 - Paris",
+    "buttons": {
+      "back": "🔙 Astrologie"
+    }
+  },
+  
+  "daily_horoscope": {
+    "title": "📅 **HOROSCOPE QUOTIDIEN** 📅",
+    "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+    "description": "Pour quel signe voulez-vous l'horoscope quotidien?",
+    "features": [
+      "📈 Analyse d'horoscope quotidien",
+      "🌟 Influences planétaires",
+      "💫 Dates importantes",
+      "🎯 Recommandations et conseils"
+    ],
+    "back_button": "🔙 Astrologie"
+  },
+  
+  "weekly_horoscope": {
+    "title": "📊 **HOROSCOPE HEBDOMADAIRE** 📊",
+    "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+    "description": "Pour quel signe voulez-vous une lecture hebdomadaire?",
+    "features": [
+      "📈 Analyse d'horoscope hebdomadaire",
+      "🌟 Influences planétaires",
+      "💫 Dates importantes",
+      "🎯 Recommandations et conseils"
+    ],
+    "back_button": "🔙 Astrologie"
+  },
+  
   "referral_system": {
     "main_panel": {
       "title": "🌟 **SYSTÈME DE PARRAINAGE FAL GRAM** 🌟",

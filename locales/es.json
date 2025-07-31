@@ -81,7 +81,175 @@
       "another_analysis": "🔄 Otro Análisis",
       "main_menu": "🏠 Menú Principal"
     }
-  }
+  },
+  
+  "admin_panel": {
+    "title": "🔧 *Panel de Administración*",
+    "buttons": {
+      "stats": "📊 Estadísticas",
+      "users": "👥 Lista de Usuarios",
+      "referrals": "👥 Relaciones de Referidos",
+      "premium": "💎 Gestión Premium",
+      "logs": "📋 Ver Registros",
+      "pdf": "📄 Descargar PDF",
+      "settings": "⚙️ Configuración",
+      "main_menu": "🏠 Menú Principal"
+    }
+  },
+  
+  "admin_stats": {
+    "title": "**📊 Estadísticas del Bot**",
+    "user_stats": "**👥 Estadísticas de Usuarios:**",
+    "total_users": "• Total de Usuarios: **{count}**",
+    "daily_subscribers": "• Suscriptores de Carta Diaria: **{count}**",
+    "referral_stats": "**👤 Estadísticas de Referidos:**",
+    "total_referrers": "• Total de Referentes: **{count}** usuarios",
+    "total_referred": "• Total de Referidos: **{count}** personas",
+    "total_earnings": "• Ganancias Totales: **{count}** lecturas",
+    "referral_rate": "• Tasa de Referidos: **{rate:.1f}%**",
+    "buttons": {
+      "referral_details": "👥 Detalles de Referidos",
+      "back": "🔙 Panel de Administración"
+    }
+  },
+  
+  "admin_logs": {
+    "title": "**📋 Últimos 50 Registros**",
+    "no_logs": "Aún no hay registros.",
+    "truncated": "... (más registros disponibles)"
+  },
+  
+  "admin_settings": {
+    "title": "⚙️ *Configuración de Administrador*",
+    "buttons": {
+      "daily_time": "🕐 Cambiar Hora de Carta Diaria",
+      "prompts": "📝 Editar Prompts",
+      "main_menu": "🏠 Menú Principal"
+    }
+  },
+  
+  "admin_users": {
+    "title": "**👥 Lista de Usuarios**",
+    "no_users": "Aún no hay usuarios."
+  },
+  
+  "admin_premium": {
+    "title": "💎 **PANEL DE GESTIÓN PREMIUM** 💎",
+    "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+    "stats_label": "📊 **Estadísticas:**",
+    "total_premium": "• Total de Usuarios Premium: **{count}**",
+    "active_subscriptions": "• Suscripciones Activas: **{count}**",
+    "management_label": "🎯 **Opciones de Gestión:**",
+    "buttons": {
+      "detailed_search": "🔍 Búsqueda Detallada",
+      "back": "🔙 Menú Premium"
+    }
+  },
+  
+  "admin_premium_users": {
+    "user_template": "**{index}.** {name} (@{username})\n   📋 Plan: {plan}\n   📅 Expira: {expires}\n   🎯 Estado: {status}\n\n",
+    "more_users": "... y {count} usuarios más",
+    "statuses": {
+      "active": "✅ Activo",
+      "expired": "❌ Expirado",
+      "unlimited": "Ilimitado",
+      "unknown": "❓ Desconocido"
+    }
+  },
+  
+  "admin_premium_stats": {
+    "title": "📊 **ESTADÍSTICAS PREMIUM** 📊",
+    "plan_distribution": "📈 **Distribución de Planes:**",
+    "revenue_stats": "💰 **Estadísticas de Ingresos:**",
+    "subscription_stats": "📊 **Estadísticas de Suscripción:**",
+    "monthly_growth": "📈 **Crecimiento Mensual:**",
+    "retention_rate": "🔄 **Tasa de Retención:**"
+  },
+  
+  "admin_gift": {
+    "title": "🎁 **REGALAR SUSCRIPCIÓN** 🎁",
+    "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+    "description": "Para regalar una suscripción premium a un usuario:",
+    "steps": [
+      "1️⃣ Ingresa ID de Usuario",
+      "2️⃣ Selecciona Plan", 
+      "3️⃣ Establece Duración"
+    ],
+    "example": "**Ejemplo:** `/gift 123456789 basic 30` (plan básico de 30 días)",
+    "available_plans": "**Planes Disponibles:**",
+    "plan_template": "• **{name}** - {price} Estrella",
+    "buttons": {
+      "examples": "📝 Ejemplos de Comandos de Regalo",
+      "back": "🔙 Gestión Premium"
+    }
+  },
+  
+  "admin_cancel": {
+    "title": "❌ **CANCELAR SUSCRIPCIÓN** ❌",
+    "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+    "description": "Para cancelar la suscripción premium de un usuario:",
+    "command": "**Comando:** `/cancel 123456789`",
+    "effects": "Esta acción:",
+    "effects_list": [
+      "• Remueve el plan premium del usuario",
+      "• Reinicia la fecha de expiración de suscripción", 
+      "• Envía mensaje de notificación al usuario"
+    ],
+    "warning": "⚠️ **Advertencia:** ¡Esta acción no se puede deshacer!",
+    "buttons": {
+      "cancel_list": "📋 Usuarios a Cancelar",
+      "back": "🔙 Gestión Premium"
+    }
+  },
+  
+  "moon_calendar": {
+    "title": "🌙 **CALENDARIO LUNAR** 🌙",
+    "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+    "today": "📅 **Hoy:** {date}",
+    "moon_phase": "🌙 **Fase Lunar:** {phase}",
+    "energy_label": "✨ **Energía Lunar de Hoy:**",
+    "suggestions_label": "🔮 **Sugerencias:**",
+    "buttons": {
+      "back": "🔙 Astrología"
+    }
+  },
+  
+  "birth_chart": {
+    "title": "🌟 **CARTA NATAL** 🌟",
+    "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+    "description": "Ingresa tu fecha y hora de nacimiento para obtener tu carta natal detallada.",
+    "format_example": "**Formato:** DD.MM.AAAA HH:MM - Ciudad",
+    "example": "**Ejemplo:** 15.03.1990 14:30 - Madrid",
+    "buttons": {
+      "back": "🔙 Astrología"
+    }
+  },
+  
+  "daily_horoscope": {
+    "title": "📅 **HORÓSCOPO DIARIO** 📅",
+    "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+    "description": "¿Para qué signo quieres el horóscopo diario?",
+    "features": [
+      "📈 Análisis de horóscopo diario",
+      "🌟 Influencias planetarias",
+      "💫 Fechas importantes",
+      "🎯 Recomendaciones y consejos"
+    ],
+    "back_button": "🔙 Astrología"
+  },
+  
+  "weekly_horoscope": {
+    "title": "📊 **HORÓSCOPO SEMANAL** 📊",
+    "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+    "description": "¿Para qué signo quieres una lectura semanal?",
+    "features": [
+      "📈 Análisis de horóscopo semanal",
+      "🌟 Influencias planetarias",
+      "💫 Fechas importantes",
+      "🎯 Recomendaciones y consejos"
+    ],
+    "back_button": "🔙 Astrología"
+  },
   
   "referral_system": {
     "main_panel": {
