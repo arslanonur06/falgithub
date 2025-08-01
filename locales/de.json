@@ -246,5 +246,40 @@
     "monthly_horoscope": "📅 Monatshoroskop",
     "purchase": "💳 Kaufen",
     "premium_menu_back": "🔙 Premium-Menü",
-    "plan_comparison_button": "📊 Pläne vergleichen"
+    "plan_comparison_button": "📊 Pläne vergleichen",
+    "buttons": {
+        "close_chatbot": "❌ Chatbot schließen",
+        "analyzing": "🔮 Analysiere deine Frage...",
+        "sorry_cant_respond": "Entschuldigung, ich kann auf diese Frage nicht antworten. Bitte stelle eine andere Frage.",
+        "chatbot_closed": "Chatbot geschlossen. Verwende /start um neu zu beginnen."
+    },
+    "messages": {
+        "moon_energy_advice": "Höre auf die Mondenergie und ihren Einfluss auf dein tägliches Leben."
+    },
+    "astrology_menu": {
+        "title": "⭐ **ASTROLOGIE-MENÜ**",
+        "description": "Persönliche astrologische Analyse",
+        "footer": "Entdecke was die Sterne dir erzählen"
+    },
+    "fortune_request": "Sende ein Foto deiner Kaffeetasse...",
+    "dream_analysis_prompt": "Willkommen in der mystischen Welt der Träume. Bitte schreibe deinen Traum detailliert auf und sende ihn mir.",
+    "tarot_drawing": "🎴 Ziehe deine Tarotkarte...",
+    "fortune_error": "❌ Beim Erstellen deiner Weissagung ist ein Fehler aufgetreten.",
+    "fortune_limit_reached": "Dein kostenloses Weissagungslimit ist erreicht. {stars_count} Telegram Stars erforderlich um fortzufahren.",
+    "dream_analyzing": "💭 Analysiere deinen Traum...",
+    "birth_chart": "🌟 Geburtshoroskop",
+    "daily_horoscope": "📅 Tageshoroskop",
+    "compatibility": "💕 Kompatibilität",
+    "buttons": {
+        "advanced_moon_calendar": "🌙 Erweiterter Mondkalender",
+        "weekly_report": "📊 Wochenbericht",
+        "planetary_transits": "🪐 Planeten-Transite",
+        "astro_chatbot": "🤖 Astrologie-Chatbot",
+        "social_features": "👥 Soziale Funktionen"
+    },
+    "enter_your_sign": "⭐ Wähle dein Sternzeichen:",
+    "astrology_calculating": "⭐ Führe astrologische Berechnungen durch...",
+    "compatibility_prompt": "💕 Wähle dein Sternzeichen um die Kompatibilität zwischen zwei Zeichen zu erfahren:",
+    "fortune_in_progress": "🔮 Deine Weissagung wird vorbereitet...",
+    "plan_comparison": "📊 Planvergleich"
 }
