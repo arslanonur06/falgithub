@@ -999,7 +999,7 @@
         "subscription_success": "✨ **{plan_name}** planına başarıyla abone oldunuz!",
         "subscription_description": "Premium plan subscription for 1 month"
     },
-      "messages": {
+    "messages": {
     "moon_energy_advice": "Ay enerjisi ile uyum halinde olun",
     "fortune_limit_reached": "Ücretsiz fal limitiniz doldu. Devam etmek için {stars_count} Telegram Yıldızı gerekiyor.",
     "fortune_in_progress": "🔮 Falınız hazırlanıyor...",

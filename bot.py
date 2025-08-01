@@ -436,84 +436,44 @@ def calculate_moon_phase(date=None):
 
 def get_moon_energy_advice(energy, lang='tr'):
     """Ay enerjisine göre tavsiyeler verir"""
-    if lang == 'tr':
-        advice_map = {
-            'new': [
-                'Yeni başlangıçlar için mükemmel zaman',
-                'Hedeflerinizi belirleyin',
-                'Yeni projeler başlatın',
-                'İç dünyanızı keşfedin'
-            ],
-            'waxing': [
-                'Büyüme ve gelişme zamanı',
-                'Enerjinizi artırın',
-                'Yeni fırsatları değerlendirin',
-                'Pozitif düşüncelerle ilerleyin'
-            ],
-            'first_quarter': [
-                'Kararlar alma zamanı',
-                'Hedeflerinize odaklanın',
-                'Eylem planları yapın',
-                'Güçlü adımlar atın'
-            ],
-            'full': [
-                'Tamamlanma ve kutlama zamanı',
-                'Başarılarınızı değerlendirin',
-                'Sevdiklerinizle paylaşın',
-                'Mistik enerjileri hissedin'
-            ],
-            'waning': [
-                'Bırakma ve temizlenme zamanı',
-                'Eski alışkanlıkları bırakın',
-                'Negatif enerjileri temizleyin',
-                'İç huzurunuzu bulun'
-            ],
-            'last_quarter': [
-                'Değerlendirme ve öğrenme zamanı',
-                'Geçmişi analiz edin',
-                'Derslerinizi çıkarın',
-                'Gelecek için hazırlanın'
-            ]
-        }
-    else:
-        advice_map = {
-            'new': [
-                'Perfect time for new beginnings',
-                'Set your intentions',
-                'Start new projects',
-                'Explore your inner world'
-            ],
-            'waxing': [
-                'Time for growth and development',
-                'Increase your energy',
-                'Seize new opportunities',
-                'Move forward with positive thoughts'
-            ],
-            'first_quarter': [
-                'Time to make decisions',
-                'Focus on your goals',
-                'Make action plans',
-                'Take strong steps'
-            ],
-            'full': [
-                'Time for completion and celebration',
-                'Evaluate your achievements',
-                'Share with loved ones',
-                'Feel the mystical energies'
-            ],
-            'waning': [
-                'Time for letting go and cleansing',
-                'Release old habits',
-                'Clear negative energies',
-                'Find your inner peace'
-            ],
-            'last_quarter': [
-                'Time for evaluation and learning',
-                'Analyze the past',
-                'Learn your lessons',
-                'Prepare for the future'
-            ]
-        }
+    advice_map = {
+        'new': [
+            get_text(lang, "moon_energy.new.1", "Perfect time for new beginnings"),
+            get_text(lang, "moon_energy.new.2", "Set your intentions"),
+            get_text(lang, "moon_energy.new.3", "Start new projects"),
+            get_text(lang, "moon_energy.new.4", "Explore your inner world")
+        ],
+        'waxing': [
+            get_text(lang, "moon_energy.waxing.1", "Time for growth and development"),
+            get_text(lang, "moon_energy.waxing.2", "Increase your energy"),
+            get_text(lang, "moon_energy.waxing.3", "Seize new opportunities"),
+            get_text(lang, "moon_energy.waxing.4", "Move forward with positive thoughts")
+        ],
+        'first_quarter': [
+            get_text(lang, "moon_energy.first_quarter.1", "Time to make decisions"),
+            get_text(lang, "moon_energy.first_quarter.2", "Focus on your goals"),
+            get_text(lang, "moon_energy.first_quarter.3", "Make action plans"),
+            get_text(lang, "moon_energy.first_quarter.4", "Take strong steps")
+        ],
+        'full': [
+            get_text(lang, "moon_energy.full.1", "Time for completion and celebration"),
+            get_text(lang, "moon_energy.full.2", "Evaluate your achievements"),
+            get_text(lang, "moon_energy.full.3", "Share with loved ones"),
+            get_text(lang, "moon_energy.full.4", "Feel the mystical energies")
+        ],
+        'waning': [
+            get_text(lang, "moon_energy.waning.1", "Time for letting go and cleansing"),
+            get_text(lang, "moon_energy.waning.2", "Release old habits"),
+            get_text(lang, "moon_energy.waning.3", "Clear negative energies"),
+            get_text(lang, "moon_energy.waning.4", "Find your inner peace")
+        ],
+        'last_quarter': [
+            get_text(lang, "moon_energy.last_quarter.1", "Time for evaluation and learning"),
+            get_text(lang, "moon_energy.last_quarter.2", "Analyze the past"),
+            get_text(lang, "moon_energy.last_quarter.3", "Learn your lessons"),
+            get_text(lang, "moon_energy.last_quarter.4", "Prepare for the future")
+        ]
+    }
     
     return advice_map.get(energy, [get_text(lang, "messages.moon_energy_advice")])
 
@@ -2305,117 +2265,51 @@ async def get_referral_link_callback(update: Update, context: CallbackContext):
     bot_info = await context.bot.get_me()
     referral_link = f"https://t.me/{bot_info.username}?start={user_id_str}"
     
-    # Çoklu dil desteği
-    if lang == 'tr':
-        message = f"""🌟 **FAL GRAM REFERANS SİSTEMİ** 🌟
-━━━━━━━━━━━━━━━━━━━━━━
-
-👤 **Statünüz:** {vip_status}
-
-📊 **İstatistikleriniz:**
-👥 Toplam Davet: **{referred_count}** kişi
-🎁 Bonus Fal Hakkı: **{bonus_readings}** adet
-💰 Toplam Kazanç: **{referral_earnings}** fal
-
-📈 **İlerleme Çubuğu ({progress}/5):**
-{progress_bar} **{referred_count}**/{next_milestone}
-
-🏆 **Ödül Sistemi:**
-• 1 Davet = 1 Ücretsiz Fal ✨
-• 5 Davet = 3 Bonus Fal + Özel Rozetler 🏅
-• 10 Davet = VIP Statü + Sınırsız Günlük Kart 👑
-• 25 Davet = Elit Üye + Öncelikli Destek 🌟
-• 50 Davet = Premium Falcı Erişimi 💎
-
-🎯 **Hedefleriniz:**
-• Günlük: {daily_goal} davet
-• Haftalık: {weekly_goal} davet
-
-🔗 **Özel Referans Linkiniz:**
-```
-{referral_link}
-```
-
-📤 **Hızlı Paylaş:**"""
-    elif lang == 'en':
-        message = f"""🌟 **FAL GRAM REFERRAL SYSTEM** 🌟
-━━━━━━━━━━━━━━━━━━━━━━
-
-👤 **Your Status:** {vip_status}
-
-📊 **Your Statistics:**
-👥 Total Invites: **{referred_count}** people
-🎁 Bonus Readings: **{bonus_readings}** readings
-💰 Total Earnings: **{referral_earnings}** readings
-
-📈 **Progress Bar ({progress}/5):**
-{progress_bar} **{referred_count}**/{next_milestone}
-
-🏆 **Reward System:**
-• 1 Invite = 1 Free Reading ✨
-• 5 Invites = 3 Bonus Readings + Special Badges 🏅
-• 10 Invites = VIP Status + Unlimited Daily Cards 👑
-• 25 Invites = Elite Member + Priority Support 🌟
-• 50 Invites = Premium Fortune Teller Access 💎
-
-🎯 **Your Goals:**
-• Daily: {daily_goal} invite
-• Weekly: {weekly_goal} invites
-
-🔗 **Your Special Referral Link:**
-```
-{referral_link}
-```
-
-📤 **Quick Share:**"""
-    else:
-        # Diğer diller için varsayılan Türkçe
-        message = f"""🌟 **FAL GRAM REFERANS SİSTEMİ** 🌟
-━━━━━━━━━━━━━━━━━━━━━━
-
-👤 **Statünüz:** {vip_status}
-
-📊 **İstatistikleriniz:**
-👥 Toplam Davet: **{referred_count}** kişi
-🎁 Bonus Fal Hakkı: **{bonus_readings}** adet
-💰 Toplam Kazanç: **{referral_earnings}** fal
-
-📈 **İlerleme Çubuğu ({progress}/5):**
-{progress_bar} **{referred_count}**/{next_milestone}
-
-🏆 **Ödül Sistemi:**
-• 1 Davet = 1 Ücretsiz Fal ✨
-• 5 Davet = 3 Bonus Fal + Özel Rozetler 🏅
-• 10 Davet = VIP Statü + Sınırsız Günlük Kart 👑
-• 25 Davet = Elit Üye + Öncelikli Destek 🌟
-• 50 Davet = Premium Falcı Erişimi 💎
-
-🎯 **Hedefleriniz:**
-• Günlük: {daily_goal} davet
-• Haftalık: {weekly_goal} davet
-
-🔗 **Özel Referans Linkiniz:**
-```
-{referral_link}
-```
-
-📤 **Hızlı Paylaş:**"""
+    # Use locale system for referral stats message
+    message = get_text(lang, "referral_system.title", "🌟 **FAL GRAM REFERRAL SYSTEM** 🌟") + "\n" + \
+              get_text(lang, "referral_system.separator", "━━━━━━━━━━━━━━━━━━━━━━") + "\n\n" + \
+              get_text(lang, "referral_system.status", "👤 **Your Status:**") + f" {vip_status}\n\n" + \
+              get_text(lang, "referral_system.statistics_title", "📊 **Your Statistics:**") + "\n" + \
+              get_text(lang, "referral_system.total_invites", "👥 Total Invites:") + f" **{referred_count}** " + \
+              get_text(lang, "referral_system.people", "people") + "\n" + \
+              get_text(lang, "referral_system.bonus_readings", "🎁 Bonus Readings:") + f" **{bonus_readings}** " + \
+              get_text(lang, "referral_system.readings", "readings") + "\n" + \
+              get_text(lang, "referral_system.total_earnings", "💰 Total Earnings:") + f" **{referral_earnings}** " + \
+              get_text(lang, "referral_system.readings", "readings") + "\n\n" + \
+              get_text(lang, "referral_system.progress_bar", "📈 **Progress Bar ({progress}/5):**") + "\n" + \
+              f"{progress_bar} **{referred_count}**/{next_milestone}\n\n" + \
+              get_text(lang, "referral_system.reward_system", "🏆 **Reward System:**") + "\n" + \
+              get_text(lang, "referral_system.reward_1", "• 1 Invite = 1 Free Reading ✨") + "\n" + \
+              get_text(lang, "referral_system.reward_5", "• 5 Invites = 3 Bonus Readings + Special Badges 🏅") + "\n" + \
+              get_text(lang, "referral_system.reward_10", "• 10 Invites = VIP Status + Unlimited Daily Cards 👑") + "\n" + \
+              get_text(lang, "referral_system.reward_25", "• 25 Invites = Elite Member + Priority Support 🌟") + "\n" + \
+              get_text(lang, "referral_system.reward_50", "• 50 Invites = Premium Fortune Teller Access 💎") + "\n\n" + \
+              get_text(lang, "referral_system.goals_title", "🎯 **Your Goals:**") + "\n" + \
+              get_text(lang, "referral_system.daily_goal", "• Daily:") + f" {daily_goal} " + \
+              get_text(lang, "referral_system.invite", "invite") + "\n" + \
+              get_text(lang, "referral_system.weekly_goal", "• Weekly:") + f" {weekly_goal} " + \
+              get_text(lang, "referral_system.invites", "invites") + "\n\n" + \
+              get_text(lang, "referral_system.link_title", "🔗 **Your Special Referral Link:**") + "\n" + \
+              f"```\n{referral_link}\n```\n\n" + \
+              get_text(lang, "referral_system.quick_share", "📤 **Quick Share:**")
     
     # Gelişmiş butonlar
     keyboard = InlineKeyboardMarkup([
         [
-            InlineKeyboardButton("📱 WhatsApp'ta Paylaş", url=f"https://api.whatsapp.com/send?text=🔮 Fal Gram'da ücretsiz fal bak! {referral_link}"),
-            InlineKeyboardButton("📲 Telegram'da Paylaş", url=f"https://t.me/share/url?url={referral_link}&text=🔮 Fal Gram'da ücretsiz fal bak!")
+            InlineKeyboardButton(get_text(lang, "referral_system.share_whatsapp", "📱 Share on WhatsApp"), 
+                               url=f"https://api.whatsapp.com/send?text=🔮 {get_text(lang, 'referral_system.share_text', 'Fal Gram\'da ücretsiz fal bak!')} {referral_link}"),
+            InlineKeyboardButton(get_text(lang, "referral_system.share_telegram", "📲 Share on Telegram"), 
+                               url=f"https://t.me/share/url?url={referral_link}&text=🔮 {get_text(lang, 'referral_system.share_text', 'Fal Gram\'da ücretsiz fal bak!')}")
         ],
         [
-            InlineKeyboardButton("📊 Detaylı İstatistik", callback_data="referral_stats"),
-            InlineKeyboardButton("🎁 Ödüllerim", callback_data="my_rewards")
+            InlineKeyboardButton(get_text(lang, "referral_system.detailed_stats", "📊 Detailed Statistics"), callback_data="referral_stats"),
+            InlineKeyboardButton(get_text(lang, "referral_system.my_rewards", "🎁 My Rewards"), callback_data="my_rewards")
         ],
         [
-            InlineKeyboardButton("📋 Linki Kopyala", callback_data=f"copy_link_{user_id_str}"),
-            InlineKeyboardButton("🔄 Yenile", callback_data="get_referral_link")
+            InlineKeyboardButton(get_text(lang, "referral_system.copy_link", "📋 Copy Link"), callback_data=f"copy_link_{user_id_str}"),
+            InlineKeyboardButton(get_text(lang, "referral_system.refresh", "🔄 Refresh"), callback_data="get_referral_link")
         ],
-        [InlineKeyboardButton("🏠 Ana Menü", callback_data="main_menu")]
+        [InlineKeyboardButton(get_text(lang, "main_menu_button", "🏠 Main Menu"), callback_data="main_menu")]
     ])
     
     await query.edit_message_text(message, reply_markup=keyboard, parse_mode='Markdown')
@@ -2513,33 +2407,29 @@ async def my_rewards(update: Update, context: CallbackContext):
         special_perks.append("• 👨‍💼 Kişisel fal danışmanı")
         special_perks.append("• 📞 7/24 öncelikli destek")
     
-    rewards_message = f"""🎁 **ÖDÜL KOLEKSİYONUNUZ** 🎁
-━━━━━━━━━━━━━━━━━━━━━━
-
-💰 **Aktif Bakiyeniz:**
-• Kullanılabilir Fal: **{bonus_readings}** adet
-• Toplam Değer: **{bonus_readings * 250}** ⭐
-
-🏅 **Kazanılan Rozetler:**
-{chr(10).join(badges) if badges else "• Henüz rozet kazanılmadı"}
-
-✨ **Özel Yetkileriniz:**
-{chr(10).join(special_perks) if special_perks else "• Daha fazla davet yaparak özel yetkilere erişin"}
-
-🎯 **Sonraki Ödüller:**
-{f"• {5-referred_count} davet daha → 🏅 Topluluk Kurucusu" if referred_count < 5 else ""}
-{f"• {10-referred_count} davet daha → 👑 VIP Statü" if referred_count < 10 else ""}
-{f"• {25-referred_count} davet daha → 💎 Elit Üyelik" if referred_count < 25 else ""}
-{f"• {50-referred_count} davet daha → 🏆 Referans Ustası" if referred_count < 50 else ""}
-
-🔮 **Özel Teklifler:**
-• 🌟 Bu hafta 3+ davet → Ekstra 2 bonus fal
-• 💎 Bu ay 10+ davet → Özel tarot okuma seansı
-• 👑 Premium üyelik %50 indirim (VIP'ler için)"""
+    rewards_message = get_text(lang, "rewards.title", "🎁 **YOUR REWARD COLLECTION** 🎁") + "\n" + \
+                     get_text(lang, "rewards.separator", "━━━━━━━━━━━━━━━━━━━━━━") + "\n\n" + \
+                     get_text(lang, "rewards.active_balance", "💰 **Active Balance:**") + "\n" + \
+                     get_text(lang, "rewards.available_readings", "• Available Readings:") + f" **{bonus_readings}** " + \
+                     get_text(lang, "rewards.readings", "readings") + "\n" + \
+                     get_text(lang, "rewards.total_value", "• Total Value:") + f" **{bonus_readings * 250}** ⭐\n\n" + \
+                     get_text(lang, "rewards.earned_badges", "🏅 **Earned Badges:**") + "\n" + \
+                     (chr(10).join(badges) if badges else get_text(lang, "rewards.no_badges", "• No badges earned yet")) + "\n\n" + \
+                     get_text(lang, "rewards.special_perks", "✨ **Your Special Perks:**") + "\n" + \
+                     (chr(10).join(special_perks) if special_perks else get_text(lang, "rewards.no_perks", "• Invite more people to unlock special perks")) + "\n\n" + \
+                     get_text(lang, "rewards.next_rewards", "🎯 **Next Rewards:**") + "\n" + \
+                     (f"• {5-referred_count} " + get_text(lang, "rewards.more_invites", "more invites") + " → 🏅 " + get_text(lang, "rewards.community_founder", "Community Founder") if referred_count < 5 else "") + "\n" + \
+                     (f"• {10-referred_count} " + get_text(lang, "rewards.more_invites", "more invites") + " → 👑 " + get_text(lang, "rewards.vip_status", "VIP Status") if referred_count < 10 else "") + "\n" + \
+                     (f"• {25-referred_count} " + get_text(lang, "rewards.more_invites", "more invites") + " → 💎 " + get_text(lang, "rewards.elite_membership", "Elite Membership") if referred_count < 25 else "") + "\n" + \
+                     (f"• {50-referred_count} " + get_text(lang, "rewards.more_invites", "more invites") + " → 🏆 " + get_text(lang, "rewards.referral_master", "Referral Master") if referred_count < 50 else "") + "\n\n" + \
+                     get_text(lang, "rewards.special_offers", "🔮 **Special Offers:**") + "\n" + \
+                     get_text(lang, "rewards.offer_1", "• 🌟 3+ invites this week → Extra 2 bonus readings") + "\n" + \
+                     get_text(lang, "rewards.offer_2", "• 💎 10+ invites this month → Special tarot reading session") + "\n" + \
+                     get_text(lang, "rewards.offer_3", "• 👑 Premium membership 50% discount (for VIPs)")
 
     keyboard = InlineKeyboardMarkup([
-        [InlineKeyboardButton("💰 Bonus Falları Kullan", callback_data="use_bonus_readings")],
-        [InlineKeyboardButton("🔙 Referans Paneli", callback_data="get_referral_link")]
+        [InlineKeyboardButton(get_text(lang, "rewards.use_bonus_readings", "💰 Use Bonus Readings"), callback_data="use_bonus_readings")],
+        [InlineKeyboardButton(get_text(lang, "rewards.back_to_referral", "🔙 Referral Panel"), callback_data="get_referral_link")]
     ])
     
     await query.edit_message_text(rewards_message, reply_markup=keyboard, parse_mode='Markdown')
@@ -2655,21 +2545,18 @@ async def successful_payment_callback(update: Update, context: CallbackContext):
             # Log the premium subscription
             supabase_manager.add_log(f"Premium subscription activated: User {user_id}, Plan {plan_id}")
             
-            success_message = f"""🎉 **Premium Abonelik Aktif!** 🎉
-
-✨ **{plan['name'] if lang == 'tr' else plan['name_en']}** planına başarıyla abone oldunuz!
-
-📅 **Süre:** 30 gün
-💎 **Özellikler:**
-"""
-            if lang == 'tr':
-                for feature in plan['features']:
-                    success_message += f"• {feature}\n"
-            else:
-                for feature in plan['features_en']:
-                    success_message += f"• {feature}\n"
+            plan_name = plan.get('name' if lang == 'tr' else 'name_en', get_text(lang, "premium.unknown_plan", "Unknown Plan"))
+            features = plan.get('features' if lang == 'tr' else 'features_en', [])
             
-            success_message += "\n🌟 Artık tüm premium özelliklere erişiminiz var!"
+            success_message = get_text(lang, "premium.subscription_active", "🎉 **Premium Subscription Active!** 🎉") + "\n\n" + \
+                            get_text(lang, "premium.subscription_success", "✨ **{plan_name}** planına başarıyla abone oldunuz!").format(plan_name=plan_name) + "\n\n" + \
+                            get_text(lang, "premium.duration", "📅 **Duration:**") + " " + get_text(lang, "premium.duration_value", "30 days") + "\n" + \
+                            get_text(lang, "premium.features", "💎 **Features:**") + "\n"
+            
+            for feature in features:
+                success_message += f"• {feature}\n"
+            
+            success_message += "\n" + get_text(lang, "premium.access_granted", "🌟 Artık tüm premium özelliklere erişiminiz var!")
             
             await update.message.reply_text(success_message, parse_mode='Markdown')
         else:
@@ -3223,26 +3110,13 @@ async def admin_premium_management(update: Update, context: CallbackContext):
     total_premium = len(premium_users)
     active_subscriptions = len([u for u in premium_users if u.get('premium_expires_at') and u['premium_expires_at'] > datetime.now().isoformat()])
     
-    if lang == 'tr':
-        message = f"""💎 **PREMIUM YÖNETİM PANELİ** 💎
-━━━━━━━━━━━━━━━━━━━━━━
-
-📊 **İstatistikler:**
-• Toplam Premium Kullanıcı: **{total_premium}**
-• Aktif Abonelikler: **{active_subscriptions}**
-
-🎯 **Yönetim Seçenekleri:**
-━━━━━━━━━━━━━━━━━━━━━━"""
-    else:
-        message = f"""💎 **PREMIUM MANAGEMENT PANEL** 💎
-━━━━━━━━━━━━━━━━━━━━━━
-
-📊 **Statistics:**
-• Total Premium Users: **{total_premium}**
-• Active Subscriptions: **{active_subscriptions}**
-
-🎯 **Management Options:**
-━━━━━━━━━━━━━━━━━━━━━━"""
+    message = get_text(lang, "admin_premium.title", "💎 **PREMIUM MANAGEMENT PANEL** 💎") + "\n" + \
+              get_text(lang, "admin_premium.separator", "━━━━━━━━━━━━━━━━━━━━━━") + "\n\n" + \
+              get_text(lang, "admin_premium.statistics", "📊 **Statistics:**") + "\n" + \
+              get_text(lang, "admin_premium.total_premium_users", "• Total Premium Users:") + f" **{total_premium}**\n" + \
+              get_text(lang, "admin_premium.active_subscriptions", "• Active Subscriptions:") + f" **{active_subscriptions}**\n\n" + \
+              get_text(lang, "admin_premium.management_options", "🎯 **Management Options:**") + "\n" + \
+              get_text(lang, "admin_premium.separator", "━━━━━━━━━━━━━━━━━━━━━━")
     
     keyboard = InlineKeyboardMarkup([
         [InlineKeyboardButton(get_text(lang, "premium_users"), callback_data="admin_premium_users")],
@@ -3271,31 +3145,31 @@ async def admin_premium_users(update: Update, context: CallbackContext):
     
     for i, user in enumerate(premium_users[:20], 1):  # İlk 20 kullanıcı
         plan = PREMIUM_PLANS.get(user.get('premium_plan', 'free'), {})
-        plan_name = plan.get('name' if lang == 'tr' else 'name_en', 'Bilinmiyor')
-        expires_at = user.get('premium_expires_at', 'Süresiz')
+        plan_name = plan.get('name' if lang == 'tr' else 'name_en', get_text(lang, "admin_premium.unknown_plan", "Unknown"))
+        expires_at = user.get('premium_expires_at', get_text(lang, "admin_premium.unlimited", "Unlimited"))
         
-        if expires_at and expires_at != 'Süresiz':
+        if expires_at and expires_at != get_text(lang, "admin_premium.unlimited", "Unlimited"):
             try:
                 expires_date = datetime.fromisoformat(expires_at.replace('Z', '+00:00'))
                 expires_str = expires_date.strftime('%d.%m.%Y')
-                status = "✅ Aktif" if expires_date > datetime.now() else "❌ Süresi Dolmuş"
+                status = get_text(lang, "admin_premium.status_active", "✅ Active") if expires_date > datetime.now() else get_text(lang, "admin_premium.status_expired", "❌ Expired")
             except:
                 expires_str = expires_at
-                status = "❓ Belirsiz"
+                status = get_text(lang, "admin_premium.status_unknown", "❓ Unknown")
         else:
-            expires_str = "Süresiz" if lang == 'tr' else "Unlimited"
-            status = "✅ Aktif"
+            expires_str = get_text(lang, "admin_premium.unlimited", "Unlimited")
+            status = get_text(lang, "admin_premium.status_active", "✅ Active")
         
-        message += f"**{i}.** {user.get('first_name', 'İsimsiz')} (@{user.get('username', 'kullanıcı')})\n"
-        message += f"   📋 Plan: {plan_name}\n"
-        message += f"   📅 Bitiş: {expires_str}\n"
-        message += f"   🎯 Durum: {status}\n\n"
+        message += f"**{i}.** {user.get('first_name', get_text(lang, 'admin_premium.unnamed', 'Unnamed'))} (@{user.get('username', get_text(lang, 'admin_premium.user', 'user'))})\n"
+        message += f"   📋 {get_text(lang, 'admin_premium.plan', 'Plan')}: {plan_name}\n"
+        message += f"   📅 {get_text(lang, 'admin_premium.expires', 'Expires')}: {expires_str}\n"
+        message += f"   🎯 {get_text(lang, 'admin_premium.status', 'Status')}: {status}\n\n"
     
     if len(premium_users) > 20:
-        message += f"... ve {len(premium_users) - 20} kullanıcı daha" if lang == 'tr' else f"... and {len(premium_users) - 20} more users"
+        message += get_text(lang, "admin_premium.more_users", "... and {count} more users").format(count=len(premium_users) - 20)
     
     keyboard = InlineKeyboardMarkup([
-        [InlineKeyboardButton("🔍 Detaylı Arama", callback_data="admin_premium_search")],
+        [InlineKeyboardButton(get_text(lang, "admin_premium.detailed_search", "🔍 Detailed Search"), callback_data="admin_premium_search")],
         [InlineKeyboardButton(get_text(lang, "back_to_premium"), callback_data="admin_premium")]
     ])
     
@@ -3665,15 +3539,17 @@ async def premium_buy_callback(update: Update, context: CallbackContext):
     transaction_id = f"premium_{plan_id}_{query.from_user.id}_{int(time.time())}"
     
     try:
+        plan_name = plan.get('name' if lang == 'tr' else 'name_en', get_text(lang, "premium.unknown_plan", "Unknown Plan"))
+        
         # Create invoice for Telegram Stars payment (using same pattern as individual payments)
         await context.bot.send_invoice(
             chat_id=query.from_user.id,
-            title=f"{plan['name'] if lang == 'tr' else plan['name_en']} - Fal Gram",
-            description=f"Premium plan subscription for 1 month" if lang == 'tr' else f"Premium plan subscription for 1 month",
+            title=f"{plan_name} - Fal Gram",
+            description=get_text(lang, "premium.subscription_description", "Premium plan subscription for 1 month"),
             payload=transaction_id,
             provider_token=PAYMENT_PROVIDER_TOKEN,
             currency="XTR",
-            prices=[LabeledPrice(f"{plan['name'] if lang == 'tr' else plan['name_en']}", plan['price_stars'])],
+            prices=[LabeledPrice(plan_name, plan['price_stars'])],
             start_parameter=f"premium_{plan_id}"
         )
         
@@ -3682,7 +3558,7 @@ async def premium_buy_callback(update: Update, context: CallbackContext):
         
     except Exception as e:
         logger.error(f"Error creating premium invoice: {e}")
-        error_message = "Ödeme oluşturulurken hata oluştu." if lang == 'tr' else "Error creating payment."
+        error_message = get_text(lang, "premium.payment_error", "Error creating payment.")
         await query.edit_message_text(error_message)
         supabase_manager.add_log(f"Premium payment error: {e}")
 
@@ -4231,51 +4107,34 @@ async def advanced_moon_calendar(update: Update, context: CallbackContext):
             'name': future_moon['name'] if lang == 'tr' else future_moon['name_en']
         })
     
-    if lang == 'tr':
-        message = f"""🌙 **GELİŞMİŞ AY TAKVİMİ** 🌙
-━━━━━━━━━━━━━━━━━━━━━━
-
-📅 **Bugün:** {today.strftime('%d.%m.%Y')}
-🌙 **Ay Fazı:** {moon_phase} {moon_name}
-
-✨ **Günün Enerjisi:**
-{energy_advice[0] if energy_advice else 'Ay enerjisi ile uyum halinde olun'}
-
-🔮 **Öneriler:**"""
-        for advice in energy_advice[1:4] if len(energy_advice) > 1 else ['Meditasyon yapın', 'İç sesinizi dinleyin']:
-            message += f"\n• {advice}"
-        
-        message += "\n\n📊 **Gelecek 7 Gün:**\n"
-        for phase_data in future_phases:
-            message += f"{phase_data['date']}: {phase_data['phase']} {phase_data['name']}\n"
-        
-        message += "\n━━━━━━━━━━━━━━━━━━━━━━"
-    else:
-        message = f"""🌙 **ADVANCED MOON CALENDAR** 🌙
-━━━━━━━━━━━━━━━━━━━━━━
-
-📅 **Today:** {today.strftime('%d.%m.%Y')}
-🌙 **Moon Phase:** {moon_phase} {moon_name}
-
-✨ **Today's Energy:**
-{energy_advice[0] if energy_advice else 'Be in harmony with moon energy'}
-
-🔮 **Recommendations:**"""
-        for advice in energy_advice[1:4] if len(energy_advice) > 1 else ['Practice meditation', 'Listen to your inner voice']:
-            message += f"\n• {advice}"
-        
-        message += "\n\n📊 **Next 7 Days:**\n"
-        for phase_data in future_phases:
-            message += f"{phase_data['date']}: {phase_data['phase']} {phase_data['name']}\n"
-        
-        message += "\n━━━━━━━━━━━━━━━━━━━━━━"
+    message = get_text(lang, "moon_calendar.title", "🌙 **ADVANCED MOON CALENDAR** 🌙") + "\n" + \
+              get_text(lang, "moon_calendar.separator", "━━━━━━━━━━━━━━━━━━━━━━") + "\n\n" + \
+              get_text(lang, "moon_calendar.today", "📅 **Today:**") + f" {today.strftime('%d.%m.%Y')}\n" + \
+              get_text(lang, "moon_calendar.moon_phase", "🌙 **Moon Phase:**") + f" {moon_phase} {moon_name}\n\n" + \
+              get_text(lang, "moon_calendar.todays_energy", "✨ **Today's Energy:**") + "\n" + \
+              f"{energy_advice[0] if energy_advice else get_text(lang, 'moon_calendar.default_energy', 'Be in harmony with moon energy')}\n\n" + \
+              get_text(lang, "moon_calendar.recommendations", "🔮 **Recommendations:**")
+    
+    default_advice = [
+        get_text(lang, "moon_calendar.advice_meditation", "Practice meditation"),
+        get_text(lang, "moon_calendar.advice_inner_voice", "Listen to your inner voice")
+    ]
+    
+    for advice in energy_advice[1:4] if len(energy_advice) > 1 else default_advice:
+        message += f"\n• {advice}"
+    
+    message += "\n\n" + get_text(lang, "moon_calendar.next_7_days", "📊 **Next 7 Days:**") + "\n"
+    for phase_data in future_phases:
+        message += f"{phase_data['date']}: {phase_data['phase']} {phase_data['name']}\n"
+    
+    message += "\n" + get_text(lang, "moon_calendar.separator", "━━━━━━━━━━━━━━━━━━━━━━")
     
     keyboard = InlineKeyboardMarkup([
-        [InlineKeyboardButton("🔔 Ay Bildirimleri" if lang == 'tr' else "🔔 Moon Notifications", 
+        [InlineKeyboardButton(get_text(lang, "moon_calendar.notifications", "🔔 Moon Notifications"), 
                             callback_data="moon_notifications_setup")],
-        [InlineKeyboardButton("📱 Kişisel Ay Analizi" if lang == 'tr' else "📱 Personal Moon Analysis", 
+        [InlineKeyboardButton(get_text(lang, "moon_calendar.personal_analysis", "📱 Personal Moon Analysis"), 
                             callback_data="personal_moon_analysis")],
-        [InlineKeyboardButton("🔙 Astroloji", callback_data="select_astrology")]
+        [InlineKeyboardButton(get_text(lang, "moon_calendar.back_to_astrology", "🔙 Astrology"), callback_data="select_astrology")]
     ])
     
     await query.edit_message_text(message, reply_markup=keyboard, parse_mode='Markdown')
@@ -4287,47 +4146,25 @@ async def moon_notifications_setup(update: Update, context: CallbackContext):
     
     lang = get_user_lang(query.from_user.id)
     
-    if lang == 'tr':
-        message = """🔔 **AY BİLDİRİMLERİ** 🔔
-━━━━━━━━━━━━━━━━━━━━━━
-
-Ay fazları hakkında bildirim almak için:
-
-🌑 **Yeni Ay Bildirimleri**
-Yeni başlangıçlar için enerji
-
-🌕 **Dolunay Bildirimleri** 
-Tamamlanma ve kutlama zamanı
-
-🌓 **İlk/Son Dördün Bildirimleri**
-Karar alma ve değerlendirme
-
-🔔 **Bildirimleri Aç/Kapat**"""
-    else:
-        message = """🔔 **MOON NOTIFICATIONS** 🔔
-━━━━━━━━━━━━━━━━━━━━━━
-
-Get notifications about moon phases:
-
-🌑 **New Moon Notifications**
-Energy for new beginnings
-
-🌕 **Full Moon Notifications**
-Time for completion and celebration
-
-🌓 **First/Last Quarter Notifications**
-Decision making and evaluation
-
-🔔 **Turn Notifications On/Off**"""
+    message = get_text(lang, "moon_notifications.title", "🔔 **MOON NOTIFICATIONS** 🔔") + "\n" + \
+              get_text(lang, "moon_notifications.separator", "━━━━━━━━━━━━━━━━━━━━━━") + "\n\n" + \
+              get_text(lang, "moon_notifications.description", "Get notifications about moon phases:") + "\n\n" + \
+              get_text(lang, "moon_notifications.new_moon", "🌑 **New Moon Notifications**") + "\n" + \
+              get_text(lang, "moon_notifications.new_moon_desc", "Energy for new beginnings") + "\n\n" + \
+              get_text(lang, "moon_notifications.full_moon", "🌕 **Full Moon Notifications**") + "\n" + \
+              get_text(lang, "moon_notifications.full_moon_desc", "Time for completion and celebration") + "\n\n" + \
+              get_text(lang, "moon_notifications.quarters", "🌓 **First/Last Quarter Notifications**") + "\n" + \
+              get_text(lang, "moon_notifications.quarters_desc", "Decision making and evaluation") + "\n\n" + \
+              get_text(lang, "moon_notifications.toggle", "🔔 **Turn Notifications On/Off**")
     
     keyboard = InlineKeyboardMarkup([
-        [InlineKeyboardButton("🌑 Yeni Ay" if lang == 'tr' else "🌑 New Moon", 
+        [InlineKeyboardButton(get_text(lang, "moon_notifications.new_moon_button", "🌑 New Moon"), 
                             callback_data="moon_notify_new")],
-        [InlineKeyboardButton("🌕 Dolunay" if lang == 'tr' else "🌕 Full Moon", 
+        [InlineKeyboardButton(get_text(lang, "moon_notifications.full_moon_button", "🌕 Full Moon"), 
                             callback_data="moon_notify_full")],
-        [InlineKeyboardButton("🌓 Dördünler" if lang == 'tr' else "🌓 Quarters", 
+        [InlineKeyboardButton(get_text(lang, "moon_notifications.quarters_button", "🌓 Quarters"), 
                             callback_data="moon_notify_quarters")],
-        [InlineKeyboardButton("🔙 Ay Takvimi" if lang == 'tr' else "🔙 Moon Calendar", 
+        [InlineKeyboardButton(get_text(lang, "moon_notifications.back_to_calendar", "🔙 Moon Calendar"), 
                             callback_data="advanced_moon_calendar")]
     ])
     
@@ -4349,43 +4186,22 @@ async def personal_moon_analysis(update: Update, context: CallbackContext):
     today = datetime.now()
     moon_data = calculate_moon_phase(today)
     
-    if lang == 'tr':
-        message = f"""📱 **KİŞİSEL AY ANALİZİ** 📱
-━━━━━━━━━━━━━━━━━━━━━━
-
-🌙 **Bugünkü Ay Fazı:** {moon_data['phase']} {moon_data['name']}
-
-✨ **Sizin İçin Özel Tavsiyeler:**
-
-🎯 **Hedefler:** Bu ay fazında hedeflerinizi yeniden değerlendirin
-💫 **Enerji:** Ay enerjisini kullanarak güçlenin
-🔮 **Sezgiler:** İç sesinizi dinleyin ve sezgilerinize güvenin
-🌟 **Büyüme:** Bu dönemde kişisel gelişiminize odaklanın
-
-📅 **Bu Hafta:** Ay enerjisi ile uyumlu aktiviteler yapın
-🌿 **Doğa:** Doğa ile bağlantı kurun ve ay ışığında meditasyon yapın
-
-━━━━━━━━━━━━━━━━━━━━━━"""
-    else:
-        message = f"""📱 **PERSONAL MOON ANALYSIS** 📱
-━━━━━━━━━━━━━━━━━━━━━━
-
-🌙 **Today's Moon Phase:** {moon_data['phase']} {moon_data['name_en']}
-
-✨ **Special Recommendations for You:**
-
-🎯 **Goals:** Re-evaluate your goals during this moon phase
-💫 **Energy:** Strengthen yourself using moon energy
-🔮 **Intuition:** Listen to your inner voice and trust your instincts
-🌟 **Growth:** Focus on your personal development during this period
-
-📅 **This Week:** Do activities compatible with moon energy
-🌿 **Nature:** Connect with nature and meditate in moonlight
-
-━━━━━━━━━━━━━━━━━━━━━━"""
+    moon_name = moon_data.get('name' if lang == 'tr' else 'name_en', get_text(lang, "moon_analysis.unknown_phase", "Unknown Phase"))
+    
+    message = get_text(lang, "moon_analysis.title", "📱 **PERSONAL MOON ANALYSIS** 📱") + "\n" + \
+              get_text(lang, "moon_analysis.separator", "━━━━━━━━━━━━━━━━━━━━━━") + "\n\n" + \
+              get_text(lang, "moon_analysis.todays_phase", "🌙 **Today's Moon Phase:**") + f" {moon_data['phase']} {moon_name}\n\n" + \
+              get_text(lang, "moon_analysis.special_recommendations", "✨ **Special Recommendations for You:**") + "\n\n" + \
+              get_text(lang, "moon_analysis.goals", "🎯 **Goals:**") + " " + get_text(lang, "moon_analysis.goals_desc", "Re-evaluate your goals during this moon phase") + "\n" + \
+              get_text(lang, "moon_analysis.energy", "💫 **Energy:**") + " " + get_text(lang, "moon_analysis.energy_desc", "Strengthen yourself using moon energy") + "\n" + \
+              get_text(lang, "moon_analysis.intuition", "🔮 **Intuition:**") + " " + get_text(lang, "moon_analysis.intuition_desc", "Listen to your inner voice and trust your instincts") + "\n" + \
+              get_text(lang, "moon_analysis.growth", "🌟 **Growth:**") + " " + get_text(lang, "moon_analysis.growth_desc", "Focus on your personal development during this period") + "\n\n" + \
+              get_text(lang, "moon_analysis.this_week", "📅 **This Week:**") + " " + get_text(lang, "moon_analysis.this_week_desc", "Do activities compatible with moon energy") + "\n" + \
+              get_text(lang, "moon_analysis.nature", "🌿 **Nature:**") + " " + get_text(lang, "moon_analysis.nature_desc", "Connect with nature and meditate in moonlight") + "\n\n" + \
+              get_text(lang, "moon_analysis.separator", "━━━━━━━━━━━━━━━━━━━━━━")
     
     keyboard = InlineKeyboardMarkup([
-        [InlineKeyboardButton("🔙 Ay Takvimi" if lang == 'tr' else "🔙 Moon Calendar", 
+        [InlineKeyboardButton(get_text(lang, "moon_analysis.back_to_calendar", "🔙 Moon Calendar"), 
                             callback_data="advanced_moon_calendar")]
     ])
     
