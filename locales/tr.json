@@ -394,13 +394,84 @@
             "title": "✨ **{plan_name}** ✨",
             "description_label": "📝 **Açıklama:**",
             "price_label": "💰 **Fiyat:**",
-            "monthly_label": "💵 **Aylık Abonelik:**",
+            "duration_label": "⏰ **Süre:**",
             "features_label": "🎯 **Özellikler:**"
         },
         "buttons": {
             "plan_template": "✨ {plan_name} - {price} ⭐",
             "buy": "💳 Satın Al",
             "back": "🔙 Premium Menü"
+        },
+        "plans": {
+            "free": {
+                "name": "Ücretsiz",
+                "description": "5 ücretsiz fal ile başlayın",
+                "duration": "Süresiz",
+                "price": "0 ⭐",
+                "features": [
+                    "☕ 5 ücretsiz fal (Kahve, Tarot, Rüya)",
+                    "♈ Günlük burç yorumu",
+                    "🔮 Temel astroloji özellikleri",
+                    "📱 Temel chatbot desteği",
+                    "🎁 Referral bonusları"
+                ]
+            },
+            "basic": {
+                "name": "Temel Plan",
+                "description": "Sınırsız fal ve gelişmiş özellikler",
+                "duration": "30 gün",
+                "price": "500 ⭐",
+                "features": [
+                    "♾️ Sınırsız fal (Kahve, Tarot, Rüya)",
+                    "📊 Haftalık burç raporu",
+                    "🔮 Gelişmiş astroloji analizi",
+                    "💫 Doğum haritası yorumu",
+                    "🌙 Ay takvimi özellikleri",
+                    "💬 Gelişmiş chatbot",
+                    "🎯 Kişiselleştirilmiş öneriler",
+                    "📈 Detaylı fal geçmişi",
+                    "🔔 Özel bildirimler"
+                ]
+            },
+            "premium": {
+                "name": "Premium Plan",
+                "description": "Tam astroloji paketi ve özel özellikler",
+                "duration": "30 gün",
+                "price": "1000 ⭐",
+                "features": [
+                    "✨ Temel Plan özellikleri",
+                    "📅 Aylık burç yorumu",
+                    "🪐 Gezegen geçişleri analizi",
+                    "💕 Burç uyumluluğu",
+                    "🌙 Gelişmiş ay takvimi",
+                    "📈 Detaylı astroloji raporları",
+                    "🎯 Kişiselleştirilmiş öneriler",
+                    "🔮 Özel fal türleri",
+                    "📊 Astroloji istatistikleri",
+                    "🎁 Özel içerikler",
+                    "⚡ Öncelikli destek"
+                ]
+            },
+            "vip": {
+                "name": "VIP Plan",
+                "description": "En üst düzey deneyim ve öncelikli destek",
+                "duration": "30 gün",
+                "price": "2000 ⭐",
+                "features": [
+                    "👑 Premium Plan özellikleri",
+                    "🤖 7/24 Astroloji Chatbot",
+                    "👥 Sosyal astroloji özellikleri",
+                    "🎁 Özel VIP içerikler",
+                    "⚡ Öncelikli destek",
+                    "📊 Gelişmiş analitikler",
+                    "🎯 Kişisel astroloji danışmanı",
+                    "🌟 Özel VIP fal türleri",
+                    "💎 Sınırsız özel içerik",
+                    "🎪 Özel etkinlikler",
+                    "📱 Özel VIP arayüzü",
+                    "🔮 AI destekli kişisel rehberlik"
+                ]
+            }
         }
     },
     "astrology_analysis": {

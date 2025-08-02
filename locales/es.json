@@ -469,21 +469,92 @@
     }
   },
   "premium_plans": {
-    "title": "💎 **PREMIUM SUBSCRIPTION**",
-    "subtitle": "Current Plan: **{plan_name}**",
+    "title": "💎 **SUSCRIPCIÓN PREMIUM**",
+    "subtitle": "Plan Actual: **{plan_name}**",
     "separator": "━━━━━━━━━━━━━━━━━━━━━━",
-    "description": "🌟 **More Power, Deeper Guidance!**\n\nUpgrade to our premium plan for unlimited readings, advanced astrology and personalized experience.",
+    "description": "🌟 **¡Más Poder, Guía Más Profunda!**\n\nActualiza a nuestro plan premium para lecturas ilimitadas, astrología avanzada y experiencia personalizada.",
     "plan_details": {
       "title": "✨ **{plan_name}** ✨",
-      "description_label": "📝 **Description:**",
-      "price_label": "💰 **Price:**",
-      "monthly_label": "💵 **Monthly Subscription:**",
-      "features_label": "🎯 **Features:**"
+      "description_label": "📝 **Descripción:**",
+      "price_label": "💰 **Precio:**",
+      "duration_label": "⏰ **Duración:**",
+      "features_label": "🎯 **Características:**"
     },
     "buttons": {
       "plan_template": "✨ {plan_name} - {price} ⭐",
-      "buy": "💳 Buy Now",
-      "back": "🔙 Premium Menu"
+      "buy": "💳 Comprar Ahora",
+      "back": "🔙 Menú Premium"
+    },
+    "plans": {
+      "free": {
+        "name": "Gratis",
+        "description": "Comienza con 5 lecturas gratis",
+        "duration": "Ilimitado",
+        "price": "0 ⭐",
+        "features": [
+          "☕ 5 lecturas gratis (Café, Tarot, Sueños)",
+          "♈ Horóscopo diario",
+          "🔮 Características básicas de astrología",
+          "📱 Soporte básico de chatbot",
+          "🎁 Bonos de referidos"
+        ]
+      },
+      "basic": {
+        "name": "Plan Básico",
+        "description": "Lecturas ilimitadas y características avanzadas",
+        "duration": "30 días",
+        "price": "500 ⭐",
+        "features": [
+          "♾️ Lecturas ilimitadas (Café, Tarot, Sueños)",
+          "📊 Reporte semanal de horóscopo",
+          "🔮 Análisis avanzado de astrología",
+          "💫 Interpretación de carta natal",
+          "🌙 Características de calendario lunar",
+          "💬 Chatbot avanzado",
+          "🎯 Recomendaciones personalizadas",
+          "📈 Historial detallado de lecturas",
+          "🔔 Notificaciones especiales"
+        ]
+      },
+      "premium": {
+        "name": "Plan Premium",
+        "description": "Paquete completo de astrología y características especiales",
+        "duration": "30 días",
+        "price": "1000 ⭐",
+        "features": [
+          "✨ Características del Plan Básico",
+          "📅 Horóscopo mensual",
+          "🪐 Análisis de tránsitos planetarios",
+          "💕 Compatibilidad de signos",
+          "🌙 Calendario lunar avanzado",
+          "📈 Reportes detallados de astrología",
+          "🎯 Recomendaciones personalizadas",
+          "🔮 Tipos especiales de lectura",
+          "📊 Estadísticas de astrología",
+          "🎁 Contenido exclusivo",
+          "⚡ Soporte prioritario"
+        ]
+      },
+      "vip": {
+        "name": "Plan VIP",
+        "description": "Experiencia máxima con soporte prioritario",
+        "duration": "30 días",
+        "price": "2000 ⭐",
+        "features": [
+          "👑 Características del Plan Premium",
+          "🤖 Chatbot de Astrología 24/7",
+          "👥 Características sociales de astrología",
+          "🎁 Contenido VIP exclusivo",
+          "⚡ Soporte prioritario",
+          "📊 Analíticas avanzadas",
+          "🎯 Consultor personal de astrología",
+          "🌟 Tipos especiales de lectura VIP",
+          "💎 Contenido exclusivo ilimitado",
+          "🎪 Eventos especiales",
+          "📱 Interfaz VIP especial",
+          "🔮 Guía personal con IA"
+        ]
+      }
     }
   },
   "astrology_analysis": {

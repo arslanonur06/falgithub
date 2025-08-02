@@ -94,8 +94,10 @@ PREMIUM_PLANS = {
         'name_en': 'Free',
         'price': 0,
         'price_stars': 0,
-        'description': 'Temel özelliklerle başlayın',
-        'description_en': 'Start with basic features',
+        'duration': 'Süresiz',
+        'duration_en': 'Unlimited',
+        'description': '5 ücretsiz fal ile başlayın',
+        'description_en': 'Start with 5 free readings',
         'features': [
             '☕ 5 ücretsiz fal (Kahve, Tarot, Rüya)',
             '♈ Günlük burç yorumu',
@@ -116,6 +118,8 @@ PREMIUM_PLANS = {
         'name_en': 'Basic Plan',
         'price': 500,
         'price_stars': 500,
+        'duration': '30 gün',
+        'duration_en': '30 days',
         'description': 'Sınırsız fal ve gelişmiş özellikler',
         'description_en': 'Unlimited readings and advanced features',
         'features': [
@@ -146,6 +150,8 @@ PREMIUM_PLANS = {
         'name_en': 'Premium Plan',
         'price': 1000,
         'price_stars': 1000,
+        'duration': '30 gün',
+        'duration_en': '30 days',
         'description': 'Tam astroloji paketi ve özel özellikler',
         'description_en': 'Complete astrology package and special features',
         'features': [
@@ -180,6 +186,8 @@ PREMIUM_PLANS = {
         'name_en': 'VIP Plan',
         'price': 2000,
         'price_stars': 2000,
+        'duration': '30 gün',
+        'duration_en': '30 days',
         'description': 'En üst düzey deneyim ve öncelikli destek',
         'description_en': 'Ultimate experience with priority support',
         'features': [
@@ -204,13 +212,17 @@ PREMIUM_PLANS = {
             '⚡ Priority support',
             '📊 Advanced analytics',
             '🎯 Personal astrology consultant',
-            '🌟 Exclusive VIP reading types',
+            '🌟 Special VIP reading types',
             '💎 Unlimited exclusive content',
             '🎪 Special events',
-            '📱 Exclusive VIP interface',
+            '📱 Special VIP interface',
             '🔮 AI-powered personal guidance'
         ]
     }
+}
+
+
+
 }
 
 genai.configure(api_key=GEMINI_API_KEY)
@@ -1016,20 +1028,34 @@ async def handle_callback_query(update: Update, context: CallbackContext):
         await get_referral_link_callback(update, context)
     elif query.data == 'draw_tarot':
         await draw_tarot_card(update, context)
+    elif query.data == 'dream_analysis':
+        await handle_dream_text(update, context)
     elif query.data == 'select_tarot':
         await draw_tarot_card(update, context)
-    elif query.data == 'dream_analysis':
-        await handle_dream_analysis(query, lang)
     elif query.data == 'astro_subscribe_daily':
         await toggle_daily_subscription(update, context)
     elif query.data == 'set_delivery_time':
-        await query.edit_message_text(
-            "⚙️ Delivery time setting feature coming soon!",
-            reply_markup=InlineKeyboardMarkup([
-                [InlineKeyboardButton("🔙 Back", callback_data="toggle_daily")]
-            ])
-        )
+        # Handle delivery time setting
+        await query.edit_message_text(get_text('daily_subscription.set_delivery_time_prompt', lang))
     elif query.data == 'subscription_stats':
+        # Handle subscription statistics
+        await query.edit_message_text(get_text('daily_subscription.stats_title', lang))
+    elif query.data == 'daily_feedback':
+        # Handle daily feedback
+        await query.edit_message_text(get_text('daily_subscription.feedback_prompt', lang))
+    elif query.data == 'referral_stats':
+        # Handle referral statistics
+        await query.edit_message_text(get_text('referral.stats_title', lang))
+    elif query.data == 'my_rewards':
+        # Handle my rewards
+        await query.edit_message_text(get_text('referral.my_rewards_title', lang))
+    elif query.data.startswith('copy_link_'):
+        # Handle copy link
+        link = query.data.replace('copy_link_', '')
+        await query.edit_message_text(get_text('referral.link_copied', lang).format(link=link))
+    else:
+        # Unknown callback
+        await query.edit_message_text(get_text('error.unknown_callback', lang))
         await query.edit_message_text(
             "📊 Subscription statistics feature coming soon!",
             reply_markup=InlineKeyboardMarkup([
@@ -1238,11 +1264,53 @@ async def handle_language_change(query, new_lang):
 # --- Missing Handler Functions ---
 
 async def show_premium_menu(query, lang):
-    """Show premium menu"""
+    """Show premium menu with all available plans"""
+    # Build premium menu text
+    menu_text = get_text("premium_plans.title", lang) + "\n\n"
+    menu_text += get_text("premium_plans.description", lang) + "\n\n"
+    menu_text += get_text("premium_plans.separator", lang) + "\n\n"
+    
+    # Add available plans
+    for plan_id, plan in PREMIUM_PLANS.items():
+        if plan_id == 'free':
+            continue  # Skip free plan in premium menu
+        
+        plan_name = plan.get('name', plan_id.title())
+        price = plan.get('price_stars', 0)
+        duration = plan.get('duration', '30 days')
+        
+        menu_text += f"✨ **{plan_name}** - {price} ⭐\n"
+        menu_text += f"⏰ {duration}\n"
+        menu_text += f"📝 {plan.get('description', '')}\n\n"
+    
+    # Create keyboard with plan buttons
+    keyboard = []
+    for plan_id, plan in PREMIUM_PLANS.items():
+        if plan_id == 'free':
+            continue  # Skip free plan in premium menu
+        
+        plan_name = plan.get('name', plan_id.title())
+        price = plan.get('price_stars', 0)
+        
+        keyboard.append([
+            InlineKeyboardButton(
+                f"✨ {plan_name} - {price} ⭐",
+                callback_data=f"premium_plan_{plan_id}"
+            )
+        ])
+    
+    # Add back button
+    keyboard.append([
+        InlineKeyboardButton(
+            get_text("main_menu_button", lang),
+            callback_data="main_menu"
+        )
+    ])
+    
     await safe_edit_message(
         query,
-        get_text("premium_menu_title", lang),
-        reply_markup=create_premium_menu_keyboard(lang),
+        menu_text,
+        reply_markup=InlineKeyboardMarkup(keyboard),
         parse_mode='Markdown'
     )
 
@@ -1479,10 +1547,49 @@ async def handle_compatibility_selection(query, lang):
 async def show_premium_plan_details(query, plan_name, lang):
     """Show premium plan details"""
     plan = PREMIUM_PLANS.get(plan_name, {})
+    if not plan:
+        await safe_edit_message(
+            query,
+            get_text("error.plan_not_found", lang),
+            reply_markup=create_premium_menu_keyboard(lang),
+            parse_mode='Markdown'
+        )
+        return
+    
+    # Get plan details from locale
+    plan_details = get_text(f"premium_plans.plans.{plan_name}", lang, default={})
+    
+    # Build plan description
+    plan_text = f"✨ **{plan.get('name', plan_name.title())}** ✨\n\n"
+    plan_text += f"📝 **{get_text('premium_plans.plan_details.description_label', lang)}**\n"
+    plan_text += f"{plan.get('description', '')}\n\n"
+    plan_text += f"💰 **{get_text('premium_plans.plan_details.price_label', lang)}**\n"
+    plan_text += f"{plan.get('price_stars', 0)} ⭐\n\n"
+    plan_text += f"⏰ **{get_text('premium_plans.plan_details.duration_label', lang)}**\n"
+    plan_text += f"{plan.get('duration', '30 days')}\n\n"
+    plan_text += f"🎯 **{get_text('premium_plans.plan_details.features_label', lang)}**\n"
+    
+    # Add features
+    features = plan.get('features', [])
+    for feature in features:
+        plan_text += f"• {feature}\n"
+    
+    # Create keyboard with buy button
+    keyboard = [
+        [InlineKeyboardButton(
+            get_text("premium_plans.buttons.buy", lang),
+            callback_data=f"buy_{plan_name}"
+        )],
+        [InlineKeyboardButton(
+            get_text("premium_plans.buttons.back", lang),
+            callback_data="premium_menu"
+        )]
+    ]
+    
     await safe_edit_message(
         query,
-        get_text("premium_plan_details", lang, plan=plan),
-        reply_markup=create_premium_menu_keyboard(lang),
+        plan_text,
+        reply_markup=InlineKeyboardMarkup(keyboard),
         parse_mode='Markdown'
     )
 
