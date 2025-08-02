@@ -67,6 +67,35 @@ def get_user_language(user_id: int) -> str:
     user = supabase_manager.get_user(user_id)
     return user.get('language', 'tr') if user else 'tr'
 
+def check_premium_access(user_id: int) -> dict:
+    """Check if user has premium access and return plan info"""
+    user = supabase_manager.get_user(user_id)
+    if not user:
+        return {'has_premium': False, 'plan': None, 'expires_at': None}
+    
+    premium_plan = user.get('premium_plan')
+    expires_at = user.get('premium_expires_at')
+    
+    if not premium_plan or premium_plan == 'free':
+        return {'has_premium': False, 'plan': None, 'expires_at': None}
+    
+    # Check if subscription has expired
+    if expires_at:
+        try:
+            expiry_date = datetime.fromisoformat(expires_at.replace('Z', '+00:00'))
+            if datetime.now(expiry_date.tzinfo) > expiry_date:
+                # Subscription expired, reset to free
+                supabase_manager.update_user_premium_plan(user_id, 'free')
+                return {'has_premium': False, 'plan': None, 'expires_at': None}
+        except:
+            pass
+    
+    return {
+        'has_premium': True, 
+        'plan': premium_plan, 
+        'expires_at': expires_at
+    }
+
 # --- Başlangıç Kurulumu ---
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -1004,7 +1033,7 @@ async def handle_callback_query(update: Update, context: CallbackContext):
         await show_premium_plan_details(query, plan_name, lang)
     elif query.data.startswith('buy_'):
         plan_name = query.data.replace('buy_', '')
-        await initiate_premium_purchase(query, plan_name, lang)
+        await premium_buy_plan(update, context)
     elif query.data.startswith('set_lang_'):
         new_lang = query.data.replace('set_lang_', '')
         await handle_language_change(query, new_lang)
@@ -1056,13 +1085,6 @@ async def handle_callback_query(update: Update, context: CallbackContext):
     else:
         # Unknown callback
         await query.edit_message_text(get_text('error.unknown_callback', lang))
-        await query.edit_message_text(
-            "📊 Subscription statistics feature coming soon!",
-            reply_markup=InlineKeyboardMarkup([
-                [InlineKeyboardButton("🔙 Back", callback_data="toggle_daily")]
-            ])
-        )
-    elif query.data == 'daily_feedback':
         await query.edit_message_text(
             "💬 Feedback feature coming soon!",
             reply_markup=InlineKeyboardMarkup([
@@ -1792,22 +1814,82 @@ async def pre_checkout_callback(update: Update, context: CallbackContext):
     await update.pre_checkout_query.answer(ok=True)
 
 async def successful_payment_callback(update: Update, context: CallbackContext):
-    """Successful payment callback"""
+    """Successful payment callback for Telegram Stars payments"""
     payment_info = update.message.successful_payment
     user_id = update.effective_user.id
+    lang = get_user_language(user_id)
     
-    # Handle different payment types
-    if payment_info.invoice_payload.startswith('premium_'):
-        plan_id = payment_info.invoice_payload.replace('premium_', '')
-        # Update user premium plan
-        supabase_manager.update_user_premium_plan(user_id, plan_id)
-        await update.message.reply_text("Premium subscription activated successfully!")
-    elif payment_info.invoice_payload == 'coffee_fortune':
-        await process_coffee_fortune_paid(update, context, True)
-    elif payment_info.invoice_payload == 'tarot_fortune':
-        await process_paid_tarot(update, context)
-    else:
-        await update.message.reply_text("Payment processed successfully!")
+    try:
+        # Handle different payment types
+        if payment_info.invoice_payload.startswith('premium_'):
+            # Extract plan name and user ID from payload
+            payload_parts = payment_info.invoice_payload.split('_')
+            if len(payload_parts) >= 3:
+                plan_name = payload_parts[1]  # e.g., 'basic', 'premium', 'vip'
+                user_id_from_payload = payload_parts[2]
+                
+                # Verify this is the correct user
+                if str(user_id) == user_id_from_payload:
+                    # Update user premium plan in database
+                    plan = PREMIUM_PLANS.get(plan_name)
+                    if plan:
+                        # Calculate expiration date (30 days from now)
+                        expires_at = datetime.now() + timedelta(days=30)
+                        
+                        # Update user's premium plan
+                        supabase_manager.update_user_premium_plan(
+                            user_id, 
+                            plan_name, 
+                            expires_at.isoformat()
+                        )
+                        
+                        # Log the successful payment
+                        supabase_manager.add_log(
+                            f"Premium payment successful: User {user_id} purchased {plan_name} plan for {payment_info.total_amount} XTR"
+                        )
+                        
+                        # Send success message
+                        success_message = f"""🎉 **Premium Abonelik Aktif!** 🎉
+
+✨ **Plan:** {plan['name']}
+💰 **Ödenen:** {payment_info.total_amount} ⭐
+📅 **Süre:** {plan['duration']}
+⏰ **Bitiş Tarihi:** {expires_at.strftime('%d.%m.%Y')}
+
+🎯 Artık tüm premium özelliklere erişiminiz var!
+
+🏠 Ana menüye dönmek için /start komutunu kullanın."""
+                        
+                        await update.message.reply_text(
+                            success_message,
+                            parse_mode='Markdown',
+                            reply_markup=InlineKeyboardMarkup([
+                                [InlineKeyboardButton("🏠 Ana Menü", callback_data="main_menu")],
+                                [InlineKeyboardButton("💎 Premium Özellikler", callback_data="premium_menu")]
+                            ])
+                        )
+                    else:
+                        await update.message.reply_text("❌ Geçersiz plan türü!")
+                else:
+                    await update.message.reply_text("❌ Kullanıcı kimliği doğrulanamadı!")
+            else:
+                await update.message.reply_text("❌ Geçersiz ödeme bilgisi!")
+                
+        elif payment_info.invoice_payload == 'coffee_fortune':
+            await process_coffee_fortune_paid(update, context, True)
+        elif payment_info.invoice_payload == 'tarot_fortune':
+            await process_paid_tarot(update, context)
+        else:
+            await update.message.reply_text("✅ Ödeme başarıyla işlendi!")
+            
+    except Exception as e:
+        logger.error(f"Payment processing error: {e}")
+        await update.message.reply_text(
+            "❌ Ödeme işlenirken bir hata oluştu. Lütfen destek ekibiyle iletişime geçin.",
+            reply_markup=InlineKeyboardMarkup([
+                [InlineKeyboardButton("🏠 Ana Menü", callback_data="main_menu")]
+            ])
+        )
 
 async def error_handler(update: Update, context: CallbackContext):
     """Error handler"""
@@ -2694,7 +2776,7 @@ async def admin_cancel_subscription_input(update: Update, context: CallbackConte
 
 # Missing premium purchase handlers
 async def premium_buy_plan(update: Update, context: CallbackContext):
-    """Handle premium plan purchase"""
+    """Handle premium plan purchase with Telegram Stars"""
     query = update.callback_query
     await query.answer()
     
@@ -2708,7 +2790,17 @@ async def premium_buy_plan(update: Update, context: CallbackContext):
     
     plan = PREMIUM_PLANS[plan_name]
     
-    # Create invoice
+    # Check if payment provider token is configured
+    if not PAYMENT_PROVIDER_TOKEN:
+        await query.edit_message_text(
+            "❌ Ödeme sistemi henüz yapılandırılmamış. Lütfen daha sonra tekrar deneyin.",
+            reply_markup=InlineKeyboardMarkup([
+                [InlineKeyboardButton("🔙 Premium Menü", callback_data="premium_menu")]
+            ])
+        )
+        return
+    
+    # Create invoice for Telegram Stars payment
     prices = [LabeledPrice(plan['name'], plan['price_stars'])]
     
     try:
@@ -2718,20 +2810,42 @@ async def premium_buy_plan(update: Update, context: CallbackContext):
             description=plan['description'],
             payload=f"premium_{plan_name}_{user_id}",
             provider_token=PAYMENT_PROVIDER_TOKEN,
-            currency="XTR",
-            prices=prices
+            currency="XTR",  # Telegram Stars currency
+            prices=prices,
+            start_parameter=f"premium_{plan_name}",
+            photo_url="https://t.me/your_bot_username/photo",  # Optional: Add your bot's photo
+            photo_width=512,
+            photo_height=512,
+            photo_size=512,
+            need_name=False,
+            need_phone_number=False,
+            need_email=False,
+            need_shipping_address=False,
+            send_phone_number_to_provider=False,
+            send_email_to_provider=False,
+            is_flexible=False
         )
         
         await query.edit_message_text(
             f"💳 **{plan['name']} Planı Satın Alma**\n\n"
             f"💰 Fiyat: {plan['price_stars']} ⭐\n"
-            f"📅 Süre: {plan['duration']}\n\n"
+            f"📅 Süre: {plan['duration']}\n"
+            f"📝 {plan['description']}\n\n"
             f"Ödeme sayfası açılıyor...",
-            parse_mode='Markdown'
+            parse_mode='Markdown',
+            reply_markup=InlineKeyboardMarkup([
+                [InlineKeyboardButton("🔙 Premium Menü", callback_data="premium_menu")]
+            ])
         )
         
     except Exception as e:
-        await query.edit_message_text(f"❌ Ödeme oluşturulamadı: {str(e)}")
+        logger.error(f"Payment invoice creation failed: {e}")
+        await query.edit_message_text(
+            f"❌ Ödeme oluşturulamadı: {str(e)}",
+            reply_markup=InlineKeyboardMarkup([
+                [InlineKeyboardButton("🔙 Premium Menü", callback_data="premium_menu")]
+            ])
+        )
 
 # Missing astrology handlers
 async def advanced_moon_calendar(update: Update, context: CallbackContext):
@@ -2771,10 +2885,10 @@ async def planetary_transits(update: Update, context: CallbackContext):
     await query.answer()
     
     user_id = query.from_user.id
-    user = supabase_manager.get_user(user_id)
+    premium_info = check_premium_access(user_id)
     lang = get_user_language(user_id)
     
-    if user.get('premium_plan') not in ['premium', 'vip']:
+    if not premium_info['has_premium'] or premium_info['plan'] not in ['premium', 'vip']:
         await query.edit_message_text(
             "❌ Bu özellik sadece Premium ve VIP kullanıcılar için!",
             reply_markup=InlineKeyboardMarkup([
