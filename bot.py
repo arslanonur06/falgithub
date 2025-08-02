@@ -384,6 +384,59 @@ class SupabaseManager:
         except Exception as e:
             logger.error(f"Supabase get_referral_relationships hatası: {e}")
             return []
+    
+    def get_user_referrals(self, user_id: int):
+        """Get referrals made by a specific user"""
+        try:
+            # Check if referral_relationships table exists, otherwise use users table
+            try:
+                result = self.client.table("referral_relationships").select("*").eq("referrer_id", user_id).execute()
+                return result.data
+            except:
+                # Fallback to users table
+                result = self.client.table("users").select("id, first_name, username, created_at").eq("referred_by", user_id).execute()
+                return result.data
+        except Exception as e:
+            logger.error(f"Error getting user referrals: {e}")
+            return []
+    
+    def get_user_referred_by(self, user_id: int):
+        """Get who referred a specific user"""
+        try:
+            # Check if referral_relationships table exists, otherwise use users table
+            try:
+                result = self.client.table("referral_relationships").select("*").eq("referred_id", user_id).execute()
+                return result.data[0] if result.data else None
+            except:
+                # Fallback to users table
+                user = self.get_user(user_id)
+                if user and user.get('referred_by'):
+                    return {'referrer_id': user['referred_by']}
+                return None
+        except Exception as e:
+            logger.error(f"Error getting user referred by: {e}")
+            return None
+    
+    def create_referral_relationship(self, referrer_id: int, referred_id: int):
+        """Create a new referral relationship"""
+        try:
+            # Try to use referral_relationships table if it exists
+            try:
+                referral_data = {
+                    'referrer_id': referrer_id,
+                    'referred_id': referred_id,
+                    'created_at': datetime.now().isoformat(),
+                    'status': 'active'
+                }
+                result = self.client.table("referral_relationships").insert(referral_data).execute()
+                return result.data[0] if result.data else None
+            except:
+                # Fallback: update user table
+                self.update_user(referred_id, {'referred_by': referrer_id})
+                return {'referrer_id': referrer_id, 'referred_id': referred_id}
+        except Exception as e:
+            logger.error(f"Error creating referral relationship: {e}")
+            return None
 
     # --- Loglama Fonksiyonları ---
     def add_log(self, message: str):
@@ -818,10 +871,37 @@ async def start(update: Update, context: CallbackContext):
             if referrer_user_id != user_id:
                 referrer = supabase_manager.get_user(referrer_user_id)
                 if referrer:
+                    # Update referrer's statistics
                     new_count = referrer.get('referred_count', 0) + 1
-                    new_earnings = referrer.get('referral_earnings', 0) + 50
-                    supabase_manager.update_user(referrer_user_id, {'referred_count': new_count, 'referral_earnings': new_earnings})
+                    new_free_readings = referrer.get('free_readings_earned', 0) + 1
+                    new_stars = referrer.get('stars_earned', 0) + 50
+                    
+                    supabase_manager.update_user(referrer_user_id, {
+                        'referred_count': new_count,
+                        'free_readings_earned': new_free_readings,
+                        'stars_earned': new_stars
+                    })
+                    
+                    # Create referral relationship record
+                    supabase_manager.create_referral_relationship(referrer_user_id, user_id)
+                    
+                    # Give bonus to new user
+                    supabase_manager.update_user(user_id, {
+                        'free_readings_earned': 1,  # 1 free reading for new user
+                        'stars_earned': 25  # 25 stars bonus for new user
+                    })
+                    
                     supabase_manager.add_log(f"Referral işlemi tamamlandı: {user_id_str} - Referrer: {referrer_id}")
+                    
+                    # Send notification to referrer
+                    try:
+                        await context.bot.send_message(
+                            referrer_user_id,
+                            f"🎉 Yeni bir arkadaşınız Fal Gram'a katıldı! 1 ücretsiz fal + 50 ⭐ kazandınız!"
+                        )
+                    except:
+                        pass
+                        
         except ValueError:
             supabase_manager.add_log(f"Geçersiz referrer ID: {referrer_id}")
     
@@ -980,6 +1060,8 @@ async def handle_callback_query(update: Update, context: CallbackContext):
         'select_astrology': lambda: show_astrology_menu(query, lang),
         'daily_card': lambda: handle_daily_card(query, lang),
         'referral': lambda: show_referral_info(query, lang),
+        'referral_stats': lambda: show_referral_stats(query, lang),
+        'my_rewards': lambda: show_my_rewards(query, lang),
         'premium_menu': lambda: show_premium_menu(query, lang),
         'change_language': lambda: show_language_menu(query),
         
@@ -1232,7 +1314,7 @@ async def handle_daily_card(query, lang):
     )
 
 async def show_referral_info(query, lang):
-    """Show referral information"""
+    """Show enhanced referral information"""
     user_id = query.from_user.id
     user = supabase_manager.get_user(user_id)
     
@@ -1241,13 +1323,135 @@ async def show_referral_info(query, lang):
     referral_link = f"https://t.me/{bot_username}?start={user_id}"
     referred_count = user.get('referred_count', 0)
     referral_earnings = user.get('referral_earnings', 0)
+    free_readings_earned = user.get('free_readings_earned', 0)
+    stars_earned = user.get('stars_earned', 0)
     
-    message = get_text("referral_info_message", lang, 
-                      referral_link=referral_link,
-                      referred_count=referred_count,
-                      referral_earnings=referral_earnings)
+    # Calculate rewards
+    total_rewards = free_readings_earned + stars_earned
     
-    keyboard = [[InlineKeyboardButton(get_text("main_menu_button", lang), callback_data='main_menu')]]
+    # Build enhanced referral message
+    message = get_text("referral.title", lang) + "\n\n"
+    message += get_text("referral.description", lang) + "\n\n"
+    message += get_text("referral.separator", lang) + "\n\n"
+    
+    # Add statistics
+    message += get_text("referral.stats_title", lang) + "\n"
+    message += get_text("referral.referral_link", lang) + "\n"
+    message += f"`{referral_link}`\n\n"
+    message += get_text("referral.total_referrals", lang).format(count=referred_count) + "\n"
+    message += get_text("referral.free_readings_earned", lang).format(readings=free_readings_earned) + "\n"
+    message += get_text("referral.stars_earned", lang).format(stars=stars_earned) + "\n"
+    message += get_text("referral.total_rewards", lang).format(rewards=total_rewards) + "\n\n"
+    
+    # Add how it works
+    message += get_text("referral.how_it_works", lang) + "\n"
+    for step in get_text("referral.how_it_works_steps", lang):
+        message += f"• {step}\n"
+    
+    # Create enhanced keyboard
+    keyboard = [
+        [InlineKeyboardButton(
+            get_text("referral.buttons.copy_link", lang),
+            callback_data=f"copy_link_{referral_link}"
+        )],
+        [InlineKeyboardButton(
+            get_text("referral.buttons.my_stats", lang),
+            callback_data="referral_stats"
+        )],
+        [InlineKeyboardButton(
+            get_text("referral.buttons.my_rewards", lang),
+            callback_data="my_rewards"
+        )],
+        [InlineKeyboardButton(
+            get_text("referral.buttons.back", lang),
+            callback_data="main_menu"
+        )]
+    ]
+    
+    await safe_edit_message(
+        query,
+        message,
+        reply_markup=InlineKeyboardMarkup(keyboard),
+        parse_mode='Markdown'
+    )
+
+async def show_referral_stats(query, lang):
+    """Show detailed referral statistics"""
+    user_id = query.from_user.id
+    user = supabase_manager.get_user(user_id)
+    
+    referred_count = user.get('referred_count', 0)
+    free_readings_earned = user.get('free_readings_earned', 0)
+    stars_earned = user.get('stars_earned', 0)
+    total_rewards = free_readings_earned + stars_earned
+    
+    # Get referral relationships
+    user_referrals = supabase_manager.get_user_referrals(user_id)
+    
+    message = get_text("referral.stats_title", lang) + "\n\n"
+    message += get_text("referral.total_referrals", lang).format(count=referred_count) + "\n"
+    message += get_text("referral.free_readings_earned", lang).format(readings=free_readings_earned) + "\n"
+    message += get_text("referral.stars_earned", lang).format(stars=stars_earned) + "\n"
+    message += get_text("referral.total_rewards", lang).format(rewards=total_rewards) + "\n\n"
+    
+    if user_referrals:
+        message += "👥 **Son Referidos:**\n"
+        for i, referral in enumerate(user_referrals[:5], 1):  # Show last 5
+            referred_user = supabase_manager.get_user(referral.get('referred_id'))
+            username = referred_user.get('username', f"User{referral.get('referred_id')}")
+            date = referral.get('created_at', '').split('T')[0] if referral.get('created_at') else 'Unknown'
+            message += f"{i}. @{username} - {date}\n"
+    
+    keyboard = [
+        [InlineKeyboardButton(
+            get_text("referral.buttons.my_rewards", lang),
+            callback_data="my_rewards"
+        )],
+        [InlineKeyboardButton(
+            get_text("referral.buttons.back", lang),
+            callback_data="referral"
+        )]
+    ]
+    
+    await safe_edit_message(
+        query,
+        message,
+        reply_markup=InlineKeyboardMarkup(keyboard),
+        parse_mode='Markdown'
+    )
+
+async def show_my_rewards(query, lang):
+    """Show user's earned rewards"""
+    user_id = query.from_user.id
+    user = supabase_manager.get_user(user_id)
+    
+    free_readings_earned = user.get('free_readings_earned', 0)
+    stars_earned = user.get('stars_earned', 0)
+    total_rewards = free_readings_earned + stars_earned
+    
+    message = get_text("referral.my_rewards_title", lang) + "\n\n"
+    message += get_text("referral.free_readings_earned", lang).format(readings=free_readings_earned) + "\n"
+    message += get_text("referral.stars_earned", lang).format(stars=stars_earned) + "\n"
+    message += get_text("referral.total_rewards", lang).format(rewards=total_rewards) + "\n\n"
+    
+    if free_readings_earned > 0:
+        message += "🎁 **Kullanılabilir Ödüller:**\n"
+        message += f"• {free_readings_earned} ücretsiz fal hakkı\n"
+        message += f"• {stars_earned} ⭐ bonus\n\n"
+        message += "💡 **Nasıl Kullanılır:**\n"
+        message += "• Ücretsiz fal haklarınız otomatik olarak kullanılır\n"
+        message += "• Bonus yıldızlar premium planlarda kullanılabilir\n"
+    
+    keyboard = [
+        [InlineKeyboardButton(
+            get_text("referral.buttons.my_stats", lang),
+            callback_data="referral_stats"
+        )],
+        [InlineKeyboardButton(
+            get_text("referral.buttons.back", lang),
+            callback_data="referral"
+        )]
+    ]
     
     await safe_edit_message(
         query,

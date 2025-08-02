@@ -99,6 +99,108 @@
               "👥 Recursos sociais de astrologia",
               "🎁 Conteúdo VIP exclusivo",
               "⚡ Suporte prioritário",
+              "📊 Analytics avançados",
+              "🎯 Consultor pessoal de astrologia",
+              "🌟 Tipos especiais de leitura VIP",
+              "💎 Conteúdo exclusivo ilimitado",
+              "🎪 Eventos especiais",
+              "📱 Interface VIP especial",
+              "🔮 Orientação pessoal com IA"
+            ]
+          }
+        }
+      },
+      "referral": {
+        "title": "👥 **SISTEMA DE INDICAÇÕES** 👥",
+        "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+        "description": "🎁 **Ganhe leituras gratuitas compartilhando o Fal Gram!**\n\nPara cada amigo que se cadastrar usando seu link, você ganha:\n• 1 leitura GRÁTIS\n• 50 ⭐ em bônus\n• Acesso antecipado a novos recursos",
+        "stats_title": "📊 **SUAS ESTATÍSTICAS**",
+        "my_rewards_title": "🎁 **MEUS PRÊMIOS**",
+        "link_copied": "✅ Link copiado: {link}",
+        "referral_link": "🔗 **Seu Link de Indicação:**",
+        "total_referrals": "👥 **Total de Indicações:** {count}",
+        "total_rewards": "🎁 **Total de Prêmios:** {rewards}",
+        "free_readings_earned": "📚 **Leituras Gratuitas Ganhas:** {readings}",
+        "stars_earned": "⭐ **Estrelas Ganhas:** {stars}",
+        "how_it_works": "🔧 **Como Funciona:**",
+        "how_it_works_steps": [
+          "1. Compartilhe seu link especial com amigos",
+          "2. Quando eles se cadastrarem, você ganha prêmios",
+          "3. Use seus prêmios para leituras gratuitas",
+          "4. Quanto mais amigos, mais prêmios!"
+        ],
+        "buttons": {
+          "copy_link": "📋 Copiar Link",
+          "my_stats": "📊 Minhas Estatísticas",
+          "my_rewards": "🎁 Meus Prêmios",
+          "back": "🔙 Menu Principal"
+        }
+      },
+      "daily_subscription": {
+        "title": "🌅 **ASSINATURA DE CARTA DIÁRIA** 🌅",
+        "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+        "status_label": "📱 **Seu Status Atual:**",
+        "delivery_label": "⏰ **Próxima Entrega:**",
+        "description": "🔮 **Sobre Este Recurso:**\nCom a assinatura de Carta Diária, você recebe uma carta de tarô especialmente preparada e sua interpretação todas as manhãs. Esta carta apresenta a energia do dia, oportunidades que você pode encontrar e pontos para prestar atenção de uma perspectiva mística.",
+        "features_label": "✨ **O Que Está Incluído:**",
+        "features_list": [
+          "• 🃏 Carta de tarô especial todas as manhãs às 09:00",
+          "• 📜 Interpretação atual e significado da carta",
+          "• 🎯 Conselhos práticos para o dia",
+          "• 🌟 Orientação de energia pessoal",
+          "• 💫 Conexões astrológicas e dicas"
+        ],
+        "benefits_label": "🎁 **Benefícios Especiais:**",
+        "benefits_list": [
+          "• Serviço completamente GRATUITO",
+          "• Carta e interpretação diferentes todos os dias",
+          "• Conteúdo personalizado",
+          "• Mensagens motivacionais e inspiradoras",
+          "• Capturando a energia positiva do dia"
+        ],
+        "stats_label": "📊 **Estatísticas:**",
+        "stats_list": [
+          "• 15.000+ assinantes ativos diários",
+          "• 94% de satisfação do usuário",
+          "• Avaliação média 4.8/5"
+        ],
+        "how_it_works_label": "🔧 **Como Funciona:**",
+        "how_it_works_list": [
+          "1. Ative a assinatura",
+          "2. Receba mensagem automática todas as manhãs",
+          "3. Leia sua carta e planeje seu dia",
+          "4. Aproveite a orientação mística diária"
+        ],
+        "buttons": {
+          "subscribe": "✅ Ativar Assinatura",
+          "unsubscribe": "❌ Cancelar Assinatura",
+          "back": "🔙 Menu Principal"
+        }
+      },
+      "error": {
+        "unknown_callback": "❌ Callback desconhecido",
+        "plan_not_found": "❌ Plano não encontrado",
+        "payment_failed": "❌ Falha no pagamento",
+        "api_limit": "⚠️ Limite da API excedido. Tente novamente em {time} segundos."
+      },
+      "admin": {
+        "stats_title": "📊 **ESTATÍSTICAS DO BOT**",
+        "users_title": "👥 **GERENCIAMENTO DE USUÁRIOS**",
+        "settings_title": "⚙️ **CONFIGURAÇÕES DO SISTEMA**",
+        "logs_title": "📋 **LOGS DO SISTEMA**",
+        "premium_title": "💎 **GERENCIAMENTO PREMIUM**",
+        "pdf_title": "📱 **RELATÓRIOS PDF**",
+        "buttons": {
+          "stats": "📊 Estatísticas",
+          "users": "👥 Usuários",
+          "settings": "⚙️ Configurações",
+          "logs": "📋 Logs",
+          "premium": "💎 Premium",
+          "pdf": "📱 PDF",
+          "back": "🔙 Voltar"
+        }
+      }
+              "⚡ Suporte prioritário",
               "📊 Análises avançadas",
               "🎯 Consultor pessoal de astrologia",
               "🌟 Tipos exclusivos de leitura VIP",

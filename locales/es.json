@@ -730,5 +730,95 @@
   "view_logs": "📋 Ver Registros",
   "settings": "⚙️ Configuración",
   "download_pdf": "📄 Descargar PDF",
-  "premium_management": "💎 Gestión Premium"
+  "premium_management": "💎 Gestión Premium",
+  "referral": {
+    "title": "👥 **SISTEMA DE REFERIDOS** 👥",
+    "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+    "description": "🎁 **¡Gana lecturas gratis compartiendo Fal Gram!**\n\nPor cada amigo que se registre usando tu enlace, ganas:\n• 1 lectura GRATIS\n• 50 ⭐ en bonos\n• Acceso anticipado a nuevas funciones",
+    "stats_title": "📊 **TUS ESTADÍSTICAS**",
+    "my_rewards_title": "🎁 **MIS PREMIOS**",
+    "link_copied": "✅ Enlace copiado: {link}",
+    "referral_link": "🔗 **Tu Enlace de Referido:**",
+    "total_referrals": "👥 **Total de Referidos:** {count}",
+    "total_rewards": "🎁 **Total de Premios:** {rewards}",
+    "free_readings_earned": "📚 **Lecturas Gratis Ganadas:** {readings}",
+    "stars_earned": "⭐ **Estrellas Ganadas:** {stars}",
+    "how_it_works": "🔧 **Cómo Funciona:**",
+    "how_it_works_steps": [
+      "1. Comparte tu enlace especial con amigos",
+      "2. Cuando se registren, ganas premios",
+      "3. Usa tus premios para lecturas gratis",
+      "4. ¡Cuántos más amigos, más premios!"
+    ],
+    "buttons": {
+      "copy_link": "📋 Copiar Enlace",
+      "my_stats": "📊 Mis Estadísticas",
+      "my_rewards": "🎁 Mis Premios",
+      "back": "🔙 Menú Principal"
+    }
+  },
+  "daily_subscription": {
+    "title": "🌅 **SUSCRIPCIÓN DE CARTA DIARIA** 🌅",
+    "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+    "status_label": "📱 **Tu Estado Actual:**",
+    "delivery_label": "⏰ **Próxima Entrega:**",
+    "description": "🔮 **Sobre Esta Función:**\nCon la suscripción de Carta Diaria, recibes una carta de tarot especialmente preparada y su interpretación cada mañana. Esta carta presenta la energía del día, oportunidades que puedes encontrar y puntos para prestar atención desde una perspectiva mística.",
+    "features_label": "✨ **Qué Está Incluido:**",
+    "features_list": [
+      "• 🃏 Carta de tarot especial cada mañana a las 09:00",
+      "• 📜 Interpretación actual y significado de la carta",
+      "• 🎯 Consejos prácticos para el día",
+      "• 🌟 Guía de energía personal",
+      "• 💫 Conexiones astrológicas y consejos"
+    ],
+    "benefits_label": "🎁 **Beneficios Especiales:**",
+    "benefits_list": [
+      "• Servicio completamente GRATUITO",
+      "• Carta e interpretación diferentes cada día",
+      "• Conteúdo personalizado",
+      "• Mensajes motivacionales e inspiradores",
+      "• Capturando la energía positiva del día"
+    ],
+    "stats_label": "📊 **Estadísticas:**",
+    "stats_list": [
+      "• 15.000+ suscriptores activos diarios",
+      "• 94% de satisfacción del usuario",
+      "• Calificación promedio 4.8/5"
+    ],
+    "how_it_works_label": "🔧 **Cómo Funciona:**",
+    "how_it_works_list": [
+      "1. Activa la suscripción",
+      "2. Recibe mensaje automático cada mañana",
+      "3. Lee tu carta y planea tu día",
+      "4. Disfruta la guía mística diaria"
+    ],
+    "buttons": {
+      "subscribe": "✅ Activar Suscripción",
+      "unsubscribe": "❌ Cancelar Suscripción",
+      "back": "🔙 Menú Principal"
+    }
+  },
+  "error": {
+    "unknown_callback": "❌ Callback desconocido",
+    "plan_not_found": "❌ Plan no encontrado",
+    "payment_failed": "❌ Fallo en el pago",
+    "api_limit": "⚠️ Límite de API excedido. Intenta de nuevo en {time} segundos."
+  },
+  "admin": {
+    "stats_title": "📊 **ESTADÍSTICAS DEL BOT**",
+    "users_title": "👥 **GESTIÓN DE USUARIOS**",
+    "settings_title": "⚙️ **CONFIGURACIÓN DEL SISTEMA**",
+    "logs_title": "📋 **LOGS DEL SISTEMA**",
+    "premium_title": "💎 **GESTIÓN PREMIUM**",
+    "pdf_title": "📱 **REPORTES PDF**",
+    "buttons": {
+      "stats": "📊 Estadísticas",
+      "users": "👥 Usuarios",
+      "settings": "⚙️ Configuración",
+      "logs": "📋 Logs",
+      "premium": "💎 Premium",
+      "pdf": "📱 PDF",
+      "back": "🔙 Volver"
+    }
+  }
 }
