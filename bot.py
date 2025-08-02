@@ -3,9 +3,6 @@ import json
 import random
 import io
 import logging
-import time
-import asyncio
-import requests
 from datetime import datetime, timedelta
 from collections import defaultdict
 from functools import lru_cache
