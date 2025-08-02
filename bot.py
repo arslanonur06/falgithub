@@ -3,27 +3,23 @@ import json
 import random
 import io
 import logging
+import time
+import asyncio
+import requests
 from datetime import datetime, timedelta
+from collections import defaultdict
+from functools import lru_cache
 from dotenv import load_dotenv
 import google.generativeai as genai
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, LabeledPrice
 from telegram.ext import (
-    Application, CommandHandler, MessageHandler, filters,
-    CallbackContext, CallbackQueryHandler, PreCheckoutQueryHandler, ConversationHandler
+    Application, CommandHandler, CallbackQueryHandler, MessageHandler,
+    PreCheckoutQueryHandler, filters, CallbackContext
 )
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
 from fpdf import FPDF
 from supabase import create_client, Client
-from functools import lru_cache
-import math
-import time
-import os
-import concurrent.futures
-from concurrent.futures import ThreadPoolExecutor
-import asyncio
-from datetime import datetime, timedelta
-from fpdf import FPDF
 
 async def safe_edit_message(query, text, reply_markup=None, parse_mode=None):
     """Güvenli mesaj düzenleme fonksiyonu"""
@@ -997,6 +993,89 @@ async def handle_callback_query(update: Update, context: CallbackContext):
     elif query.data.startswith('buy_'):
         plan_name = query.data.replace('buy_', '')
         await initiate_premium_purchase(query, plan_name, lang)
+    elif query.data.startswith('set_lang_'):
+        new_lang = query.data.replace('set_lang_', '')
+        await handle_language_change(query, new_lang)
+    elif query.data == 'back_to_admin':
+        await back_to_admin(update, context)
+    elif query.data == 'advanced_moon_calendar':
+        await advanced_moon_calendar(update, context)
+    elif query.data == 'planetary_transits':
+        await planetary_transits(update, context)
+    elif query.data == 'social_astrology':
+        await social_astrology(update, context)
+    elif query.data == 'chatbot_close':
+        await chatbot_close(update, context)
+    elif query.data == 'toggle_daily':
+        await toggle_daily_subscription(update, context)
+    elif query.data == 'confirm_daily_subscribe':
+        await confirm_daily_subscribe(update, context)
+    elif query.data == 'confirm_daily_unsubscribe':
+        await confirm_daily_unsubscribe(update, context)
+    elif query.data == 'get_referral_link':
+        await get_referral_link_callback(update, context)
+    elif query.data == 'draw_tarot':
+        await draw_tarot_card(update, context)
+    elif query.data == 'select_tarot':
+        await draw_tarot_card(update, context)
+    elif query.data == 'dream_analysis':
+        await handle_dream_analysis(query, lang)
+    elif query.data == 'astro_subscribe_daily':
+        await toggle_daily_subscription(update, context)
+    elif query.data == 'set_delivery_time':
+        await query.edit_message_text(
+            "⚙️ Delivery time setting feature coming soon!",
+            reply_markup=InlineKeyboardMarkup([
+                [InlineKeyboardButton("🔙 Back", callback_data="toggle_daily")]
+            ])
+        )
+    elif query.data == 'subscription_stats':
+        await query.edit_message_text(
+            "📊 Subscription statistics feature coming soon!",
+            reply_markup=InlineKeyboardMarkup([
+                [InlineKeyboardButton("🔙 Back", callback_data="toggle_daily")]
+            ])
+        )
+    elif query.data == 'daily_feedback':
+        await query.edit_message_text(
+            "💬 Feedback feature coming soon!",
+            reply_markup=InlineKeyboardMarkup([
+                [InlineKeyboardButton("🔙 Back", callback_data="toggle_daily")]
+            ])
+        )
+    elif query.data == 'referral_stats':
+        await query.edit_message_text(
+            "📊 Detailed referral statistics coming soon!",
+            reply_markup=InlineKeyboardMarkup([
+                [InlineKeyboardButton("🔙 Back", callback_data="get_referral_link")]
+            ])
+        )
+    elif query.data == 'my_rewards':
+        await query.edit_message_text(
+            "🎁 Your rewards feature coming soon!",
+            reply_markup=InlineKeyboardMarkup([
+                [InlineKeyboardButton("🔙 Back", callback_data="get_referral_link")]
+            ])
+        )
+    elif query.data.startswith('copy_link_'):
+        user_id = query.data.replace('copy_link_', '')
+        bot_info = await context.bot.get_me()
+        referral_link = f"https://t.me/{bot_info.username}?start={user_id}"
+        await query.edit_message_text(
+            f"📋 **Your Referral Link Copied!**\n\n```{referral_link}```\n\nLink copied to clipboard!",
+            reply_markup=InlineKeyboardMarkup([
+                [InlineKeyboardButton("🔙 Back", callback_data="get_referral_link")]
+            ]),
+            parse_mode='Markdown'
+        )
+    else:
+        # Unknown callback data
+        await query.edit_message_text(
+            "❌ Bilinmeyen komut!",
+            reply_markup=InlineKeyboardMarkup([
+                [InlineKeyboardButton("🏠 Ana Menü", callback_data="main_menu")]
+            ])
+        )
 
 
 # --- Handler Implementations ---
@@ -1043,6 +1122,10 @@ async def handle_tarot_fortune(query, lang):
 
 async def handle_dream_analysis(query, lang):
     """Handle dream analysis selection"""
+    # Set user state to waiting for dream
+    user_id = query.from_user.id
+    supabase_manager.update_user(user_id, {'state': 'waiting_for_dream'})
+    
     await safe_edit_message(
         query,
         get_text("dream_analysis_prompt", lang),
@@ -1539,17 +1622,19 @@ async def handle_message(update: Update, context: CallbackContext):
     lang = get_user_language(user_id)
     text = update.message.text
     
-    # Check if user is in a conversation state
-    user_data = context.user_data
+    # Get user from database to check state
+    user = supabase_manager.get_user(user_id)
+    user_state = user.get('state', 'idle') if user else 'idle'
     
-    if user_data.get('waiting_for') == 'dream_text':
-        await process_dream_text_impl(update, context, text, lang)
-    elif user_data.get('waiting_for') == 'birth_info':
-        await process_birth_info_impl(update, context, text, lang)
-    elif user_data.get('chatbot_active'):
-        await handle_chatbot_question_impl(update, context, text, lang)
-        else:
-        # Default response
+    # Handle different user states
+    if user_state == 'waiting_for_dream':
+        await handle_dream_text(update, context)
+    elif user_state == 'waiting_for_birth_info':
+        await process_birth_chart(update, context)
+    elif user_state == 'chatbot_mode':
+        await handle_chatbot_question(update, context)
+    else:
+        # Default response - show main menu
         await update.message.reply_text(
             get_text("default_message_response", lang),
             reply_markup=create_main_menu_keyboard(lang)
@@ -1655,11 +1740,1043 @@ async def process_paid_tarot(update, context):
     tarot_cards = supabase_manager.get_tarot_cards()
     card = random.choice(tarot_cards) if tarot_cards else "The Fool"
     
-        await update.message.reply_text(
+    await update.message.reply_text(
         get_text("tarot_fortune_paid", lang, card=card),
         parse_mode='Markdown'
     )
 
+# Missing functions from the previous bot.py
+async def draw_tarot_card(update: Update, context: CallbackContext):
+    """Draw tarot card and create interpretation."""
+    query = update.callback_query
+    await query.answer()
+    
+    user = await get_or_create_user(query.from_user.id, query.from_user)
+    user_id_str = str(query.from_user.id)
+    lang = get_user_lang(query.from_user.id)
+    
+    # Check rate limit
+    if not gemini_rate_limiter.can_make_request(query.from_user.id):
+        wait_time = gemini_rate_limiter.get_wait_time(query.from_user.id)
+        await query.edit_message_text(
+            f"⚠️ API rate limit exceeded. Please wait {int(wait_time)} seconds before trying again.",
+            reply_markup=get_main_menu_keyboard(query.from_user.id)
+        )
+        return
+    
+    # Admin check - admin has unlimited access
+    if query.from_user.id == ADMIN_ID:
+        supabase_manager.add_log(f"Admin user requested tarot: {user_id_str}")
+        await query.edit_message_text(get_text(lang, "tarot_drawing"))
+        
+        try:
+            tarot_cards = supabase_manager.get_tarot_cards()
+            card = random.choice(tarot_cards) if tarot_cards else "The Fool"
+            
+            # Simple model selection
+            try:
+                model = genai.GenerativeModel('gemini-1.5-flash')
+            except Exception:
+                model = genai.GenerativeModel('gemini-pro')
+            
+            # Simple prompt
+            simple_prompt = f"You are a tarot reader. Write a short interpretation for {user.get('first_name', 'Friend')} who drew the {card} card. 100 words, in {lang}."
+            
+            # Try Gemini API first, then fallback to DeepSeek
+            try:
+                loop = asyncio.get_event_loop()
+                response = await asyncio.wait_for(
+                    loop.run_in_executor(None, model.generate_content, simple_prompt),
+                    timeout=10.0  # 10 second timeout
+                )
+                
+                supabase_manager.add_log(f"✅ Tarot Gemini API call completed ({lang})")
+            except Exception as gemini_error:
+                supabase_manager.add_log(f"❌ Gemini API error, switching to DeepSeek: {str(gemini_error)[:100]}")
+                
+                # Fallback to DeepSeek API
+                try:
+                    deepseek_response = await asyncio.wait_for(
+                        loop.run_in_executor(None, call_deepseek_api, simple_prompt),
+                        timeout=15.0  # 15 second timeout for DeepSeek
+                    )
+                    
+                    # Create a response object similar to Gemini
+                    response = type('Response', (), {'text': deepseek_response})()
+                    supabase_manager.add_log(f"✅ Tarot DeepSeek API call completed ({lang})")
+                except Exception as deepseek_error:
+                    supabase_manager.add_log(f"❌ DeepSeek API error: {str(deepseek_error)[:100]}")
+                    # Fallback response
+                    response = type('Response', (), {'text': f"""🔮 **{card} Card Interpretation**
+
+**Card Meaning:** The {card} card heralds new beginnings and opportunities.
+
+**Personal Message:** {user.get('first_name', 'Friend')}, important changes are approaching in your life.
+
+**Advice:** Gather your courage and seize new opportunities."""})()
+            
+            supabase_manager.add_log(f"Admin tarot reading generated. User: {user_id_str}. Card: {card}")
+            await query.message.reply_text(response.text, reply_markup=get_main_menu_keyboard(query.from_user.id))
+        except Exception as e:
+            logger.error(f"Admin tarot reading error: {e}")
+            await query.edit_message_text(
+                get_text(lang, "fortune_error"), 
+                reply_markup=get_main_menu_keyboard(query.from_user.id)
+            )
+        return
+    
+    # Check reading limit for regular users
+    readings_count = supabase_manager.get_user(query.from_user.id).get("readings_count", 0)
+    if readings_count >= FREE_READING_LIMIT:
+        # Redirect to premium plans
+        keyboard = InlineKeyboardMarkup([
+            [InlineKeyboardButton("💎 Premium Plans", callback_data="premium_menu")],
+            [InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")]
+        ])
+        await query.edit_message_text(
+            f"{get_text(lang, 'fortune_limit_reached')}\n\n💫 **Continue with Telegram Stars:**", 
+            reply_markup=keyboard,
+            parse_mode='Markdown'
+        )
+        return
+    
+    await query.edit_message_text(get_text(lang, "tarot_drawing"))
+    
+    try:
+        tarot_cards = supabase_manager.get_tarot_cards()
+        card = random.choice(tarot_cards) if tarot_cards else "The Fool"
+        
+        # Simple and reliable model selection
+        try:
+            model = genai.GenerativeModel('gemini-1.5-flash')
+        except Exception:
+            model = genai.GenerativeModel('gemini-pro')
+        
+        # Simple and fast prompt
+        simple_prompt = f"You are a tarot reader. Write a short interpretation for {user.get('first_name', 'Friend')} who drew the {card} card. 100 words, in {lang}."
+        
+        # Try Gemini API first, then fallback to DeepSeek
+        try:
+            loop = asyncio.get_event_loop()
+            response = await asyncio.wait_for(
+                loop.run_in_executor(None, model.generate_content, simple_prompt),
+                timeout=10.0  # 10 second timeout
+            )
+            
+            supabase_manager.add_log(f"✅ Tarot Gemini API call completed ({lang})")
+        except Exception as gemini_error:
+            supabase_manager.add_log(f"❌ Gemini API error, switching to DeepSeek: {str(gemini_error)[:100]}")
+            
+            # Fallback to DeepSeek API
+            try:
+                deepseek_response = await asyncio.wait_for(
+                    loop.run_in_executor(None, call_deepseek_api, simple_prompt),
+                    timeout=15.0  # 15 second timeout for DeepSeek
+                )
+                
+                # Create a response object similar to Gemini
+                response = type('Response', (), {'text': deepseek_response})()
+                supabase_manager.add_log(f"✅ Tarot DeepSeek API call completed ({lang})")
+            except Exception as deepseek_error:
+                supabase_manager.add_log(f"❌ DeepSeek API error: {str(deepseek_error)[:100]}")
+                # Fallback response
+                response = type('Response', (), {'text': f"""🔮 **{card} Card Interpretation**
+
+**Card Meaning:** The {card} card heralds new beginnings and opportunities.
+
+**Personal Message:** {user.get('first_name', 'Friend')}, important changes are approaching in your life.
+
+**Advice:** Gather your courage and seize new opportunities."""})()
+        
+        if not response or not response.text:
+            raise Exception("Empty response from Gemini API")
+        
+        supabase_manager.add_log(f"Gemini tarot response received ({lang}): {len(response.text)} characters")
+        
+        # Update reading count
+        supabase_manager.update_user(query.from_user.id, {
+            "readings_count": supabase_manager.get_user(query.from_user.id)["readings_count"] + 1
+        })
+        
+        supabase_manager.add_log(f"Tarot reading generated. User: {user_id_str}. Card: {card}")
+        await query.message.reply_text(response.text, reply_markup=get_main_menu_keyboard(query.from_user.id))
+    except Exception as e:
+        logger.error(f"Tarot reading error: {e}")
+        await query.edit_message_text(
+            get_text(lang, "fortune_error"), 
+            reply_markup=get_main_menu_keyboard(query.from_user.id)
+        )
+
+async def handle_dream_text(update: Update, context: CallbackContext):
+    """Handle dream text, birth chart information, and chatbot questions."""
+    user_id_str = str(update.effective_user.id)
+    user = supabase_manager.get_user(update.effective_user.id)
+    
+    supabase_manager.add_log(f"handle_dream_text called: {user_id_str}")
+    supabase_manager.add_log(f"User state: {user.get('state') if user else 'no_user'}")
+    
+    # Check user state
+    if user and user.get('state') == 'waiting_for_dream':
+        # Dream interpretation process
+        lang = get_user_lang(update.effective_user.id)
+        dream_text = update.message.text
+        
+        supabase_manager.add_log(f"Dream text received: {user_id_str}. Text: {dream_text[:50]}...")
+        
+        await update.message.reply_text(get_text(lang, "dream_analyzing"))
+        
+        try:
+            # Simple and reliable model selection
+            try:
+                model = genai.GenerativeModel('gemini-1.5-flash')
+            except Exception:
+                model = genai.GenerativeModel('gemini-pro')
+            
+            # Get prompt from Supabase
+            prompt = supabase_manager.get_prompt("dream", lang)
+            if not prompt:
+                prompt = f"You are an experienced dream interpreter. Create a dream interpretation for {update.effective_user.first_name}.\n\nDescribe what they saw in their dream first. For example: 'In your dream, you saw a butterfly...'\n\nThen explain the meaning of these symbols and make a personal interpretation for {update.effective_user.first_name}.\n\n150-200 words."
+            
+            # Prepare prompt
+            final_prompt = prompt.replace("{username}", update.effective_user.first_name).replace("{dream_text}", dream_text)
+            
+            # Add language instruction
+            if lang == 'tr':
+                final_prompt = f"YOU ARE A DREAM INTERPRETER. WRITE ONLY DREAM INTERPRETATION IN TURKISH.\n\n{final_prompt}\n\nTURKISH INTERPRETATION:"
+            elif lang == 'en':
+                final_prompt = f"YOU ARE A DREAM INTERPRETER. WRITE ONLY DREAM INTERPRETATION IN ENGLISH.\n\n{final_prompt}\n\nENGLISH INTERPRETATION:"
+            elif lang == 'es':
+                final_prompt = f"ERES UN INTÉRPRETE DE SUEÑOS. ESCRIBE SOLO LA INTERPRETACIÓN DEL SUEÑO EN ESPAÑOL.\n\n{final_prompt}\n\nINTERPRETACIÓN EN ESPAÑOL:"
+            elif lang == 'fr':
+                final_prompt = f"VOUS ÊTES UN INTERPRÈTE DE RÊVES. ÉCRIVEZ SEULEMENT L'INTERPRÉTATION DU RÊVE EN FRANÇAIS.\n\n{final_prompt}\n\nINTERPRÉTATION EN FRANÇAIS:"
+            else:
+                final_prompt = f"YOU ARE A DREAM INTERPRETER. WRITE ONLY DREAM INTERPRETATION.\n\n{final_prompt}\n\nINTERPRETATION:"
+            
+            supabase_manager.add_log(f"Dream prompt prepared ({lang}): {len(final_prompt)} characters")
+            supabase_manager.add_log(f"Gemini API call in progress (dream, {lang}): {user_id_str}")
+            
+            # Send to Gemini (async API) - with timeout
+            try:
+                loop = asyncio.get_event_loop()
+                response = await asyncio.wait_for(
+                    loop.run_in_executor(None, model.generate_content, final_prompt),
+                    timeout=10.0  # 10 second timeout
+                )
+                
+                supabase_manager.add_log(f"Gemini API response successfully received: {user_id_str}")
+            except asyncio.TimeoutError:
+                supabase_manager.add_log(f"Gemini API timeout (10s): {user_id_str}")
+                raise Exception("Gemini API did not respond (10 second timeout)")
+            except Exception as e:
+                supabase_manager.add_log(f"Gemini API error: {str(e)[:100]}")
+                raise Exception(f"Gemini API error: {str(e)[:100]}")
+            
+            supabase_manager.add_log(f"Gemini API response received: {response}")
+            
+            if not response:
+                raise Exception("No response received from Gemini API")
+            
+            if not response.text:
+                raise Exception("Empty response received from Gemini API")
+            
+            supabase_manager.add_log(f"Gemini dream response received: {len(response.text)} characters")
+            supabase_manager.add_log(f"Response content: {response.text[:500]}...")
+            
+            # Reduce free reading count (if not admin)
+            if update.effective_user.id != ADMIN_ID:
+                current_readings = user.get("readings_count", 0)
+                supabase_manager.update_user(update.effective_user.id, {
+                    'state': 'idle',
+                    'readings_count': current_readings + 1
+                })
+                supabase_manager.add_log(f"Dream analysis completed (free reading reduced): {user_id_str}")
+            else:
+                supabase_manager.update_user(update.effective_user.id, {'state': 'idle'})
+                supabase_manager.add_log(f"Admin dream analysis completed: {user_id_str}")
+            
+            await update.message.reply_text(response.text, reply_markup=get_main_menu_keyboard(update.effective_user.id))
+        except Exception as e:
+            logger.error(f"Dream analysis error: {e}")
+            await update.message.reply_text(
+                get_text(lang, "fortune_error"), 
+                reply_markup=get_main_menu_keyboard(update.effective_user.id)
+            )
+            
+    elif user and user.get('state') == 'waiting_for_birth_info':
+        # Birth chart information process
+        await process_birth_chart(update, context)
+        
+    elif user and user.get('state') == 'chatbot_mode':
+        # Astrology chatbot process
+        await handle_chatbot_question(update, context)
+        
+    else:
+        # User is not waiting for dream, check state
+        current_state = user.get('state') if user else 'no_user'
+        supabase_manager.add_log(f"Text received but state not suitable: {user_id_str}. State: {current_state}")
+
+async def process_birth_chart(update: Update, context: CallbackContext):
+    """Process birth chart analysis"""
+    user_id = update.effective_user.id
+    user_id_str = str(user_id)
+    lang = get_user_lang(user_id)
+    birth_info = update.message.text
+    
+    await update.message.reply_text(get_text(lang, "astrology_calculating"))
+    
+    try:
+        # Gemini model
+        try:
+            model = genai.GenerativeModel('gemini-1.5-flash')
+        except Exception:
+            model = genai.GenerativeModel('gemini-pro')
+        
+        # Get prompt from Supabase
+        prompt = supabase_manager.get_prompt("birth_chart", lang)
+        if not prompt:
+            prompt = f"You are a professional astrologer. Create a comprehensive birth chart analysis based on the following birth information:\n\nBirth Information: {birth_info}\n\nThe analysis should include:\n1. Sun Sign Analysis\n2. Rising Sign\n3. Moon Sign\n4. Mercury\n5. Venus\n6. Mars\n7. General Interpretation\n\n200-250 words, personalized and in-depth."
+        
+        # Replace placeholders
+        username = update.effective_user.first_name or update.effective_user.username or "User"
+        final_prompt = prompt.format(
+            username=username,
+            birth_date=birth_info,
+            birth_time="Unknown",
+            birth_place="Unknown"
+        )
+        
+        # Add language instruction
+        final_prompt = f"YOU ARE AN ASTROLOGER. WRITE ONLY IN {lang.upper()} LANGUAGE.\n\n{final_prompt}\n\n{lang.upper()} ANALYSIS:"
+        
+        # Async API call - with timeout
+        try:
+            loop = asyncio.get_event_loop()
+            response = await asyncio.wait_for(
+                loop.run_in_executor(None, model.generate_content, final_prompt),
+                timeout=15.0  # 15 second timeout
+            )
+            
+            supabase_manager.add_log(f"✅ Birth Chart Gemini API call completed: {user_id_str}")
+        except asyncio.TimeoutError:
+            supabase_manager.add_log(f"❌ Birth Chart Gemini API timeout (15s): {user_id_str}")
+            raise Exception("Gemini API did not respond (15 second timeout)")
+        except Exception as e:
+            supabase_manager.add_log(f"❌ Birth Chart Gemini API error: {str(e)[:100]}")
+            raise Exception(f"Gemini API error: {str(e)[:100]}")
+        
+        if not response or not response.text:
+            raise Exception("Empty response received from Gemini API")
+        
+        chart_message = f"""🌟 **BIRTH CHART ANALYSIS** 🌟
+━━━━━━━━━━━━━━━━━━━━━━
+
+📅 **Birth Information:** {birth_info}
+
+{response.text}
+
+━━━━━━━━━━━━━━━━━━━━━━
+✨ *This analysis is prepared to provide you with personal guidance* ✨"""
+        
+        keyboard = InlineKeyboardMarkup([
+            [InlineKeyboardButton("🔄 Another Analysis", callback_data="astro_birth_chart")],
+            [InlineKeyboardButton("📱 Download PDF", callback_data=f"birth_chart_pdf_{user_id}")],
+            [InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")]
+        ])
+        
+        await update.message.reply_text(chart_message, reply_markup=keyboard, parse_mode='Markdown')
+        supabase_manager.update_user(user_id, {'state': 'idle'})
+        supabase_manager.add_log(f"Birth chart analysis completed: {user_id_str}")
+        
+    except Exception as e:
+        logger.error(f"Birth chart error: {e}")
+        await update.message.reply_text(
+            get_text(lang, "fortune_error"),
+            reply_markup=get_main_menu_keyboard(user_id)
+        )
+        supabase_manager.update_user(user_id, {'state': 'idle'})
+
+async def handle_chatbot_question(update: Update, context: CallbackContext):
+    """Handle chatbot questions"""
+    user_id = update.effective_user.id
+    user = supabase_manager.get_user(user_id)
+    
+    if user.get('state') != 'chatbot_mode' or user.get('premium_plan') != 'vip':
+        return
+    
+    lang = get_user_lang(user_id)
+    question = update.message.text
+    
+    await update.message.reply_text(get_text(lang, "analyzing"))
+    
+    try:
+        # Gemini model
+        try:
+            model = genai.GenerativeModel('gemini-1.5-flash')
+        except Exception:
+            model = genai.GenerativeModel('gemini-pro')
+        
+        # Get prompt from Supabase
+        prompt = supabase_manager.get_prompt("astro_chatbot", lang)
+        if not prompt:
+            prompt = f"You are an experienced astrology chatbot. Answer the user's question like a professional astrology consultant.\n\nUser Question: {question}\n\nYour answer should include:\n- Direct and detailed response to the question\n- Astrological information and explanations\n- Practical advice\n- References to current planetary conditions\n\n120-180 words, in a friendly and professional tone."
+        
+        # Replace placeholders
+        username = update.effective_user.first_name or update.effective_user.username or "User"
+        final_prompt = prompt.format(username=username)
+        
+        # Add question and language instruction
+        final_prompt = f"USER QUESTION: {question}\n\n{final_prompt}\n\nYOU ARE AN ASTROLOGY CHATBOT. RESPOND ONLY IN {lang.upper()} LANGUAGE.\n\n{lang.upper()} RESPONSE:"
+        
+        response = model.generate_content(final_prompt)
+        
+        if response and response.text:
+            chatbot_message = f"""🤖 **ASTROLOGY CONSULTANT** 🤖
+
+{response.text}
+
+━━━━━━━━━━━━━━━━━━━━━━
+💬 *You can ask another question...*"""
+            
+            keyboard = InlineKeyboardMarkup([
+                [InlineKeyboardButton("❌ Close Chatbot", callback_data="chatbot_close")]
+            ])
+            
+            await update.message.reply_text(chatbot_message, reply_markup=keyboard, parse_mode='Markdown')
+            supabase_manager.add_log(f"Chatbot question answered: {user_id} - {question[:50]}...")
+        else:
+            raise Exception("No response received from Gemini API")
+            
+    except Exception as e:
+        logger.error(f"Chatbot error: {e}")
+        await update.message.reply_text(
+            get_text(lang, "sorry_cant_respond"),
+            reply_markup=InlineKeyboardMarkup([
+                [InlineKeyboardButton("❌ Close Chatbot", callback_data="chatbot_close")]
+            ])
+        )
+
+# Missing functions from the previous bot.py
+async def toggle_daily_subscription(update: Update, context: CallbackContext):
+    """Toggle daily subscription"""
+    query = update.callback_query
+    await query.answer()
+    
+    user_id_str = str(query.from_user.id)
+    user = supabase_manager.get_user(query.from_user.id)
+    current_status = user.get("daily_subscribed", False)
+    lang = get_user_lang(query.from_user.id)
+    
+    # User's current status
+    subscription_status = "✅ ACTIVE" if current_status else "❌ INACTIVE"
+    next_delivery = "Every morning 09:00" if current_status else "Subscription not active"
+    
+    # Detailed explanation message
+    if lang == 'tr':
+        info_message = f"""🌅 **DAILY CARD SUBSCRIPTION** 🌅
+━━━━━━━━━━━━━━━━━━━━━━
+
+📱 **Your Current Status:** {subscription_status}
+⏰ **Next Delivery:** {next_delivery}
+
+🔮 **About This Feature:**
+With Daily Card subscription, you receive a specially prepared tarot card and its interpretation every morning. This card presents the day's energy, opportunities you may encounter, and points to pay attention to from a mystical perspective.
+
+✨ **What's Included:**
+• 🃏 Special tarot card every morning at 09:00
+• 📜 Current interpretation and meaning of the card
+• 🎯 Practical advice for the day
+• 🌟 Personal energy guidance
+• 💫 Astrological connections and tips
+
+🎁 **Special Benefits:**
+• Completely FREE service
+• Different card and interpretation every day
+• Personalized content
+• Motivational and inspiring messages
+• Capturing the positive energy of the day
+
+📊 **Statistics:**
+• 15,000+ active daily subscribers
+• 94% user satisfaction
+• Average 4.8/5 rating
+
+🔧 **How It Works:**
+1. Activate subscription
+2. Receive automatic message every morning
+3. Read your card and plan your day
+4. Cancel anytime you want
+
+⚙️ **Settings:**
+• Delivery time: 09:00 (changeable)
+• Including weekends: Yes
+• Notification type: Silent message"""
+
+        toggle_text = "🔕 Stop Subscription" if current_status else "🔔 Start Subscription"
+        toggle_callback = "confirm_daily_unsubscribe" if current_status else "confirm_daily_subscribe"
+        
+    else:  # English
+        info_message = f"""🌅 **DAILY CARD SUBSCRIPTION** 🌅
+━━━━━━━━━━━━━━━━━━━━━━
+
+📱 **Your Current Status:** {subscription_status}
+⏰ **Next Delivery:** {next_delivery}
+
+🔮 **About This Feature:**
+With Daily Card subscription, you receive a specially prepared tarot card and its interpretation every morning. This card presents the day's energy, opportunities you may encounter, and points to pay attention to from a mystical perspective.
+
+✨ **What's Included:**
+• 🃏 Special tarot card every morning at 09:00
+• 📜 Current interpretation and meaning of the card
+• 🎯 Practical advice for the day
+• 🌟 Personal energy guidance
+• 💫 Astrological connections and tips
+
+🎁 **Special Benefits:**
+• Completely FREE service
+• Different card and interpretation every day
+• Personalized content
+• Motivational and inspiring messages
+• Capturing the positive energy of the day
+
+📊 **Statistics:**
+• 15,000+ active daily subscribers
+• 94% user satisfaction
+• Average 4.8/5 rating
+
+🔧 **How It Works:**
+1. Activate subscription
+2. Receive automatic message every morning
+3. Read your card and plan your day
+4. Cancel anytime you want
+
+⚙️ **Settings:**
+• Delivery time: 09:00 (changeable)
+• Including weekends: Yes
+• Notification type: Silent message"""
+
+        toggle_text = "🔕 Stop Subscription" if current_status else "🔔 Start Subscription"
+        toggle_callback = "confirm_daily_unsubscribe" if current_status else "confirm_daily_subscribe"
+    
+    keyboard = InlineKeyboardMarkup([
+        [InlineKeyboardButton(toggle_text, callback_data=toggle_callback)],
+        [InlineKeyboardButton("⚙️ Set Delivery Time", callback_data="set_delivery_time")],
+        [InlineKeyboardButton("📊 Subscription Statistics", callback_data="subscription_stats")],
+        [InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")]
+    ])
+    
+    await query.edit_message_text(info_message, reply_markup=keyboard, parse_mode='Markdown')
+
+async def confirm_daily_subscribe(update: Update, context: CallbackContext):
+    """Confirm daily subscription"""
+    query = update.callback_query
+    await query.answer()
+    
+    user_id_str = str(query.from_user.id)
+    supabase_manager.update_user(query.from_user.id, {"daily_subscribed": True})
+    lang = get_user_lang(query.from_user.id)
+    
+    supabase_manager.add_log(f"User {user_id_str} started daily subscription.")
+    
+    success_message = """🎉 **Daily Card Subscription Activated!** 🎉
+
+✅ You will now receive your special tarot card every morning at 09:00
+🔮 Your first card will be delivered tomorrow morning
+💫 Great decision!
+
+🎁 **Welcome Gift:**
+You'll receive an extra bonus card for your first week!"""
+
+    keyboard = InlineKeyboardMarkup([
+        [InlineKeyboardButton("🔄 Subscription Settings", callback_data="toggle_daily")],
+        [InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")]
+    ])
+    
+    await query.edit_message_text(success_message, reply_markup=keyboard, parse_mode='Markdown')
+
+async def confirm_daily_unsubscribe(update: Update, context: CallbackContext):
+    """Cancel daily subscription"""
+    query = update.callback_query
+    await query.answer()
+    
+    user_id_str = str(query.from_user.id)
+    supabase_manager.update_user(query.from_user.id, {"daily_subscribed": False})
+    lang = get_user_lang(query.from_user.id)
+    
+    supabase_manager.add_log(f"User {user_id_str} stopped daily subscription.")
+    
+    unsubscribe_message = """💔 **Daily Card Subscription Stopped**
+
+😔 You will no longer receive daily tarot cards
+🔄 You can reactivate anytime
+🎁 Your data is preserved, you can return
+
+📊 **Your Feedback:**
+Why did you stop the subscription? (Optional)"""
+
+    keyboard = InlineKeyboardMarkup([
+        [InlineKeyboardButton("🔄 Subscribe Again", callback_data="confirm_daily_subscribe")],
+        [InlineKeyboardButton("💬 Give Feedback", callback_data="daily_feedback")],
+        [InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")]
+    ])
+    
+    await query.edit_message_text(unsubscribe_message, reply_markup=keyboard, parse_mode='Markdown')
+
+async def get_referral_link_callback(update: Update, context: CallbackContext):
+    """Create and show referral link"""
+    query = update.callback_query
+    await query.answer()
+    
+    user_id_str = str(query.from_user.id)
+    lang = get_user_lang(query.from_user.id)
+    user = supabase_manager.get_user(query.from_user.id)
+    
+    # Get referral statistics
+    referred_count = user.get("referred_count", 0)
+    bonus_readings = user.get("bonus_readings", 0)
+    referral_earnings = user.get("referral_earnings", 0)
+    
+    # VIP status check
+    vip_status = "👑 VIP" if referred_count >= 10 else "🌟 Elite" if referred_count >= 25 else "💎 Premium" if referred_count >= 5 else "🆕 New"
+    
+    # Progress bar (5 milestone)
+    current_milestone = (referred_count // 5) * 5
+    next_milestone = current_milestone + 5
+    progress = referred_count - current_milestone
+    progress_bar = "🟢" * progress + "⚪" * (5 - progress)
+    
+    # Daily/weekly goals
+    daily_goal = 1
+    weekly_goal = 5
+    
+    bot_info = await context.bot.get_me()
+    referral_link = f"https://t.me/{bot_info.username}?start={user_id_str}"
+    
+    message = f"""🌟 **FAL GRAM REFERRAL SYSTEM** 🌟
+━━━━━━━━━━━━━━━━━━━━━━
+
+👤 **Your Status:** {vip_status}
+
+📊 **Your Statistics:**
+👥 Total Invites: **{referred_count}** people
+🎁 Bonus Readings: **{bonus_readings}** readings
+💰 Total Earnings: **{referral_earnings}** readings
+
+📈 **Progress Bar ({progress}/5):**
+{progress_bar} **{referred_count}**/{next_milestone}
+
+🏆 **Reward System:**
+• 1 Invite = 1 Free Reading ✨
+• 5 Invites = 3 Bonus Readings + Special Badges 🏅
+• 10 Invites = VIP Status + Unlimited Daily Cards 👑
+• 25 Invites = Elite Member + Priority Support 🌟
+• 50 Invites = Premium Fortune Teller Access 💎
+
+🎯 **Your Goals:**
+• Daily: {daily_goal} invite
+• Weekly: {weekly_goal} invites
+
+🔗 **Your Special Referral Link:**
+```
+{referral_link}
+```
+
+📤 **Quick Share:**"""
+    
+    # Advanced buttons
+    keyboard = InlineKeyboardMarkup([
+        [
+            InlineKeyboardButton("📱 Share on WhatsApp", url=f"https://api.whatsapp.com/send?text=🔮 Get free fortune telling on Fal Gram! {referral_link}"),
+            InlineKeyboardButton("📲 Share on Telegram", url=f"https://t.me/share/url?url={referral_link}&text=🔮 Get free fortune telling on Fal Gram!")
+        ],
+        [
+            InlineKeyboardButton("📊 Detailed Statistics", callback_data="referral_stats"),
+            InlineKeyboardButton("🎁 My Rewards", callback_data="my_rewards")
+        ],
+        [
+            InlineKeyboardButton("📋 Copy Link", callback_data=f"copy_link_{user_id_str}"),
+            InlineKeyboardButton("🔄 Refresh", callback_data="get_referral_link")
+        ],
+        [InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")]
+    ])
+    
+    await query.edit_message_text(message, reply_markup=keyboard, parse_mode='Markdown')
+
+
+# --- Missing Functions and Handlers ---
+
+# Rate limiting for Gemini API
+class GeminiRateLimiter:
+    def __init__(self, max_requests_per_minute=60):
+        self.max_requests = max_requests_per_minute
+        self.requests = defaultdict(list)
+    
+    def can_make_request(self, user_id):
+        now = time.time()
+        user_requests = self.requests[user_id]
+        
+        # Remove requests older than 1 minute
+        user_requests[:] = [req_time for req_time in user_requests if now - req_time < 60]
+        
+        if len(user_requests) < self.max_requests:
+            user_requests.append(now)
+            return True
+        return False
+    
+    def get_wait_time(self, user_id):
+        now = time.time()
+        user_requests = self.requests[user_id]
+        
+        # Remove old requests
+        user_requests[:] = [req_time for req_time in user_requests if now - req_time < 60]
+        
+        if len(user_requests) >= self.max_requests:
+            oldest_request = min(user_requests)
+            return 60 - (now - oldest_request)
+        return 0
+
+# Initialize rate limiter
+gemini_rate_limiter = GeminiRateLimiter()
+
+# DeepSeek API Configuration
+DEEPSEEK_API_KEY = os.getenv('DEEPSEEK_API_KEY')
+DEEPSEEK_API_URL = "https://api.deepseek.com/v1/chat/completions"
+
+def call_deepseek_api(prompt, model="deepseek-chat"):
+    """Call DeepSeek API with the given prompt"""
+    if not DEEPSEEK_API_KEY:
+        raise Exception("DeepSeek API key not configured")
+    
+    headers = {
+        "Authorization": f"Bearer {DEEPSEEK_API_KEY}",
+        "Content-Type": "application/json"
+    }
+    
+    data = {
+        "model": model,
+        "messages": [
+            {"role": "user", "content": prompt}
+        ],
+        "max_tokens": 1000,
+        "temperature": 0.7
+    }
+    
+    try:
+        response = requests.post(DEEPSEEK_API_URL, headers=headers, json=data, timeout=30)
+        response.raise_for_status()
+        result = response.json()
+        return result["choices"][0]["message"]["content"]
+    except Exception as e:
+        raise Exception(f"DeepSeek API error: {str(e)}")
+
+# Zodiac signs for different languages
+ZODIAC_SIGNS = {
+    'tr': ['Koç', 'Boğa', 'İkizler', 'Yengeç', 'Aslan', 'Başak', 'Terazi', 'Akrep', 'Yay', 'Oğlak', 'Kova', 'Balık'],
+    'en': ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'],
+    'es': ['Aries', 'Tauro', 'Géminis', 'Cáncer', 'Leo', 'Virgo', 'Libra', 'Escorpio', 'Sagitario', 'Capricornio', 'Acuario', 'Piscis'],
+    'fr': ['Bélier', 'Taureau', 'Gémeaux', 'Cancer', 'Lion', 'Vierge', 'Balance', 'Scorpion', 'Sagittaire', 'Capricorne', 'Verseau', 'Poissons']
+}
+
+# Supported languages
+SUPPORTED_LANGUAGES = {
+    'tr': 'Türkçe',
+    'en': 'English', 
+    'es': 'Español',
+    'fr': 'Français'
+}
+
+# Initialize Supabase manager
+supabase_manager = SupabaseManager(SUPABASE_URL, SUPABASE_KEY)
+
+# Missing admin functions
+async def admin_gift_command(update: Update, context: CallbackContext):
+    """Admin command to gift premium subscription"""
+    if update.effective_user.id != ADMIN_ID:
+        await update.message.reply_text("❌ Bu komutu kullanma yetkiniz yok!")
+        return
+    
+    try:
+        args = context.args
+        if len(args) != 3:
+            await update.message.reply_text("❌ Kullanım: /gift <user_id> <plan> <days>")
+            return
+        
+        user_id = int(args[0])
+        plan = args[1]
+        days = int(args[2])
+        
+        # Validate plan
+        if plan not in ['basic', 'premium', 'vip']:
+            await update.message.reply_text("❌ Geçersiz plan. Kullanılabilir: basic, premium, vip")
+            return
+        
+        # Calculate expiration date
+        expires_at = datetime.now() + timedelta(days=days)
+        
+        # Update user's premium plan
+        supabase_manager.update_user_premium_plan(user_id, plan, expires_at)
+        
+        # Log the action
+        supabase_manager.add_log(f"Admin gifted {plan} plan to user {user_id} for {days} days")
+        
+        await update.message.reply_text(f"✅ {user_id} kullanıcısına {plan} planı {days} gün için hediye edildi!")
+        
+    except ValueError:
+        await update.message.reply_text("❌ Geçersiz user_id veya days değeri!")
+    except Exception as e:
+        await update.message.reply_text(f"❌ Hata: {str(e)}")
+
+async def admin_cancel_command(update: Update, context: CallbackContext):
+    """Admin command to cancel premium subscription"""
+    if update.effective_user.id != ADMIN_ID:
+        await update.message.reply_text("❌ Bu komutu kullanma yetkiniz yok!")
+        return
+    
+    try:
+        args = context.args
+        if len(args) != 1:
+            await update.message.reply_text("❌ Kullanım: /cancel <user_id>")
+            return
+        
+        user_id = int(args[0])
+        
+        # Cancel user's premium plan
+        supabase_manager.update_user_premium_plan(user_id, 'free', None)
+        
+        # Log the action
+        supabase_manager.add_log(f"Admin cancelled premium plan for user {user_id}")
+        
+        await update.message.reply_text(f"✅ {user_id} kullanıcısının premium aboneliği iptal edildi!")
+        
+    except ValueError:
+        await update.message.reply_text("❌ Geçersiz user_id değeri!")
+    except Exception as e:
+        await update.message.reply_text(f"❌ Hata: {str(e)}")
+
+# Missing callback handlers
+async def back_to_admin(update: Update, context: CallbackContext):
+    """Return to admin panel"""
+    query = update.callback_query
+    await query.answer()
+    
+    if query.from_user.id != ADMIN_ID:
+        await query.edit_message_text("❌ Bu komutu kullanma yetkiniz yok!")
+        return
+    
+    lang = get_user_language(query.from_user.id)
+    await admin_show_stats(query, lang)
+
+async def admin_gift_subscription_input(update: Update, context: CallbackContext):
+    """Handle gift subscription input"""
+    if update.effective_user.id != ADMIN_ID:
+        await update.message.reply_text("❌ Bu komutu kullanma yetkiniz yok!")
+        return
+    
+    # Store user state for gift subscription
+    context.user_data['gift_state'] = 'waiting_user_id'
+    await update.message.reply_text("👤 Hediye edilecek kullanıcının ID'sini girin:")
+
+async def admin_cancel_subscription_input(update: Update, context: CallbackContext):
+    """Handle cancel subscription input"""
+    if update.effective_user.id != ADMIN_ID:
+        await update.message.reply_text("❌ Bu komutu kullanma yetkiniz yok!")
+        return
+    
+    # Store user state for cancel subscription
+    context.user_data['cancel_state'] = 'waiting_user_id'
+    await update.message.reply_text("👤 İptal edilecek kullanıcının ID'sini girin:")
+
+# Missing premium purchase handlers
+async def premium_buy_plan(update: Update, context: CallbackContext):
+    """Handle premium plan purchase"""
+    query = update.callback_query
+    await query.answer()
+    
+    plan_name = query.data.replace('buy_', '')
+    user_id = query.from_user.id
+    lang = get_user_language(user_id)
+    
+    if plan_name not in PREMIUM_PLANS:
+        await query.edit_message_text("❌ Geçersiz plan!")
+        return
+    
+    plan = PREMIUM_PLANS[plan_name]
+    
+    # Create invoice
+    prices = [LabeledPrice(plan['name'], plan['price_stars'])]
+    
+    try:
+        await context.bot.send_invoice(
+            chat_id=update.effective_chat.id,
+            title=f"{plan['name']} Aboneliği",
+            description=plan['description'],
+            payload=f"premium_{plan_name}_{user_id}",
+            provider_token=PAYMENT_PROVIDER_TOKEN,
+            currency="XTR",
+            prices=prices
+        )
+        
+        await query.edit_message_text(
+            f"💳 **{plan['name']} Planı Satın Alma**\n\n"
+            f"💰 Fiyat: {plan['price_stars']} ⭐\n"
+            f"📅 Süre: {plan['duration']}\n\n"
+            f"Ödeme sayfası açılıyor...",
+            parse_mode='Markdown'
+        )
+        
+    except Exception as e:
+        await query.edit_message_text(f"❌ Ödeme oluşturulamadı: {str(e)}")
+
+# Missing astrology handlers
+async def advanced_moon_calendar(update: Update, context: CallbackContext):
+    """Show advanced moon calendar"""
+    query = update.callback_query
+    await query.answer()
+    
+    lang = get_user_language(query.from_user.id)
+    
+    # Calculate current moon phase
+    current_phase = calculate_moon_phase()
+    energy_advice = get_moon_energy_advice(current_phase['energy'], lang)
+    
+    message = f"""🌙 **GELİŞMİŞ AY TAKVİMİ** 🌙
+━━━━━━━━━━━━━━━━━━━━━━
+
+📅 **Bugünün Ay Fazı:** {current_phase['phase_name']}
+🌊 **Enerji Seviyesi:** {current_phase['energy']}/100
+📊 **Ay Yaşı:** {current_phase['age']:.1f} gün
+
+💫 **Enerji Tavsiyesi:**
+{energy_advice}
+
+━━━━━━━━━━━━━━━━━━━━━━
+✨ *Ay enerjisini kullanarak gününüzü planlayın* ✨"""
+    
+    keyboard = InlineKeyboardMarkup([
+        [InlineKeyboardButton("🔙 Astroloji", callback_data="select_astrology")],
+        [InlineKeyboardButton("🏠 Ana Menü", callback_data="main_menu")]
+    ])
+    
+    await query.edit_message_text(message, reply_markup=keyboard, parse_mode='Markdown')
+
+async def planetary_transits(update: Update, context: CallbackContext):
+    """Show planetary transits (VIP feature)"""
+    query = update.callback_query
+    await query.answer()
+    
+    user_id = query.from_user.id
+    user = supabase_manager.get_user(user_id)
+    lang = get_user_language(user_id)
+    
+    if user.get('premium_plan') not in ['premium', 'vip']:
+        await query.edit_message_text(
+            "❌ Bu özellik sadece Premium ve VIP kullanıcılar için!",
+            reply_markup=InlineKeyboardMarkup([
+                [InlineKeyboardButton("💎 Premium Planlar", callback_data="premium_menu")],
+                [InlineKeyboardButton("🏠 Ana Menü", callback_data="main_menu")]
+            ])
+        )
+        return
+    
+    # Generate planetary transit information
+    try:
+        model = genai.GenerativeModel('gemini-1.5-flash')
+        
+        prompt = f"""You are an expert astrologer. Create a detailed planetary transit report for today.
+
+Include:
+1. Current planetary positions
+2. Major transits and aspects
+3. How these affect different zodiac signs
+4. Recommendations for the day
+
+Write in {lang.upper()} language, 200-250 words."""
+
+        response = model.generate_content(prompt)
+        
+        message = f"""🌟 **PLANETARY TRANSITS** 🌟
+━━━━━━━━━━━━━━━━━━━━━━
+
+{response.text}
+
+━━━━━━━━━━━━━━━━━━━━━━
+✨ *Premium astrological insights* ✨"""
+        
+        keyboard = InlineKeyboardMarkup([
+            [InlineKeyboardButton("🔙 Astroloji", callback_data="select_astrology")],
+            [InlineKeyboardButton("🏠 Ana Menü", callback_data="main_menu")]
+        ])
+        
+        await query.edit_message_text(message, reply_markup=keyboard, parse_mode='Markdown')
+        
+    except Exception as e:
+        await query.edit_message_text(
+            f"❌ Hata: {str(e)}",
+            reply_markup=InlineKeyboardMarkup([
+                [InlineKeyboardButton("🔙 Astroloji", callback_data="select_astrology")]
+            ])
+        )
+
+async def social_astrology(update: Update, context: CallbackContext):
+    """Show social astrology features (VIP feature)"""
+    query = update.callback_query
+    await query.answer()
+    
+    user_id = query.from_user.id
+    user = supabase_manager.get_user(user_id)
+    lang = get_user_language(user_id)
+    
+    if user.get('premium_plan') != 'vip':
+        await query.edit_message_text(
+            "❌ Bu özellik sadece VIP kullanıcılar için!",
+            reply_markup=InlineKeyboardMarkup([
+                [InlineKeyboardButton("👑 VIP Plan", callback_data="premium_plan_vip")],
+                [InlineKeyboardButton("🏠 Ana Menü", callback_data="main_menu")]
+            ])
+        )
+        return
+    
+    message = f"""👥 **SOSYAL ASTROLOJİ** 👥
+━━━━━━━━━━━━━━━━━━━━━━
+
+🌟 **VIP Özellikler:**
+• Astroloji topluluk grupları
+• Uzman astrologlarla canlı sohbet
+• Kişisel astroloji danışmanlığı
+• Özel astroloji etkinlikleri
+• Premium astroloji içerikleri
+
+🔮 **Yakında Gelecek:**
+• Astroloji forumu
+• Canlı yayınlar
+• Özel workshop'lar
+• Kişisel astroloji raporları
+
+━━━━━━━━━━━━━━━━━━━━━━
+✨ *VIP deneyiminizi keşfedin* ✨"""
+    
+    keyboard = InlineKeyboardMarkup([
+        [InlineKeyboardButton("🔙 Astroloji", callback_data="select_astrology")],
+        [InlineKeyboardButton("🏠 Ana Menü", callback_data="main_menu")]
+    ])
+    
+    await query.edit_message_text(message, reply_markup=keyboard, parse_mode='Markdown')
+
+async def chatbot_close(update: Update, context: CallbackContext):
+    """Close chatbot mode"""
+    query = update.callback_query
+    await query.answer()
+    
+    user_id = query.from_user.id
+    supabase_manager.update_user(user_id, {'state': 'idle'})
+    
+    lang = get_user_language(user_id)
+    await show_main_menu(query, lang)
+
+# Missing utility functions
+def get_main_menu_keyboard(user_id: int):
+    """Get main menu keyboard for user"""
+    lang = get_user_language(user_id)
+    return create_main_menu_keyboard(lang)
 
 # --- Main Function ---
 
@@ -1671,8 +2788,8 @@ def main():
     # Command handlers
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("admin", admin))
-    application.add_handler(CommandHandler("gift", gift))
-    application.add_handler(CommandHandler("cancel", cancel))
+    application.add_handler(CommandHandler("gift", admin_gift_command))
+    application.add_handler(CommandHandler("cancel", admin_cancel_command))
     
     # Callback query handler
     application.add_handler(CallbackQueryHandler(handle_callback_query))
