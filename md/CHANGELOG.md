@@ -4,6 +4,112 @@ Tüm önemli değişiklikler bu dosyada belgelenmiştir.
 
 ---
 
+## [3.2.0] - 2025-07-28 🌟 **MAJOR RELEASE: Gelişmiş Referral Sistemi & Premium Karşılaştırması**
+
+### 💎 **YENİ ÖZELLİKLER**
+
+#### **🌟 Gelişmiş Referral Sistemi**
+- 🎨 **Elegant UI Tasarımı** - Güzel progress bar'lar, istatistikler ve ödül gösterimi
+- 🏆 **Gelişmiş Özellikler** - Lider tablosu, ilerleme takibi, sonraki hedef göstergeleri
+- 📱 **Sosyal Paylaşım** - WhatsApp ve Telegram paylaşım butonları
+- 🎯 **Milestone Sistemi** - 1, 5, 10, 25, 50 referans için net ilerleme ve ödüller
+- 📊 **Detaylı İstatistikler** - Progress bar'lar, referans sayıları, kazanç takibi
+- 🔗 **Kopyalama Özelliği** - Referans linkini kolayca kopyalama
+- 🏆 **Lider Tablosu** - En iyi referans verenlerin listesi
+- 📈 **İlerleme Detayları** - Kullanıcının mevcut durumu ve sonraki hedefe olan mesafesi
+
+#### **💎 Premium Plan Karşılaştırması**
+- 📊 **Karşılaştırma Tablosu** - Yan yana plan karşılaştırması ve özellik matrisi
+- 🛒 **Seçim Akışı** - Net plan seçimi ve satın alma butonları
+- 💳 **Ödeme Entegrasyonu** - Telegram Stars ödeme sistemi
+- 📋 **Plan Detayları** - Her plan için detaylı özellik açıklaması
+- 💡 **Ödeme Bilgileri** - Tam ödeme talimatları ve güvenlik bilgileri
+
+#### **🌐 Dil Seçimi - Düzeltildi ve Geliştirildi**
+- 🔧 **Fonksiyonellik Düzeltmesi** - Onay ile düzgün dil değiştirme
+- 🎨 **Elegant UI** - Mevcut dil göstergesi ile çok dilli görünüm
+- 🔙 **Navigasyon** - Düzgün geri butonları ve menü entegrasyonu
+- ✅ **Onay** - Dil değişikliği onay mesajları
+
+#### **🏠 Ana Menü Butonları - Her Yere Eklendi**
+- 🏠 **Evrensel Navigasyon** - Her sayfada ana menü butonu
+- 🔙 **Geri Butonları** - Menüler arası düzgün navigasyon akışı
+- 📱 **Tutarlı UX** - Tüm bölümlerde tek tip buton düzeni
+
+#### **💳 Telegram Stars Ödeme - Tam Entegrasyon**
+- 💳 **Ödeme Akışı** - Telegram Stars ile tam satın alma süreci
+- 🔒 **Güvenlik** - Hata yönetimi ile güvenli ödeme işlemi
+- ✅ **Onay** - Başarı/hata mesajları ile düzgün navigasyon
+- 📊 **Veritabanı Entegrasyonu** - Premium plan aktivasyonu ve loglama
+
+### 🔧 **BACKEND GELİŞMELERİ**
+
+#### **Yeni Handler Fonksiyonları**
+- 🔗 **handle_copy_referral_link** - Referans linki kopyalama işlevselliği
+- 📱 **handle_share_whatsapp** - WhatsApp paylaşımı
+- 📤 **handle_share_telegram** - Telegram paylaşımı
+- 🏆 **show_referral_leaderboard** - En iyi referans verenlerin gösterimi
+- 📈 **show_referral_progress** - Detaylı ilerleme takibi
+- 🎯 **show_referral_next_goal** - Sonraki milestone bilgisi
+- 📋 **show_premium_details** - Detaylı plan bilgileri
+- 💳 **show_payment_info** - Ödeme talimatları
+
+#### **Callback Sistemi Geliştirmeleri**
+- 🔄 **Tam Callback Entegrasyonu** - Tüm callback handler'ları düzgün bağlandı
+- 🧭 **Navigasyon Akışı** - Tüm menüler arası geçiş
+- ❌ **Hata Yönetimi** - Bilinmeyen callback'ler için hata işleme
+- 🏠 **Ana Menü Butonları** - Her sayfada ana menü butonu
+
+### 🎨 **UX/UI İYİLEŞTİRMELERİ**
+
+#### **Referral Sistemi Arayüzü**
+- 🎨 **Elegant Tasarım** - Emoji zengini arayüzler
+- 📊 **Progress Bar'lar** - Görsel ilerleme göstergeleri
+- 🏆 **Lider Tablosu** - En iyi referans verenlerin listesi
+- 📱 **Sosyal Paylaşım** - WhatsApp ve Telegram paylaşım butonları
+- 🎯 **Hedef Göstergeleri** - Sonraki milestone ve ödül önizlemeleri
+
+#### **Premium Plan Karşılaştırması**
+- 📊 **Profesyonel Karşılaştırma Tabloları** - Yan yana plan karşılaştırması
+- ✨ **Özellik Bazlı Analiz** - Her özelliğin hangi planda olduğunu gösteren matris
+- 🛒 **Plan Seçimi** - Net plan seçimi ve satın alma butonları
+- 🧭 **Navigasyon Butonları** - Ana menü ile karşılaştırma menüsü
+
+#### **Dil Seçimi İyileştirmeleri**
+- 🌐 **Çok Dilli Görünüm** - Mevcut dil göstergesi ile elegant mesaj
+- 🔄 **Dil Değişimi** - Onay ile düzgün dil değiştirme
+- 🔙 **Geri Butonları** - Düzgün navigasyon ve menü entegrasyonu
+- ✅ **Onay Mesajları** - Dil değişikliği onay bildirimleri
+
+### 🚀 **PERFORMANS İYİLEŞTİRMELERİ**
+
+- ⚡ **Callback Handler Hızı** - Tüm callback işlemleri optimize edildi
+- 📊 **Referral İstatistikleri** - Referral analitik sorguları hızlandırıldı
+- 🔄 **Dil Değişimi** - Dil değiştirme süreci optimize edildi
+- 💳 **Ödeme Sistemi** - Hızlı Telegram Stars ödeme işlemi
+
+### 🐛 **BUG FİXLER**
+
+- ✅ **Referral UI Sorunları** - Terrible UI ve eksik özellikler düzeltildi
+- ✅ **Premium Karşılaştırması** - Plan karşılaştırması ve seçim akışı düzeltildi
+- ✅ **Dil Butonu** - Bozuk dil butonu ve zayıf UX düzeltildi
+- ✅ **Ana Menü Butonları** - Eksik ana menü butonları eklendi
+- ✅ **Telegram Stars Ödeme** - Ödeme sistemi entegrasyonu tamamlandı
+
+### 🔒 **GÜVENLİK GELİŞMELERİ**
+
+- 🛡️ **Ödeme Güvenliği** - Telegram Stars güvenli ödeme sistemi
+- 🔐 **Premium Aktivasyon** - Güvenli premium plan aktivasyonu
+- 📊 **Audit Trail** - Tüm ödeme işlemleri loglanıyor
+
+### 📝 **DOKÜMANTASYON GÜNCELLEMELERİ**
+
+- 📋 **PREMIUM_PLANS.md** - Yeni özellikler ve ödeme sistemi ile güncellendi
+- 📝 **CHANGELOG.md** - v3.2.0 değişiklikleri eklendi
+- 🌍 **JSON Dosyaları** - Yeni çeviri anahtarları eklendi (TR/EN)
+
+---
+
 ## [3.1.2] - 2025-07-28 🔧 **HOTFIX: Portuguese Locale Removal & Bug Fixes**
 
 ### 🐛 **BUG FİXLER**

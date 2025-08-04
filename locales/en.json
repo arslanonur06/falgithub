@@ -810,5 +810,77 @@
   "view_logs": "📋 View Logs",
   "settings": "⚙️ Settings",
             "download_pdf": "📄 Download PDF",
-  "premium_management": "💎 Premium Management"
+  "premium_management": "💎 Premium Management",
+  "referral": {
+    "title": "🌟 **REFERRAL SYSTEM** 🌟",
+    "description": "Invite friends and earn rewards!",
+    "stats_title": "📊 **Your Referral Statistics**",
+    "my_rewards_title": "🎁 **Your Rewards**",
+    "link_copied": "✅ Referral link copied: {link}",
+    "leaderboard_title": "🏆 **Referral Leaderboard**",
+    "progress_title": "📈 **Your Progress**",
+    "next_goal_title": "🎯 **Next Goal**",
+    "copy_link": "📋 Copy Link",
+    "share_whatsapp": "📱 Share on WhatsApp",
+    "share_telegram": "📤 Share on Telegram",
+    "leaderboard": "🏆 Leaderboard",
+    "progress": "📊 Progress Details",
+    "next_goal": "🎯 Next Goal",
+    "back_to_referral": "🔙 Back to Referral"
+  },
+  "premium": {
+    "comparison_title": "📊 **PREMIUM PLAN COMPARISON** 📊",
+    "comparison_description": "Compare all our premium plans and choose the best one for you!",
+    "plan_overview": "📋 **Plan Overview**",
+    "feature_comparison": "✨ **Detailed Feature Comparison**",
+    "plan_details": "📋 Plan Details",
+    "payment_info": "💳 Payment Information",
+    "back_to_comparison": "🔙 Back to Comparison",
+    "back_to_premium": "🔙 Premium Menu",
+    "pay_with_stars": "💳 Pay with Stars",
+    "telegram_stars_payment": "⭐ Pay with Telegram Stars",
+    "payment_success": "🎉 Payment Successful!",
+    "payment_error": "❌ Payment Error",
+    "try_again": "🔄 Try Again"
+  },
+  "language": {
+    "selection_title": "🌐 **Language Selection** 🌐",
+    "selection_description": "Choose your preferred language for the best experience:",
+    "current_language": "Current Language: **{lang}**",
+    "language_updated_success": "✅ Language updated to **{lang}**!",
+    "back_to_menu": "🔙 Back to Menu"
+  },
+  "navigation": {
+    "main_menu": "🏠 Main Menu",
+    "back": "🔙 Back",
+    "next": "➡️ Next",
+    "previous": "⬅️ Previous"
+  },
+  "payment": {
+    "title": "💳 **Payment Information** 💳",
+    "description": "We accept Telegram Stars for all premium plans.",
+    "secure_payment": "🔒 **Secure Payment:**",
+    "secure_features": [
+      "• All payments are processed securely through Telegram",
+      "• Your payment information is never stored",
+      "• Instant activation after successful payment"
+    ],
+    "how_to_get_stars": "💰 **How to get Telegram Stars:**",
+    "stars_sources": [
+      "• Earn stars by using Telegram Premium",
+      "• Purchase stars from Telegram",
+      "• Receive stars as gifts from other users"
+    ],
+    "payment_process": "📱 **Payment Process:**",
+    "payment_steps": [
+      "1. Select your preferred plan",
+      "2. Click 'Pay with Stars'",
+      "3. Complete payment in Telegram",
+      "4. Enjoy your premium features!"
+    ],
+    "need_help": "❓ **Need Help?**",
+    "contact_support": "Contact our support team for assistance.",
+    "buy_premium": "💳 Buy Premium",
+    "back_to_plans": "🔙 Back to Plans"
+  }
 }

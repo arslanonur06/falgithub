@@ -1,6 +1,6 @@
 # 🔮 Fal Gram - AI-Powered Fortune Telling Telegram Bot
 
-**Version: 3.1.0** | Tam Astroloji Modülü & Supabase Prompt Sistemi
+**Version: 3.2.0** | Gelişmiş Referral Sistemi & Premium Karşılaştırması
 
 Fal Gram, kullanıcılara **kahve falı**, **tarot okuma**, **rüya tabiri** ve **gelişmiş astroloji hizmetleri** sunan yenilikçi bir Telegram botudur. Google Gemini AI teknolojisi ile desteklenen bot, **8 farklı dilde** hizmet vermekte ve **3 seviyeli premium abonelik sistemi** sunmaktadır.
 
@@ -64,7 +64,11 @@ Fal Gram, kullanıcılara **kahve falı**, **tarot okuma**, **rüya tabiri** ve 
 - **Kültürel uyarlama** - Her dil için özel terimler
 
 ### 🚀 **Gelişmiş Özellikler**
-- **👥 Referral Sistemi** - Arkadaş davet etme ve ödül kazanma
+- **🌟 Gelişmiş Referral Sistemi** - Elegant UI, progress bar'lar, lider tablosu, sosyal paylaşım
+- **💎 Premium Plan Karşılaştırması** - Yan yana plan karşılaştırması ve özellik matrisi
+- **💳 Telegram Stars Ödeme** - Güvenli ödeme sistemi ve anında aktivasyon
+- **🌐 Gelişmiş Dil Sistemi** - Elegant dil seçimi ve onay mesajları
+- **🏠 Evrensel Navigasyon** - Her sayfada ana menü butonları
 - **📱 Günlük Kart Aboneliği** - Otomatik tarot kartı gönderimi
 - **🔧 Kapsamlı Admin Panel** - Kullanıcı yönetimi, premium yönetimi ve PDF raporlar
 - **💎 Premium Yönetimi** - Abonelik hediye etme, iptal etme, istatistikler
