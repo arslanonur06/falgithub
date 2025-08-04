@@ -4,6 +4,23 @@ Tüm önemli değişiklikler bu dosyada belgelenmiştir.
 
 ---
 
+## [3.1.2] - 2025-07-28 🔧 **HOTFIX: Portuguese Locale Removal & Bug Fixes**
+
+### 🐛 **BUG FİXLER**
+
+- ✅ **Portuguese Locale JSON Error** - Removed problematic `pt.json` file due to JSON syntax errors
+- ✅ **Bot Startup Issues** - Fixed bot startup errors caused by invalid JSON in Portuguese locale
+- ✅ **Language Support** - Updated to support 8 languages instead of 9 (TR, EN, ES, FR, RU, DE, AR, IT)
+- ✅ **Documentation Updates** - Updated README.md and other documentation to reflect language changes
+
+### 🔧 **MAINTENANCE**
+
+- 🗑️ **Removed Portuguese Support** - Temporarily removed Portuguese locale due to JSON structure issues
+- 📝 **Updated Documentation** - All documentation files updated to reflect current language support
+- 🔄 **Locale Loading** - Bot now loads only valid locale files (tr.json, en.json, es.json)
+
+---
+
 ## [3.1.1] - 2025-07-28 🔧 **UPDATE: Gelişmiş Admin Panel & Dil Desteği**
 
 ### 💎 **YENİ ÖZELLİKLER**

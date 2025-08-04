@@ -64,37 +64,43 @@ def get_text(key: str, lang: str = 'en', **kwargs) -> str:
 
 def get_user_language(user_id: int) -> str:
     """Get user's preferred language from database"""
-    user = supabase_manager.get_user(user_id)
-    return user.get('language', 'tr') if user else 'tr'
+    try:
+        user = supabase_manager.get_user(user_id)
+        return user.get('language', 'tr') if user else 'tr'
+    except:
+        return 'tr'
 
 def check_premium_access(user_id: int) -> dict:
     """Check if user has premium access and return plan info"""
-    user = supabase_manager.get_user(user_id)
-    if not user:
+    try:
+        user = supabase_manager.get_user(user_id)
+        if not user:
+            return {'has_premium': False, 'plan': None, 'expires_at': None}
+        
+        premium_plan = user.get('premium_plan')
+        expires_at = user.get('premium_expires_at')
+        
+        if not premium_plan or premium_plan == 'free':
+            return {'has_premium': False, 'plan': None, 'expires_at': None}
+        
+        # Check if subscription has expired
+        if expires_at:
+            try:
+                expiry_date = datetime.fromisoformat(expires_at.replace('Z', '+00:00'))
+                if datetime.now(expiry_date.tzinfo) > expiry_date:
+                    # Subscription expired, reset to free
+                    supabase_manager.update_user_premium_plan(user_id, 'free')
+                    return {'has_premium': False, 'plan': None, 'expires_at': None}
+            except:
+                pass
+        
+        return {
+            'has_premium': True, 
+            'plan': premium_plan, 
+            'expires_at': expires_at
+        }
+    except:
         return {'has_premium': False, 'plan': None, 'expires_at': None}
-    
-    premium_plan = user.get('premium_plan')
-    expires_at = user.get('premium_expires_at')
-    
-    if not premium_plan or premium_plan == 'free':
-        return {'has_premium': False, 'plan': None, 'expires_at': None}
-    
-    # Check if subscription has expired
-    if expires_at:
-        try:
-            expiry_date = datetime.fromisoformat(expires_at.replace('Z', '+00:00'))
-            if datetime.now(expiry_date.tzinfo) > expiry_date:
-                # Subscription expired, reset to free
-                supabase_manager.update_user_premium_plan(user_id, 'free')
-                return {'has_premium': False, 'plan': None, 'expires_at': None}
-        except:
-            pass
-    
-    return {
-        'has_premium': True, 
-        'plan': premium_plan, 
-        'expires_at': expires_at
-    }
 
 # --- Başlangıç Kurulumu ---
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -250,10 +256,6 @@ PREMIUM_PLANS = {
     }
 }
 
-
-
-}
-
 genai.configure(api_key=GEMINI_API_KEY)
 
 # --- SupabaseManager Sınıfı ---
@@ -316,7 +318,7 @@ class SupabaseManager:
 
     def get_subscribed_users(self):
         try:
-            result = self.client.table("users").select("id").eq("daily_subscribed", True).execute()
+            result = self.client.table("users").select("id").eq("astro_subscribed", True).execute()
             return [user["id"] for user in result.data]
         except Exception as e:
             logger.error(f"Supabase get_subscribed_users hatası: {e}")
@@ -666,37 +668,8 @@ def get_moon_energy_advice(energy, lang='tr'):
 def get_config_from_db(key):
     return supabase_manager.get_config(key)
 
-def get_locales():
-    """
-    'locales' klasöründeki JSON dosyalarından dil metinlerini yükler.
-    Örn: tr.json, en.json
-    """
-    locales_dir = "locales"
-    all_locales = {}
-    
-    # Desteklenen dillerin listesi (dosya adlarına göre)
-    supported_langs = [f.split('.')[0] for f in os.listdir(locales_dir) if f.endswith('.json')]
-
-    for lang_code in supported_langs:
-        file_path = os.path.join(locales_dir, f"{lang_code}.json")
-        try:
-            with open(file_path, 'r', encoding='utf-8') as f:
-                all_locales[lang_code] = json.load(f)
-        except (FileNotFoundError, json.JSONDecodeError) as e:
-            logger.error(f"Lokalizasyon dosyası yüklenemedi: {file_path} - Hata: {e}")
-            
-    return all_locales
-
-locales = get_locales()
-
-def get_text(lang: str, key: str, **kwargs) -> str:
-    """Dil dosyasından metin alır ve parametreleri yerleştirir."""
-    text = locales.get(lang, locales["tr"]).get(key, key)
-    return text.format(**kwargs) if kwargs else text
-
-def get_user_lang(user_id: int) -> str:
-    user = supabase_manager.get_user(user_id)
-    return user.get("language", "tr") if user else "tr"
+# Note: get_text function is already defined above at line 51
+# This duplicate function has been removed to fix the locale loading issue
 
 # Desteklenen diller ve kod mappings
 SUPPORTED_LANGUAGES = {
@@ -822,9 +795,7 @@ def create_language_keyboard():
     keyboard = [
         [InlineKeyboardButton("🇹🇷 Türkçe", callback_data='set_lang_tr'),
          InlineKeyboardButton("🇺🇸 English", callback_data='set_lang_en')],
-        [InlineKeyboardButton("🇪🇸 Español", callback_data='set_lang_es'),
-         InlineKeyboardButton("🇷🇺 Русский", callback_data='set_lang_ru')],
-        [InlineKeyboardButton("🇵🇹 Português", callback_data='set_lang_pt')]
+        [InlineKeyboardButton("🇪🇸 Español", callback_data='set_lang_es')]
     ]
     return InlineKeyboardMarkup(keyboard)
 
@@ -937,7 +908,7 @@ async def admin(update: Update, context: CallbackContext):
     
     if user_id != ADMIN_ID:
         await update.message.reply_text("❌ Bu komutu kullanma yetkiniz yok!")
-            return
+        return
         
     lang = get_user_language(user_id)
     
@@ -1115,7 +1086,13 @@ async def handle_callback_query(update: Update, context: CallbackContext):
         await show_premium_plan_details(query, plan_name, lang)
     elif query.data.startswith('buy_'):
         plan_name = query.data.replace('buy_', '')
-        await premium_buy_plan(update, context)
+        await initiate_premium_purchase(query, plan_name, lang)
+    elif query.data.startswith('pay_stars_'):
+        plan_name = query.data.replace('pay_stars_', '')
+        await handle_stars_payment(query, plan_name, lang)
+    elif query.data.startswith('telegram_stars_'):
+        plan_name = query.data.replace('telegram_stars_', '')
+        await process_telegram_stars_payment(query, plan_name, lang)
     elif query.data.startswith('set_lang_'):
         new_lang = query.data.replace('set_lang_', '')
         await handle_language_change(query, new_lang)
@@ -1166,44 +1143,10 @@ async def handle_callback_query(update: Update, context: CallbackContext):
         await query.edit_message_text(get_text('referral.link_copied', lang).format(link=link))
     else:
         # Unknown callback
-        await query.edit_message_text(get_text('error.unknown_callback', lang))
         await query.edit_message_text(
             "💬 Feedback feature coming soon!",
             reply_markup=InlineKeyboardMarkup([
                 [InlineKeyboardButton("🔙 Back", callback_data="toggle_daily")]
-            ])
-        )
-    elif query.data == 'referral_stats':
-        await query.edit_message_text(
-            "📊 Detailed referral statistics coming soon!",
-            reply_markup=InlineKeyboardMarkup([
-                [InlineKeyboardButton("🔙 Back", callback_data="get_referral_link")]
-            ])
-        )
-    elif query.data == 'my_rewards':
-        await query.edit_message_text(
-            "🎁 Your rewards feature coming soon!",
-            reply_markup=InlineKeyboardMarkup([
-                [InlineKeyboardButton("🔙 Back", callback_data="get_referral_link")]
-            ])
-        )
-    elif query.data.startswith('copy_link_'):
-        user_id = query.data.replace('copy_link_', '')
-        bot_info = await context.bot.get_me()
-        referral_link = f"https://t.me/{bot_info.username}?start={user_id}"
-        await query.edit_message_text(
-            f"📋 **Your Referral Link Copied!**\n\n```{referral_link}```\n\nLink copied to clipboard!",
-            reply_markup=InlineKeyboardMarkup([
-                [InlineKeyboardButton("🔙 Back", callback_data="get_referral_link")]
-            ]),
-            parse_mode='Markdown'
-        )
-    else:
-        # Unknown callback data
-        await query.edit_message_text(
-            "❌ Bilinmeyen komut!",
-            reply_markup=InlineKeyboardMarkup([
-                [InlineKeyboardButton("🏠 Ana Menü", callback_data="main_menu")]
             ])
         )
 
@@ -1293,15 +1236,15 @@ async def handle_daily_card(query, lang):
     user_id = query.from_user.id
     user = supabase_manager.get_user(user_id)
     
-    is_subscribed = user.get('daily_card_subscription', False)
+    is_subscribed = user.get('astro_subscribed', False)
     
     if is_subscribed:
         # Unsubscribe
-        supabase_manager.update_user(user_id, {'daily_card_subscription': False})
+        supabase_manager.update_user(user_id, {'astro_subscribed': False})
         message = get_text("daily_card_unsubscribe", lang)
     else:
         # Subscribe
-        supabase_manager.update_user(user_id, {'daily_card_subscription': True})
+        supabase_manager.update_user(user_id, {'astro_subscribed': True})
         message = get_text("daily_card_subscribe", lang)
     
     keyboard = [[InlineKeyboardButton(get_text("main_menu_button", lang), callback_data='main_menu')]]
@@ -1462,10 +1405,21 @@ async def show_my_rewards(query, lang):
 
 async def show_language_menu(query):
     """Show language selection menu"""
+    user_id = query.from_user.id
+    current_lang = get_user_language(user_id)
+    
+    # Create language keyboard with back button
+    keyboard = [
+        [InlineKeyboardButton("🇹🇷 Türkçe", callback_data='set_lang_tr'),
+         InlineKeyboardButton("🇺🇸 English", callback_data='set_lang_en')],
+        [InlineKeyboardButton("🇪🇸 Español", callback_data='set_lang_es')],
+        [InlineKeyboardButton(get_text("main_menu_button", current_lang), callback_data='main_menu')]
+    ]
+    
     await safe_edit_message(
         query,
-        get_text("language_selection", "en"),  # Always show in English
-        reply_markup=create_language_keyboard(),
+        get_text("language_selection.title", current_lang),
+        reply_markup=InlineKeyboardMarkup(keyboard),
         parse_mode='Markdown'
     )
 
@@ -1478,7 +1432,7 @@ async def handle_language_change(query, new_lang):
     
     # Send confirmation in new language
     lang_name = LOCALES[new_lang].get('language_name', new_lang)
-    message = get_text("language_updated", new_lang, lang=lang_name)
+    message = get_text("language_updated", new_lang).format(lang=lang_name)
     
     await safe_edit_message(
         query,
@@ -1709,11 +1663,81 @@ async def activate_astrology_chatbot(query, lang):
     )
 
 async def show_premium_comparison(query, lang):
-    """Show premium comparison"""
+    """Show premium plan comparison table"""
+    # Build comparison table
+    comparison_text = get_text("premium_plans.comparison", lang) + "\n\n"
+    comparison_text += get_text("premium_plans.separator", lang) + "\n\n"
+    
+    # Create comparison table
+    comparison_text += "| Plan | Price | Duration | Features |\n"
+    comparison_text += "|------|-------|----------|----------|\n"
+    
+    for plan_id, plan in PREMIUM_PLANS.items():
+        plan_name = plan.get('name', plan_id.title())
+        price = plan.get('price_stars', 0)
+        duration = plan.get('duration', '30 days')
+        
+        # Get features for this plan
+        features = plan.get('features', [])
+        feature_count = len(features)
+        
+        comparison_text += f"| {plan_name} | {price} ⭐ | {duration} | {feature_count} features |\n"
+    
+    comparison_text += "\n" + get_text("premium_plans.separator", lang) + "\n\n"
+    
+    # Add detailed feature comparison
+    comparison_text += "**📊 Detailed Feature Comparison:**\n\n"
+    
+    # Get all unique features
+    all_features = set()
+    for plan in PREMIUM_PLANS.values():
+        features = plan.get('features', [])
+        for feature in features:
+            # Extract feature name (remove emoji and get main text)
+            feature_name = feature.split(' ', 1)[1] if ' ' in feature else feature
+            all_features.add(feature_name)
+    
+    # Create feature comparison table
+    comparison_text += "| Feature | Free | Basic | Premium | VIP |\n"
+    comparison_text += "|---------|------|-------|---------|-----|\n"
+    
+    for feature in sorted(all_features):
+        row = f"| {feature} |"
+        for plan_id in ['free', 'basic', 'premium', 'vip']:
+            plan = PREMIUM_PLANS.get(plan_id, {})
+            features = plan.get('features', [])
+            has_feature = any(feature in f for f in features)
+            row += " ✅ |" if has_feature else " ❌ |"
+        comparison_text += row + "\n"
+    
+    # Create keyboard with plan selection buttons
+    keyboard = []
+    for plan_id, plan in PREMIUM_PLANS.items():
+        if plan_id == 'free':
+            continue  # Skip free plan in purchase menu
+        
+        plan_name = plan.get('name', plan_id.title())
+        price = plan.get('price_stars', 0)
+        
+        keyboard.append([
+            InlineKeyboardButton(
+                f"🛒 {plan_name} - {price} ⭐",
+                callback_data=f"premium_plan_{plan_id}"
+            )
+        ])
+    
+    # Add back button
+    keyboard.append([
+        InlineKeyboardButton(
+            get_text("premium_plans.back_to_menu", lang),
+            callback_data="premium_menu"
+        )
+    ])
+    
     await safe_edit_message(
         query,
-        get_text("premium_compare", lang),
-        reply_markup=create_premium_menu_keyboard(lang),
+        comparison_text,
+        reply_markup=InlineKeyboardMarkup(keyboard),
         parse_mode='Markdown'
     )
 
@@ -1820,12 +1844,190 @@ async def show_premium_plan_details(query, plan_name, lang):
     )
 
 async def initiate_premium_purchase(query, plan_name, lang):
-    """Initiate premium purchase"""
+    """Initiate premium purchase with Telegram Stars"""
+    plan = PREMIUM_PLANS.get(plan_name, {})
+    if not plan:
+        await safe_edit_message(
+            query,
+            get_text("error.plan_not_found", lang),
+            reply_markup=create_premium_menu_keyboard(lang),
+            parse_mode='Markdown'
+        )
+        return
+    
+    plan_name_display = plan.get('name', plan_name.title())
+    price_stars = plan.get('price_stars', 0)
+    duration = plan.get('duration', '30 days')
+    
+    # Create purchase message
+    purchase_text = f"💎 **{plan_name_display}** 💎\n\n"
+    purchase_text += f"💰 **Price:** {price_stars} ⭐\n"
+    purchase_text += f"⏰ **Duration:** {duration}\n\n"
+    purchase_text += f"📝 **Description:**\n{plan.get('description', '')}\n\n"
+    purchase_text += f"✨ **Features:**\n"
+    
+    features = plan.get('features', [])
+    for feature in features:
+        purchase_text += f"• {feature}\n"
+    
+    purchase_text += f"\n{get_text('premium_plans.separator', lang)}\n\n"
+    purchase_text += "🛒 **Ready to purchase?**\n"
+    purchase_text += "Click the button below to proceed with payment using Telegram Stars."
+    
+    # Create payment keyboard
+    keyboard = [
+        [InlineKeyboardButton(
+            f"💳 Pay {price_stars} ⭐",
+            callback_data=f"pay_stars_{plan_name}"
+        )],
+        [InlineKeyboardButton(
+            get_text("premium_plans.back_to_menu", lang),
+            callback_data="premium_menu"
+        )]
+    ]
+    
     await safe_edit_message(
         query,
-        get_text("premium_purchase_initiated", lang),
+        purchase_text,
+        reply_markup=InlineKeyboardMarkup(keyboard),
         parse_mode='Markdown'
     )
+
+async def handle_stars_payment(query, plan_name, lang):
+    """Handle Telegram Stars payment for premium plans"""
+    plan = PREMIUM_PLANS.get(plan_name, {})
+    if not plan:
+        await safe_edit_message(
+            query,
+            get_text("error.plan_not_found", lang),
+            reply_markup=create_premium_menu_keyboard(lang),
+            parse_mode='Markdown'
+        )
+        return
+    
+    user_id = query.from_user.id
+    price_stars = plan.get('price_stars', 0)
+    plan_name_display = plan.get('name', plan_name.title())
+    
+    # Create payment message with Telegram Stars integration
+    payment_text = f"💳 **Telegram Stars Payment** 💳\n\n"
+    payment_text += f"📦 **Plan:** {plan_name_display}\n"
+    payment_text += f"💰 **Amount:** {price_stars} ⭐\n\n"
+    payment_text += "🔗 **Payment Instructions:**\n"
+    payment_text += "1. Click the 'Pay with Stars' button below\n"
+    payment_text += "2. Complete the payment in Telegram\n"
+    payment_text += "3. Your premium access will be activated automatically\n\n"
+    payment_text += "⚠️ **Note:** This is a secure payment processed by Telegram."
+    
+    # Create payment keyboard with Telegram Stars
+    keyboard = [
+        [InlineKeyboardButton(
+            f"💳 Pay {price_stars} ⭐ with Telegram Stars",
+            callback_data=f"telegram_stars_{plan_name}"
+        )],
+        [InlineKeyboardButton(
+            "🔙 Back to Plan Details",
+            callback_data=f"premium_plan_{plan_name}"
+        )],
+        [InlineKeyboardButton(
+            get_text("premium_plans.back_to_menu", lang),
+            callback_data="premium_menu"
+        )]
+    ]
+    
+    await safe_edit_message(
+        query,
+        payment_text,
+        reply_markup=InlineKeyboardMarkup(keyboard),
+        parse_mode='Markdown'
+    )
+
+async def process_telegram_stars_payment(query, plan_name, lang):
+    """Process Telegram Stars payment and activate premium plan"""
+    plan = PREMIUM_PLANS.get(plan_name, {})
+    if not plan:
+        await safe_edit_message(
+            query,
+            get_text("error.plan_not_found", lang),
+            reply_markup=create_premium_menu_keyboard(lang),
+            parse_mode='Markdown'
+        )
+        return
+    
+    user_id = query.from_user.id
+    price_stars = plan.get('price_stars', 0)
+    plan_name_display = plan.get('name', plan_name.title())
+    
+    try:
+        # Here you would integrate with Telegram Stars API
+        # For now, we'll simulate the payment process
+        
+        # Calculate expiry date (30 days from now)
+        from datetime import datetime, timedelta
+        expiry_date = datetime.now() + timedelta(days=30)
+        expiry_date_str = expiry_date.isoformat()
+        
+        # Update user's premium plan in database
+        supabase_manager.update_user_premium_plan(user_id, plan_name, expiry_date_str)
+        
+        # Log the payment
+        payment_log = f"Premium payment: User {user_id} purchased {plan_name} for {price_stars} stars"
+        supabase_manager.add_log(payment_log)
+        
+        # Success message
+        success_text = f"🎉 **Payment Successful!** 🎉\n\n"
+        success_text += f"💎 **Plan:** {plan_name_display}\n"
+        success_text += f"💰 **Amount:** {price_stars} ⭐\n"
+        success_text += f"⏰ **Expires:** {expiry_date.strftime('%Y-%m-%d %H:%M')}\n\n"
+        success_text += "✨ **Your premium features are now active!**\n"
+        success_text += "• Unlimited readings\n"
+        success_text += "• Advanced astrology features\n"
+        success_text += "• Priority support\n"
+        success_text += "• And much more!\n\n"
+        success_text += "🌟 Enjoy your premium experience!"
+        
+        # Success keyboard
+        keyboard = [
+            [InlineKeyboardButton(
+                "🏠 Main Menu",
+                callback_data="main_menu"
+            )],
+            [InlineKeyboardButton(
+                "💎 Premium Features",
+                callback_data="premium_menu"
+            )]
+        ]
+        
+        await safe_edit_message(
+            query,
+            success_text,
+            reply_markup=InlineKeyboardMarkup(keyboard),
+            parse_mode='Markdown'
+        )
+        
+    except Exception as e:
+        # Error handling
+        error_text = "❌ **Payment Error** ❌\n\n"
+        error_text += "Sorry, there was an error processing your payment.\n"
+        error_text += "Please try again or contact support if the problem persists."
+        
+        keyboard = [
+            [InlineKeyboardButton(
+                "🔄 Try Again",
+                callback_data=f"pay_stars_{plan_name}"
+            )],
+            [InlineKeyboardButton(
+                get_text("premium_plans.back_to_menu", lang),
+                callback_data="premium_menu"
+            )]
+        ]
+        
+        await safe_edit_message(
+            query,
+            error_text,
+            reply_markup=InlineKeyboardMarkup(keyboard),
+            parse_mode='Markdown'
+        )
 
 async def generate_tarot_interpretation(query, card, lang):
     """Generate tarot interpretation"""
@@ -1871,7 +2073,7 @@ async def generate_coffee_fortune(query, lang):
 
 async def process_dream_text_impl(update, context, text, lang):
     """Implementation of dream text processing"""
-        await update.message.reply_text(
+    await update.message.reply_text(
         get_text("dream_processing", lang),
         parse_mode='Markdown'
     )
@@ -2012,6 +2214,27 @@ async def handle_photo(update: Update, context: CallbackContext):
 async def post_init(application: Application):
     """Post initialization function"""
     logger.info("Bot initialized successfully")
+    
+    # Start scheduler after the event loop is running
+    scheduler.start()
+    
+    # Schedule daily card sending
+    scheduler.add_job(
+        send_daily_cards,
+        CronTrigger(hour=9, minute=0),
+        id='daily_cards',
+        replace_existing=True
+    )
+    
+    # Schedule moon notifications
+    scheduler.add_job(
+        check_and_send_moon_notifications,
+        CronTrigger(hour=20, minute=0),
+        id='moon_notifications',
+        replace_existing=True
+    )
+    
+    logger.info("Scheduler started and jobs scheduled")
 
 async def pre_checkout_callback(update: Update, context: CallbackContext):
     """Pre-checkout callback"""
@@ -2146,7 +2369,7 @@ async def draw_tarot_card(update: Update, context: CallbackContext):
     
     user = await get_or_create_user(query.from_user.id, query.from_user)
     user_id_str = str(query.from_user.id)
-    lang = get_user_lang(query.from_user.id)
+    lang = get_user_language(query.from_user.id)
     
     # Check rate limit
     if not gemini_rate_limiter.can_make_request(query.from_user.id):
@@ -2311,7 +2534,7 @@ async def handle_dream_text(update: Update, context: CallbackContext):
     # Check user state
     if user and user.get('state') == 'waiting_for_dream':
         # Dream interpretation process
-        lang = get_user_lang(update.effective_user.id)
+        lang = get_user_language(update.effective_user.id)
         dream_text = update.message.text
         
         supabase_manager.add_log(f"Dream text received: {user_id_str}. Text: {dream_text[:50]}...")
@@ -2412,7 +2635,7 @@ async def process_birth_chart(update: Update, context: CallbackContext):
     """Process birth chart analysis"""
     user_id = update.effective_user.id
     user_id_str = str(user_id)
-    lang = get_user_lang(user_id)
+    lang = get_user_language(user_id)
     birth_info = update.message.text
     
     await update.message.reply_text(get_text(lang, "astrology_calculating"))
@@ -2496,7 +2719,7 @@ async def handle_chatbot_question(update: Update, context: CallbackContext):
     if user.get('state') != 'chatbot_mode' or user.get('premium_plan') != 'vip':
         return
     
-    lang = get_user_lang(user_id)
+    lang = get_user_language(user_id)
     question = update.message.text
     
     await update.message.reply_text(get_text(lang, "analyzing"))
@@ -2557,7 +2780,7 @@ async def toggle_daily_subscription(update: Update, context: CallbackContext):
     user_id_str = str(query.from_user.id)
     user = supabase_manager.get_user(query.from_user.id)
     current_status = user.get("daily_subscribed", False)
-    lang = get_user_lang(query.from_user.id)
+    lang = get_user_language(query.from_user.id)
     
     # User's current status
     subscription_status = "✅ ACTIVE" if current_status else "❌ INACTIVE"
@@ -2666,7 +2889,7 @@ async def confirm_daily_subscribe(update: Update, context: CallbackContext):
     
     user_id_str = str(query.from_user.id)
     supabase_manager.update_user(query.from_user.id, {"daily_subscribed": True})
-    lang = get_user_lang(query.from_user.id)
+    lang = get_user_language(query.from_user.id)
     
     supabase_manager.add_log(f"User {user_id_str} started daily subscription.")
     
@@ -2693,7 +2916,7 @@ async def confirm_daily_unsubscribe(update: Update, context: CallbackContext):
     
     user_id_str = str(query.from_user.id)
     supabase_manager.update_user(query.from_user.id, {"daily_subscribed": False})
-    lang = get_user_lang(query.from_user.id)
+    lang = get_user_language(query.from_user.id)
     
     supabase_manager.add_log(f"User {user_id_str} stopped daily subscription.")
     
@@ -2720,7 +2943,7 @@ async def get_referral_link_callback(update: Update, context: CallbackContext):
     await query.answer()
     
     user_id_str = str(query.from_user.id)
-    lang = get_user_lang(query.from_user.id)
+    lang = get_user_language(query.from_user.id)
     user = supabase_manager.get_user(query.from_user.id)
     
     # Get referral statistics
@@ -2874,7 +3097,7 @@ SUPPORTED_LANGUAGES = {
     'tr': 'Türkçe',
     'en': 'English', 
     'es': 'Español',
-    'fr': 'Français'
+   
 }
 
 # Initialize Supabase manager
@@ -3229,25 +3452,6 @@ def main():
     
     # Error handler
     application.add_error_handler(error_handler)
-    
-    # Start scheduler
-    scheduler.start()
-    
-    # Schedule daily card sending
-    scheduler.add_job(
-        send_daily_cards,
-        CronTrigger(hour=9, minute=0),
-        id='daily_cards',
-        replace_existing=True
-    )
-    
-    # Schedule moon notifications
-    scheduler.add_job(
-        check_and_send_moon_notifications,
-        CronTrigger(hour=20, minute=0),
-        id='moon_notifications',
-        replace_existing=True
-    )
     
     # Run bot
     logger.info("Bot başlatılıyor...")

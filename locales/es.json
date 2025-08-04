@@ -46,6 +46,20 @@
   "premium_plan_basic": "✨ Plan Básico - 500 ⭐",
   "premium_plan_premium": "✨ Plan Premium - 1000 ⭐",
   "premium_plan_vip": "✨ Plan VIP - 2000 ⭐",
+  "premium_plans": {
+    "title": "💎 **PLANES PREMIUM** 💎",
+    "description": "¡Descubre nuestros planes premium para funciones especiales y experiencia ilimitada de fortuna!",
+    "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+    "comparison": "📊 **Comparación de Planes**",
+    "features": "✨ **Características:**",
+    "price": "💰 **Precio:**",
+    "duration": "⏰ **Duración:**",
+    "buy_now": "🛒 Comprar Ahora",
+    "back_to_menu": "⬅️ Volver al Menú"
+  },
+  "error": {
+    "plan_not_found": "❌ Plan no encontrado. Por favor, inténtalo de nuevo."
+  },
   "plan_comparison": {
     "title": "📊 **COMPARACIÓN DE PLANES** 📊",
     "separator": "━━━━━━━━━━━━━━━━━━━━━━",

@@ -66,8 +66,8 @@
   "referral": "👥 Arkadaş Davet Et",
   "language": "🌐 Dil Seçimi",
   "language_selection": {
-    "title": "🌐 **Dil Seçimi**",
-    "description": "Lütfen tercih ettiğiniz dili seçin:",
+    "title": "🌐 **Dil Seçimi / Language Selection**",
+    "description": "Lütfen tercih ettiğiniz dili seçin:\nPlease select your preferred language:",
     "buttons": {
       "turkish": "🇹🇷 Türkçe",
       "english": "🇺🇸 English",
@@ -98,20 +98,6 @@
   "premium_plan_basic": "✨ Temel Plan - 500 ⭐",
   "premium_plan_premium": "✨ Premium Plan - 1000 ⭐",
   "premium_plan_vip": "✨ VIP Plan - 2000 ⭐",
-  "premium_plans": {
-    "title": "💎 **PREMIUM PLANLAR** 💎",
-    "description": "Özel özellikler ve sınırsız fal deneyimi için premium planlarımızı keşfedin!",
-    "separator": "━━━━━━━━━━━━━━━━━━━━━━",
-    "comparison": "📊 **Plan Karşılaştırması**",
-    "features": "✨ **Özellikler:**",
-    "price": "💰 **Fiyat:**",
-    "duration": "⏰ **Süre:**",
-    "buy_now": "🛒 Şimdi Satın Al",
-    "back_to_menu": "⬅️ Ana Menüye Dön"
-  },
-  "error": {
-    "plan_not_found": "❌ Plan bulunamadı. Lütfen tekrar deneyin."
-  },
   "plan_comparison": {
     "title": "📊 **PLAN KARŞILAŞTIRMASI** 📊",
     "separator": "━━━━━━━━━━━━━━━━━━━━━━",

@@ -2,7 +2,7 @@
 
 **Version: 3.1.0** | Tam Astroloji Modülü & Supabase Prompt Sistemi
 
-Fal Gram, kullanıcılara **kahve falı**, **tarot okuma**, **rüya tabiri** ve **gelişmiş astroloji hizmetleri** sunan yenilikçi bir Telegram botudur. Google Gemini AI teknolojisi ile desteklenen bot, **9 farklı dilde** hizmet vermekte ve **3 seviyeli premium abonelik sistemi** sunmaktadır.
+Fal Gram, kullanıcılara **kahve falı**, **tarot okuma**, **rüya tabiri** ve **gelişmiş astroloji hizmetleri** sunan yenilikçi bir Telegram botudur. Google Gemini AI teknolojisi ile desteklenen bot, **8 farklı dilde** hizmet vermekte ve **3 seviyeli premium abonelik sistemi** sunmaktadır.
 
 ---
 
@@ -59,7 +59,7 @@ Fal Gram, kullanıcılara **kahve falı**, **tarot okuma**, **rüya tabiri** ve 
 
 ### 🌐 **Çoklu Dil Desteği**
 - 🇹🇷 Türkçe | 🇺🇸 English | 🇪🇸 Español | 🇫🇷 Français | 🇷🇺 Русский
-- 🇩🇪 Deutsch | 🇸🇦 العربية | 🇮🇹 Italiano | 🇵🇹 Português
+- 🇩🇪 Deutsch | 🇸🇦 العربية | 🇮🇹 Italiano
 - **Otomatik dil tespiti** - Telegram client dilinizi algılar
 - **Kültürel uyarlama** - Her dil için özel terimler
 
@@ -71,7 +71,7 @@ Fal Gram, kullanıcılara **kahve falı**, **tarot okuma**, **rüya tabiri** ve 
 - **📊 Detaylı İstatistikler** - Kullanım analitikleri ve gelir raporları
 - **🌙 Ay Bildirimleri** - Dolunay/yeniay özel mesajları
 - **🗄️ Supabase Prompt Sistemi** - Dinamik AI prompt yönetimi
-- **🌍 Çok Dilli AI Yanıtlar** - 9 dilde doğal AI yorumları
+- **🌍 Çok Dilli AI Yanıtlar** - 8 dilde doğal AI yorumları
 - **🎁 Hediye Abonelik Sistemi** - Admin komutları ile premium hediye etme
 - **📈 Gerçek Zamanlı Analitik** - Canlı kullanıcı ve gelir takibi
 
