@@ -49,17 +49,27 @@ for filename in os.listdir(locales_dir):
             LOCALES[lang_code] = json.load(f)
 
 def get_text(key: str, lang: str = 'en', **kwargs) -> str:
-    """Get localized text for a given key"""
-    # Get the text from locale file
-    text = LOCALES.get(lang, {}).get(key, LOCALES.get('en', {}).get(key, key))
-    
-    # Format with any provided kwargs
+    """Get localized text for a given key, with robust fallback and logging"""
+    def get_nested_value(data, key_path):
+        keys = key_path.split('.')
+        current = data
+        for k in keys:
+            if isinstance(current, dict) and k in current:
+                current = current[k]
+            else:
+                return None
+        return current
+    text = get_nested_value(LOCALES.get(lang, {}), key)
+    if text is None:
+        text = get_nested_value(LOCALES.get('en', {}), key)
+    if text is None:
+        logger.warning(f"Missing translation key: {key} (lang={lang})")
+        text = key  # Fallback to key itself
     if kwargs:
         try:
             text = text.format(**kwargs)
-        except:
-            pass
-    
+        except Exception as e:
+            logger.warning(f"Format error for key {key}: {e}")
     return text
 
 def get_user_language(user_id: int) -> str:
@@ -1952,26 +1962,20 @@ async def initiate_premium_purchase(query, plan_name, lang):
             parse_mode='Markdown'
         )
         return
-    
     plan_name_display = plan.get('name', plan_name.title())
     price_stars = plan.get('price_stars', 0)
     duration = plan.get('duration', '30 days')
-    
     # Create purchase message
     purchase_text = f"💎 **{plan_name_display}** 💎\n\n"
     purchase_text += f"💰 **Price:** {price_stars} ⭐\n"
     purchase_text += f"⏰ **Duration:** {duration}\n\n"
     purchase_text += f"📝 **Description:**\n{plan.get('description', '')}\n\n"
     purchase_text += f"✨ **Features:**\n"
-    
     features = plan.get('features', [])
     for feature in features:
         purchase_text += f"• {feature}\n"
-    
     purchase_text += f"\n{get_text('premium_plans.separator', lang)}\n\n"
-    purchase_text += "🛒 **Ready to purchase?**\n"
-    purchase_text += "Click the button below to proceed with payment using Telegram Stars."
-    
+    purchase_text += get_text('premium.purchase_initiated', lang) + "\n"
     # Create payment keyboard
     keyboard = [
         [InlineKeyboardButton(
@@ -1983,7 +1987,6 @@ async def initiate_premium_purchase(query, plan_name, lang):
             callback_data="premium_menu"
         )]
     ]
-    
     await safe_edit_message(
         query,
         purchase_text,
@@ -2002,43 +2005,31 @@ async def handle_stars_payment(query, plan_name, lang):
             parse_mode='Markdown'
         )
         return
-    
     user_id = query.from_user.id
     price_stars = plan.get('price_stars', 0)
     plan_name_display = plan.get('name', plan_name.title())
-    
-    # Create payment message with Telegram Stars integration
-    payment_text = f"💳 **Telegram Stars Payment** 💳\n\n"
-    payment_text += f"📦 **Plan:** {plan_name_display}\n"
-    payment_text += f"💰 **Amount:** {price_stars} ⭐\n\n"
-    payment_text += "🔗 **Payment Instructions:**\n"
-    payment_text += "1. Click the 'Pay with Stars' button below\n"
-    payment_text += "2. Complete the payment in Telegram\n"
-    payment_text += "3. Your premium access will be activated automatically\n\n"
-    payment_text += "⚠️ **Note:** This is a secure payment processed by Telegram."
-    
-    # Create payment keyboard with Telegram Stars
-    keyboard = [
-        [InlineKeyboardButton(
-            f"💳 Pay {price_stars} ⭐ with Telegram Stars",
-            callback_data=f"telegram_stars_{plan_name}"
-        )],
-        [InlineKeyboardButton(
-            "🔙 Back to Plan Details",
-            callback_data=f"premium_plan_{plan_name}"
-        )],
-        [InlineKeyboardButton(
-            get_text("premium_plans.back_to_menu", lang),
-            callback_data="premium_menu"
-        )]
-    ]
-    
-    await safe_edit_message(
-        query,
-        payment_text,
-        reply_markup=InlineKeyboardMarkup(keyboard),
-        parse_mode='Markdown'
-    )
+    # Simulate payment process (replace with real payment integration)
+    try:
+        # Payment logic here (simulate success)
+        await safe_edit_message(
+            query,
+            get_text('premium.payment_success', lang),
+            reply_markup=InlineKeyboardMarkup([
+                [InlineKeyboardButton(get_text('buttons.main_menu', lang), callback_data="main_menu")]
+            ]),
+            parse_mode='Markdown'
+        )
+    except Exception as e:
+        logger.error(f"Payment error: {e}")
+        await safe_edit_message(
+            query,
+            get_text('premium.payment_error', lang),
+            reply_markup=InlineKeyboardMarkup([
+                [InlineKeyboardButton(get_text('buttons.try_again', lang), callback_data=f"pay_stars_{plan_name}")],
+                [InlineKeyboardButton(get_text('buttons.back_to_menu', lang), callback_data="premium_menu")]
+            ]),
+            parse_mode='Markdown'
+        )
 
 async def process_telegram_stars_payment(query, plan_name, lang):
     """Process Telegram Stars payment and activate premium plan"""
@@ -2051,75 +2042,34 @@ async def process_telegram_stars_payment(query, plan_name, lang):
             parse_mode='Markdown'
         )
         return
-    
     user_id = query.from_user.id
     price_stars = plan.get('price_stars', 0)
     plan_name_display = plan.get('name', plan_name.title())
-    
     try:
-        # Here you would integrate with Telegram Stars API
-        # For now, we'll simulate the payment process
-        
-        # Calculate expiry date (30 days from now)
+        # Simulate payment success
         from datetime import datetime, timedelta
         expiry_date = datetime.now() + timedelta(days=30)
         expiry_date_str = expiry_date.isoformat()
-        
-        # Update user's premium plan in database
         supabase_manager.update_user_premium_plan(user_id, plan_name, expiry_date_str)
-        
-        # Log the payment
-        payment_log = f"Premium payment: User {user_id} purchased {plan_name} for {price_stars} stars"
-        supabase_manager.add_log(payment_log)
-        
-        # Success message
-        success_text = f"🎉 **Payment Successful!** 🎉\n\n"
-        success_text += f"💎 **Plan:** {plan_name_display}\n"
-        success_text += f"💰 **Amount:** {price_stars} ⭐\n"
-        success_text += f"⏰ **Expires:** {expiry_date.strftime('%Y-%m-%d %H:%M')}\n\n"
-        success_text += "✨ **Your premium features are now active!**\n"
-        success_text += "• Unlimited readings\n"
-        success_text += "• Advanced astrology features\n"
-        success_text += "• Priority support\n"
-        success_text += "• And much more!\n\n"
-        success_text += "🌟 Enjoy your premium experience!"
-        
-        # Success keyboard
+        supabase_manager.add_log(f"Premium payment: User {user_id} purchased {plan_name} for {price_stars} stars")
+        success_text = get_text('premium.payment_success', lang) + f"\n\n💎 **Plan:** {plan_name_display}\n💰 **Amount:** {price_stars} ⭐\n⏰ **Expires:** {expiry_date.strftime('%Y-%m-%d %H:%M')}\n"
         keyboard = [
-            [InlineKeyboardButton(
-                "🏠 Main Menu",
-                callback_data="main_menu"
-            )],
-            [InlineKeyboardButton(
-                "💎 Premium Features",
-                callback_data="premium_menu"
-            )]
+            [InlineKeyboardButton(get_text('buttons.main_menu', lang), callback_data="main_menu")],
+            [InlineKeyboardButton(get_text('buttons.back_to_menu', lang), callback_data="premium_menu")]
         ]
-        
         await safe_edit_message(
             query,
             success_text,
             reply_markup=InlineKeyboardMarkup(keyboard),
             parse_mode='Markdown'
         )
-        
     except Exception as e:
-        # Error handling
-        error_text = "❌ **Payment Error** ❌\n\n"
-        error_text += "Sorry, there was an error processing your payment.\n"
-        error_text += "Please try again or contact support if the problem persists."
-        
+        logger.error(f"Payment error: {e}")
+        error_text = get_text('premium.payment_error', lang)
         keyboard = [
-            [InlineKeyboardButton(
-                "🔄 Try Again",
-                callback_data=f"pay_stars_{plan_name}"
-            )],
-            [InlineKeyboardButton(
-                get_text("premium_plans.back_to_menu", lang),
-                callback_data="premium_menu"
-            )]
+            [InlineKeyboardButton(get_text('buttons.try_again', lang), callback_data=f"pay_stars_{plan_name}")],
+            [InlineKeyboardButton(get_text('buttons.back_to_menu', lang), callback_data="premium_menu")]
         ]
-        
         await safe_edit_message(
             query,
             error_text,

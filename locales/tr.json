@@ -859,7 +859,9 @@
     "telegram_stars_payment": "⭐ Telegram Yıldızları ile Öde",
     "payment_success": "🎉 Ödeme Başarılı!",
     "payment_error": "❌ Ödeme Hatası",
-    "try_again": "🔄 Tekrar Dene"
+    "try_again": "🔄 Tekrar Dene",
+    "purchase_initiated": "🛒 Satın alma başlatıldı. Ödeme için aşağıdaki butona tıklayın.",
+    "payment_success": "🎉 Ödeme Başarılı! Premium özellikleriniz aktif."
   },
   "premium_plans": {
     "separator": "━━━━━━━━━━━━━━━━━━━━━━",
@@ -871,9 +873,9 @@
     },
     "buttons": {
       "buy": "💳 Satın Al",
-      "back": "🔙 Geri"
-    },
-    "back_to_menu": "🔙 Menüye Geri Dön"
+      "back": "🔙 Geri",
+      "back_to_menu": "🔙 Menüye Geri Dön"
+    }
   },
   "language": {
     "selection_title": "🌐 **Dil Seçimi** 🌐",
@@ -915,7 +917,8 @@
     "upgrade_premium": "⭐ Premium'a Yükselt",
     "upgrade_basic": "💎 Temel'e Yükselt",
     "buy_premium": "💳 Premium Satın Al",
-    "try_again": "🔄 Tekrar Dene"
+    "try_again": "🔄 Tekrar Dene",
+    "back_to_menu": "🔙 Menüye Geri Dön"
   },
   "payment": {
     "title": "💳 **Ödeme Bilgileri** 💳",

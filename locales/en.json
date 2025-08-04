@@ -854,7 +854,8 @@
     "telegram_stars_payment": "⭐ Pay with Telegram Stars",
     "payment_success": "🎉 Payment Successful!",
     "payment_error": "❌ Payment Error",
-    "try_again": "🔄 Try Again"
+    "try_again": "🔄 Try Again",
+    "purchase_initiated": "🛒 Purchase initiated. Click the button below to proceed with payment."
   },
   "premium_plans": {
     "separator": "━━━━━━━━━━━━━━━━━━━━━━",
