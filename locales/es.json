@@ -769,70 +769,34 @@
       "my_stats": "📊 Mis Estadísticas",
       "my_rewards": "🎁 Mis Premios",
       "back": "🔙 Menú Principal"
-    }
+    },
+    "no_data": "No hay datos disponibles aún.",
+    "progress_title": "📈 **Tu Progreso de Referidos**",
+    "next_goal_title": "🎯 **Tu Próximo Objetivo**"
   },
-  "daily_subscription": {
-    "title": "🌅 **SUSCRIPCIÓN DE CARTA DIARIA** 🌅",
+  "payment": {
+    "title": "💳 **SISTEMA DE PAGO** 💳",
     "separator": "━━━━━━━━━━━━━━━━━━━━━━",
-    "status_label": "📱 **Tu Estado Actual:**",
-    "delivery_label": "⏰ **Próxima Entrega:**",
-    "description": "🔮 **Sobre Esta Función:**\nCon la suscripción de Carta Diaria, recibes una carta de tarot especialmente preparada y su interpretación cada mañana. Esta carta presenta la energía del día, oportunidades que puedes encontrar y puntos para prestar atención desde una perspectiva mística.",
-    "features_label": "✨ **Qué Está Incluido:**",
-    "features_list": [
-      "• 🃏 Carta de tarot especial cada mañana a las 09:00",
-      "• 📜 Interpretación actual y significado de la carta",
-      "• 🎯 Consejos prácticos para el día",
-      "• 🌟 Guía de energía personal",
-      "• 💫 Conexiones astrológicas y consejos"
+    "description": "💰 **¡Obtén funciones premium con estrellas!**\n\nLas estrellas son nuestro medio de pago. Aquí puedes ver cómo ganar y usar estrellas.",
+    "secure_features": [
+      "• Todos los pagos se procesan de forma segura a través de Telegram",
+      "• Tu información de pago nunca se almacena",
+      "• Activación instantánea después del pago exitoso"
     ],
-    "benefits_label": "🎁 **Beneficios Especiales:**",
-    "benefits_list": [
-      "• Servicio completamente GRATUITO",
-      "• Carta e interpretación diferentes cada día",
-      "• Conteúdo personalizado",
-      "• Mensajes motivacionales e inspiradores",
-      "• Capturando la energía positiva del día"
+    "stars_sources": [
+      "• Gana estrellas usando Telegram Premium",
+      "• Compra estrellas desde Telegram",
+      "• Recibe estrellas como regalo de otros usuarios"
     ],
-    "stats_label": "📊 **Estadísticas:**",
-    "stats_list": [
-      "• 15.000+ suscriptores activos diarios",
-      "• 94% de satisfacción del usuario",
-      "• Calificación promedio 4.8/5"
+    "payment_steps": [
+      "1. Selecciona tu plan preferido",
+      "2. Haz clic en 'Pagar con Estrellas'",
+      "3. Completa el pago en Telegram",
+      "4. ¡Disfruta de tus funciones premium!"
     ],
-    "how_it_works_label": "🔧 **Cómo Funciona:**",
-    "how_it_works_list": [
-      "1. Activa la suscripción",
-      "2. Recibe mensaje automático cada mañana",
-      "3. Lee tu carta y planea tu día",
-      "4. Disfruta la guía mística diaria"
-    ],
-    "buttons": {
-      "subscribe": "✅ Activar Suscripción",
-      "unsubscribe": "❌ Cancelar Suscripción",
-      "back": "🔙 Menú Principal"
-    }
-  },
-  "error": {
-    "unknown_callback": "❌ Callback desconocido",
-    "plan_not_found": "❌ Plan no encontrado",
-    "payment_failed": "❌ Fallo en el pago",
-    "api_limit": "⚠️ Límite de API excedido. Intenta de nuevo en {time} segundos."
-  },
-  "buttons": {
-    "copy_link": "📋 Copiar Enlace",
-    "my_stats": "📊 Mis Estadísticas",
-    "share_whatsapp": "📱 Compartir en WhatsApp",
-    "share_telegram": "📤 Compartir en Telegram",
-    "my_rewards": "🎁 Mis Premios",
-    "leaderboard": "🏆 Tabla de Posiciones",
-    "progress_details": "📊 Detalles de Progreso",
-    "next_goal": "🎯 Próximo Objetivo",
-    "main_menu": "🏠 Menú Principal",
-    "compare_plans": "📊 Comparar Planes",
-    "payment_info": "💳 Información de Pago",
-    "plan_details": "📋 Detalles del Plan",
+    "payment_info": "💳 **Información de Pago**",
+    "plan_details": "📋 **Detalles del Plan**",
     "back_to_premium": "🔙 Menú Premium",
-    "back_to_referral": "🔙 Volver a Referidos",
     "back_to_plans": "🔙 Volver a Planes",
     "back_to_comparison": "🔙 Volver a Comparación",
     "back_to_menu": "🔙 Volver al Menú",

@@ -668,7 +668,9 @@
             "to_vip": "• VIP'e: {count} davet",
             "to_elite": "• Elite'e: {count} davet",
             "leaderboard_label": "🔥 **Bu Ayın Lider Tablosu İlk 5:**",
-            "no_data": "Henüz yok"
+            "no_data": "Henüz veri yok.",
+            "progress_title": "📈 **Referans İlerlemeniz**",
+            "next_goal_title": "🎯 **Sonraki Hedefiniz**"
         },
         "rewards_panel": {
             "title": "🎁 **ÖDÜL KOLEKSİYONUNUZ** 🎁",
@@ -828,7 +830,7 @@
     "link_copied": "✅ Referans linki kopyalandı: {link}",
     "leaderboard_title": "🏆 **Referans Lider Tablosu**",
     "progress_title": "📈 **İlerlemeniz**",
-    "next_goal_title": "🎯 **Sonraki Hedef**",
+    "next_goal_title": "🎯 **Sonraki Hedefiniz**",
     "copy_link": "📋 Linki Kopyala",
     "share_whatsapp": "📱 WhatsApp'ta Paylaş",
     "share_telegram": "📤 Telegram'da Paylaş",
