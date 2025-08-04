@@ -1147,36 +1147,36 @@ async def handle_callback_query(update: Update, context: CallbackContext):
     elif query.data == 'daily_feedback':
         # Handle daily feedback
         await query.edit_message_text(get_text('daily_subscription.feedback_prompt', lang))
-    elif query.data == 'referral_stats':
-        # Handle referral statistics
-        await query.edit_message_text(get_text('referral.stats_title', lang))
-    elif query.data == 'my_rewards':
-        # Handle my rewards
-        await query.edit_message_text(get_text('referral.my_rewards_title', lang))
-    elif query.data.startswith('copy_link_'):
-        await handle_copy_referral_link(query, lang)
-    elif query.data == 'share_whatsapp':
-        await handle_share_whatsapp(query, lang)
-    elif query.data == 'share_telegram':
-        await handle_share_telegram(query, lang)
-    elif query.data == 'referral_leaderboard':
-        await show_referral_leaderboard(query, lang)
-    elif query.data == 'referral_progress':
-        await show_referral_progress(query, lang)
-    elif query.data == 'referral_next_goal':
-        await show_referral_next_goal(query, lang)
-    elif query.data == 'premium_details':
-        await show_premium_details(query, lang)
-    elif query.data == 'payment_info':
-        await show_payment_info(query, lang)
+    elif query.data == 'set_delivery_time':
+        # Handle delivery time setting
+        await query.edit_message_text(get_text('daily_subscription.set_delivery_time_prompt', lang))
+    elif query.data == 'subscription_stats':
+        # Handle subscription statistics
+        await query.edit_message_text(get_text('daily_subscription.stats_title', lang))
+    elif query.data == 'daily_feedback':
+        # Handle daily feedback
+        await query.edit_message_text(get_text('daily_subscription.feedback_prompt', lang))
     else:
-        # Unknown callback
-        await query.edit_message_text(
-            "💬 Feedback feature coming soon!",
-            reply_markup=InlineKeyboardMarkup([
-                [InlineKeyboardButton("🔙 Back", callback_data="toggle_daily")]
-            ])
-        )
+        # Unknown callback - provide better error handling
+        try:
+            await query.edit_message_text(
+                get_text('error_occurred', lang),
+                reply_markup=InlineKeyboardMarkup([
+                    [InlineKeyboardButton(get_text('buttons.main_menu', lang), callback_data="main_menu")]
+                ])
+            )
+        except Exception as e:
+            logger.error(f"Error handling unknown callback {query.data}: {e}")
+            # Try to send a new message if edit fails
+            try:
+                await query.message.reply_text(
+                    get_text('error_occurred', lang),
+                    reply_markup=InlineKeyboardMarkup([
+                        [InlineKeyboardButton(get_text('buttons.main_menu', lang), callback_data="main_menu")]
+                    ])
+                )
+            except Exception as e2:
+                logger.error(f"Failed to send error message: {e2}")
 
 
 # --- Handler Implementations ---

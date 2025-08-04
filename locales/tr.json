@@ -761,7 +761,7 @@
   "social_features_button": "👥 Sosyal Özellikler",
   "language_name": "Türkçe",
   "default_message_response": "Lütfen gezinmek için menü butonlarını kullanın. 👇",
-  "error_occurred": "❌ Bir hata oluştu. Lütfen tekrar deneyin.",
+  "error_occurred": "❌ Bir hata oluştu. Lütfen daha sonra tekrar deneyin.",
   "feature_not_available": "⚠️ Bu özellik henüz mevcut değil.",
   "premium_required": "💎 Bu özellik premium abonelik gerektirir.",
   "operation_successful": "✅ İşlem başarıyla tamamlandı!",
@@ -888,6 +888,35 @@
     "next": "➡️ İleri",
     "previous": "⬅️ Önceki"
   },
+  "buttons": {
+    "copy_link": "📋 Linki Kopyala",
+    "my_stats": "📊 İstatistiklerim",
+    "share_whatsapp": "📱 WhatsApp'ta Paylaş",
+    "share_telegram": "📤 Telegram'da Paylaş",
+    "my_rewards": "🎁 Ödüllerim",
+    "leaderboard": "🏆 Lider Tablosu",
+    "progress_details": "📊 İlerleme Detayları",
+    "next_goal": "🎯 Sonraki Hedef",
+    "main_menu": "🏠 Ana Menü",
+    "compare_plans": "📊 Planları Karşılaştır",
+    "payment_info": "💳 Ödeme Bilgileri",
+    "plan_details": "📋 Plan Detayları",
+    "back_to_premium": "🔙 Premium Menü",
+    "back_to_referral": "🔙 Referansa Geri Dön",
+    "back_to_plans": "🔙 Planlara Geri Dön",
+    "back_to_comparison": "🔙 Karşılaştırmaya Geri Dön",
+    "back_to_menu": "🔙 Menüye Geri Dön",
+    "back": "🔙 Geri",
+    "buy_now": "🛒 Şimdi Satın Al",
+    "close": "❌ Kapat",
+    "subscribe": "✅ Abone Ol",
+    "unsubscribe": "❌ Aboneliği İptal Et",
+    "upgrade_vip": "👑 VIP'e Yükselt",
+    "upgrade_premium": "⭐ Premium'a Yükselt",
+    "upgrade_basic": "💎 Temel'e Yükselt",
+    "buy_premium": "💳 Premium Satın Al",
+    "try_again": "🔄 Tekrar Dene"
+  },
   "payment": {
     "title": "💳 **Ödeme Bilgileri** 💳",
     "description": "Tüm premium planlar için Telegram Yıldızlarını kabul ediyoruz.",
@@ -915,8 +944,4 @@
     "buy_premium": "💳 Premium Satın Al",
     "back_to_plans": "🔙 Planlara Geri Dön"
   }
-<<<<<<< Current (Your changes)
->>>>>>> Incoming (Background Agent changes)
-=======
->>>>>>> Incoming (Background Agent changes)
 } 
