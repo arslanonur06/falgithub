@@ -815,5 +815,77 @@
   "admin_pdf_download": "📄 **PDF İndirme**\n\nRaporları PDF formatında indirin.",
   "astrology_chatbot_activated": "🤖 **Astroloji Chatbot Aktif**\n\nArtık astroloji sorularınızı sorabilirsiniz!",
   "moon_calendar_message": "🌙 **Ay Takvimi**\n\nAy fazları ve enerji rehberliği.",
-  "birth_chart_prompt": "🌟 Doğum bilgilerinizi girin:\n\nFormat: GG.AA.YYYY SS:DD Şehir\nÖrnek: 15.03.1990 14:30 İstanbul"
+  "birth_chart_prompt": "🌟 Doğum bilgilerinizi girin:\n\nFormat: GG.AA.YYYY SS:DD Şehir\nÖrnek: 15.03.1990 14:30 İstanbul",
+  "referral": {
+    "title": "🌟 **REFERANS SİSTEMİ** 🌟",
+    "description": "Arkadaşlarınızı davet edin ve ödüller kazanın!",
+    "stats_title": "📊 **Referans İstatistikleriniz**",
+    "my_rewards_title": "🎁 **Ödülleriniz**",
+    "link_copied": "✅ Referans linki kopyalandı: {link}",
+    "leaderboard_title": "🏆 **Referans Lider Tablosu**",
+    "progress_title": "📈 **İlerlemeniz**",
+    "next_goal_title": "🎯 **Sonraki Hedef**",
+    "copy_link": "📋 Linki Kopyala",
+    "share_whatsapp": "📱 WhatsApp'ta Paylaş",
+    "share_telegram": "📤 Telegram'da Paylaş",
+    "leaderboard": "🏆 Lider Tablosu",
+    "progress": "📊 İlerleme Detayları",
+    "next_goal": "🎯 Sonraki Hedef",
+    "back_to_referral": "🔙 Referansa Geri Dön"
+  },
+  "premium": {
+    "comparison_title": "📊 **PREMIUM PLAN KARŞILAŞTIRMASI** 📊",
+    "comparison_description": "Tüm premium planlarımızı karşılaştırın ve size en uygun olanı seçin!",
+    "plan_overview": "📋 **Plan Genel Bakışı**",
+    "feature_comparison": "✨ **Detaylı Özellik Karşılaştırması**",
+    "plan_details": "📋 Plan Detayları",
+    "payment_info": "💳 Ödeme Bilgileri",
+    "back_to_comparison": "🔙 Karşılaştırmaya Geri Dön",
+    "back_to_premium": "🔙 Premium Menü",
+    "pay_with_stars": "💳 Yıldızlarla Öde",
+    "telegram_stars_payment": "⭐ Telegram Yıldızları ile Öde",
+    "payment_success": "🎉 Ödeme Başarılı!",
+    "payment_error": "❌ Ödeme Hatası",
+    "try_again": "🔄 Tekrar Dene"
+  },
+  "language": {
+    "selection_title": "🌐 **Dil Seçimi** 🌐",
+    "selection_description": "En iyi deneyim için tercih ettiğiniz dili seçin:",
+    "current_language": "Mevcut Dil: **{lang}**",
+    "language_updated_success": "✅ Dil **{lang}** olarak güncellendi!",
+    "back_to_menu": "🔙 Menüye Geri Dön"
+  },
+  "navigation": {
+    "main_menu": "🏠 Ana Menü",
+    "back": "🔙 Geri",
+    "next": "➡️ İleri",
+    "previous": "⬅️ Önceki"
+  },
+  "payment": {
+    "title": "💳 **Ödeme Bilgileri** 💳",
+    "description": "Tüm premium planlar için Telegram Yıldızlarını kabul ediyoruz.",
+    "secure_payment": "🔒 **Güvenli Ödeme:**",
+    "secure_features": [
+      "• Tüm ödemeler Telegram üzerinden güvenli şekilde işlenir",
+      "• Ödeme bilgileriniz asla saklanmaz",
+      "• Başarılı ödemeden sonra anında aktivasyon"
+    ],
+    "how_to_get_stars": "💰 **Telegram Yıldızları nasıl alınır:**",
+    "stars_sources": [
+      "• Telegram Premium kullanarak yıldız kazanın",
+      "• Telegram'dan yıldız satın alın",
+      "• Diğer kullanıcılardan hediye olarak yıldız alın"
+    ],
+    "payment_process": "📱 **Ödeme Süreci:**",
+    "payment_steps": [
+      "1. Tercih ettiğiniz planı seçin",
+      "2. 'Yıldızlarla Öde'ye tıklayın",
+      "3. Telegram'da ödemeyi tamamlayın",
+      "4. Premium özelliklerinizin keyfini çıkarın!"
+    ],
+    "need_help": "❓ **Yardıma mı ihtiyacınız var?**",
+    "contact_support": "Destek ekibimizle iletişime geçin.",
+    "buy_premium": "💳 Premium Satın Al",
+    "back_to_plans": "🔙 Planlara Geri Dön"
+  }
 } 

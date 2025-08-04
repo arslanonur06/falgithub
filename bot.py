@@ -1154,9 +1154,21 @@ async def handle_callback_query(update: Update, context: CallbackContext):
         # Handle my rewards
         await query.edit_message_text(get_text('referral.my_rewards_title', lang))
     elif query.data.startswith('copy_link_'):
-        # Handle copy link
-        link = query.data.replace('copy_link_', '')
-        await query.edit_message_text(get_text('referral.link_copied', lang).format(link=link))
+        await handle_copy_referral_link(query, lang)
+    elif query.data == 'share_whatsapp':
+        await handle_share_whatsapp(query, lang)
+    elif query.data == 'share_telegram':
+        await handle_share_telegram(query, lang)
+    elif query.data == 'referral_leaderboard':
+        await show_referral_leaderboard(query, lang)
+    elif query.data == 'referral_progress':
+        await show_referral_progress(query, lang)
+    elif query.data == 'referral_next_goal':
+        await show_referral_next_goal(query, lang)
+    elif query.data == 'premium_details':
+        await show_premium_details(query, lang)
+    elif query.data == 'payment_info':
+        await show_payment_info(query, lang)
     else:
         # Unknown callback
         await query.edit_message_text(
