@@ -178,6 +178,7 @@
   },
   "subscription_management": "💳 Manage Subscription",
   "monthly_horoscope": "📅 Monthly Horoscope",
+  "weekly_horoscope": "📊 Weekly Horoscope",
   "purchase": "🛒 Purchase",
   "premium_menu_back": "🔙 Premium Menu",
   "premium_feature": "💎 PREMIUM FEATURE",
@@ -601,7 +602,10 @@
       "settings": "⚙️ Set Delivery Time",
       "stats": "📊 Subscription Statistics",
       "main_menu": "🏠 Main Menu"
-    }
+    },
+    "set_delivery_time_prompt": "⏰ **Set Delivery Time**\n\nPlease enter your preferred delivery time in HH:MM format (24-hour):\n\nExample: 09:00 for 9 AM\nExample: 18:00 for 6 PM",
+    "stats_title": "📊 **Subscription Statistics**\n\nHere are your daily card subscription statistics:",
+    "feedback_prompt": "💬 **Feedback**\n\nWe'd love to hear your thoughts about the daily card service!\n\nPlease share your feedback:"
   },
   "referral_system": {
         "main_panel": {
@@ -826,7 +830,16 @@
     "leaderboard": "🏆 Leaderboard",
     "progress": "📊 Progress Details",
     "next_goal": "🎯 Next Goal",
-    "back_to_referral": "🔙 Back to Referral"
+    "back_to_referral": "🔙 Back to Referral",
+    "total_referrals": "Total Referrals: **{count}**",
+    "free_readings_earned": "Free Readings Earned: **{readings}**",
+    "stars_earned": "Stars Earned: **{stars}** ⭐",
+    "total_rewards": "Total Rewards Value: **{rewards}** ⭐",
+    "buttons": {
+      "my_rewards": "🎁 My Rewards",
+      "my_stats": "📊 My Stats",
+      "back": "🔙 Back"
+    }
   },
   "premium": {
     "comparison_title": "📊 **PREMIUM PLAN COMPARISON** 📊",
@@ -842,6 +855,20 @@
     "payment_success": "🎉 Payment Successful!",
     "payment_error": "❌ Payment Error",
     "try_again": "🔄 Try Again"
+  },
+  "premium_plans": {
+    "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+    "plan_details": {
+      "description_label": "Description",
+      "price_label": "Price",
+      "duration_label": "Duration",
+      "features_label": "Features"
+    },
+    "buttons": {
+      "buy": "💳 Buy Now",
+      "back": "🔙 Back"
+    },
+    "back_to_menu": "🔙 Back to Menu"
   },
   "language": {
     "selection_title": "🌐 **Language Selection** 🌐",

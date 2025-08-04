@@ -1205,10 +1205,30 @@ async def handle_callback_query(update: Update, context: CallbackContext):
 # --- Handler Implementations ---
 
 async def show_main_menu(query, lang):
-    """Show main menu"""
+    """Show main menu with beautiful UI"""
+    # Enhanced welcome message with better formatting
+    welcome_message = f"""
+✨🔮 **FAL GRAM** 🔮✨
+━━━━━━━━━━━━━━━━━━━━━━
+
+🌟 *The doors of the mystical world are opening...*
+
+Choose your mystical journey:
+
+☕ **Coffee Fortune** - Discover the future in your cup
+🃏 **Tarot Reading** - The cards have something to tell you  
+💭 **Dream Analysis** - Decode your subconscious messages
+⭐ **Astrology** - Guidance from the stars
+🌅 **Daily Card** - Personal guidance every morning
+👥 **Invite Friends** - Blessings multiply when shared
+
+━━━━━━━━━━━━━━━━━━━━━━
+✨ *Are you ready to discover your destiny?* ✨
+"""
+    
     await safe_edit_message(
         query,
-        get_text("start_message", lang),
+        welcome_message,
         reply_markup=create_main_menu_keyboard(lang),
         parse_mode='Markdown'
     )
@@ -1680,19 +1700,27 @@ async def admin_premium_pdf(query, lang):
 
 async def show_daily_horoscope_menu(query, lang):
     """Show daily horoscope menu"""
+    # Create keyboard with main menu button
+    keyboard = create_horoscope_keyboard(lang)
+    keyboard.append([InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")])
+    
     await safe_edit_message(
         query,
         get_text("daily_horoscope_menu", lang),
-        reply_markup=create_horoscope_keyboard(lang),
+        reply_markup=InlineKeyboardMarkup(keyboard),
         parse_mode='Markdown'
     )
 
 async def show_compatibility_menu(query, lang):
     """Show compatibility menu"""
+    # Create keyboard with main menu button
+    keyboard = create_compatibility_keyboard(lang)
+    keyboard.append([InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")])
+    
     await safe_edit_message(
         query,
         get_text("compatibility_menu", lang),
-        reply_markup=create_compatibility_keyboard(lang),
+        reply_markup=InlineKeyboardMarkup(keyboard),
         parse_mode='Markdown'
     )
 
@@ -1716,19 +1744,27 @@ async def show_moon_calendar(query, lang):
 
 async def show_weekly_horoscope_menu(query, lang):
     """Show weekly horoscope menu"""
+    # Create keyboard with main menu button
+    keyboard = create_horoscope_keyboard(lang)
+    keyboard.append([InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")])
+    
     await safe_edit_message(
         query,
         get_text("weekly_horoscope_menu", lang),
-        reply_markup=create_horoscope_keyboard(lang),
+        reply_markup=InlineKeyboardMarkup(keyboard),
         parse_mode='Markdown'
     )
 
 async def show_monthly_horoscope_menu(query, lang):
     """Show monthly horoscope menu"""
+    # Create keyboard with main menu button
+    keyboard = create_horoscope_keyboard(lang)
+    keyboard.append([InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")])
+    
     await safe_edit_message(
         query,
         get_text("monthly_horoscope_menu", lang),
-        reply_markup=create_horoscope_keyboard(lang),
+        reply_markup=InlineKeyboardMarkup(keyboard),
         parse_mode='Markdown'
     )
 

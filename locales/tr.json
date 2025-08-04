@@ -178,6 +178,7 @@
   },
   "subscription_management": "💳 Abonelik Yönetimi",
   "monthly_horoscope": "📅 Aylık Burç",
+  "weekly_horoscope": "📊 Haftalık Burç",
   "purchase": "🛒 Satın Al",
   "premium_menu_back": "🔙 Premium Menü",
   "premium_feature": "💎 PREMIUM ÖZELLİK",
@@ -601,7 +602,10 @@
       "settings": "⚙️ Teslimat Saati Ayarla",
       "stats": "📊 Abonelik İstatistikleri",
       "main_menu": "🏠 Ana Menü"
-    }
+    },
+    "set_delivery_time_prompt": "⏰ **Teslimat Saatini Ayarla**\n\nLütfen tercih ettiğiniz teslimat saatini SS:DD formatında girin (24 saat):\n\nÖrnek: 09:00 (sabah 9)\nÖrnek: 18:00 (akşam 6)",
+    "stats_title": "📊 **Abonelik İstatistikleri**\n\nİşte günlük kart aboneliğinizin istatistikleri:",
+    "feedback_prompt": "💬 **Geri Bildirim**\n\nGünlük kart hizmeti hakkındaki düşüncelerinizi duymak isteriz!\n\nLütfen geri bildiriminizi paylaşın:"
   },
   "referral_system": {
         "main_panel": {
@@ -831,7 +835,16 @@
     "leaderboard": "🏆 Lider Tablosu",
     "progress": "📊 İlerleme Detayları",
     "next_goal": "🎯 Sonraki Hedef",
-    "back_to_referral": "🔙 Referansa Geri Dön"
+    "back_to_referral": "🔙 Referansa Geri Dön",
+    "total_referrals": "Toplam Referans: **{count}**",
+    "free_readings_earned": "Kazanılan Ücretsiz Fallar: **{readings}**",
+    "stars_earned": "Kazanılan Yıldızlar: **{stars}** ⭐",
+    "total_rewards": "Toplam Ödül Değeri: **{rewards}** ⭐",
+    "buttons": {
+      "my_rewards": "🎁 Ödüllerim",
+      "my_stats": "📊 İstatistiklerim",
+      "back": "🔙 Geri"
+    }
   },
   "premium": {
     "comparison_title": "📊 **PREMIUM PLAN KARŞILAŞTIRMASI** 📊",
@@ -847,6 +860,20 @@
     "payment_success": "🎉 Ödeme Başarılı!",
     "payment_error": "❌ Ödeme Hatası",
     "try_again": "🔄 Tekrar Dene"
+  },
+  "premium_plans": {
+    "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+    "plan_details": {
+      "description_label": "Açıklama",
+      "price_label": "Fiyat",
+      "duration_label": "Süre",
+      "features_label": "Özellikler"
+    },
+    "buttons": {
+      "buy": "💳 Satın Al",
+      "back": "🔙 Geri"
+    },
+    "back_to_menu": "🔙 Menüye Geri Dön"
   },
   "language": {
     "selection_title": "🌐 **Dil Seçimi** 🌐",
@@ -917,4 +944,11 @@
         "upgrade_basic": "💎 Temel'e Yükselt",
         "buy_premium": "💳 Premium Satın Al"
   }
+<<<<<<< HEAD
+=======
+<<<<<<< Current (Your changes)
+>>>>>>> Incoming (Background Agent changes)
+=======
+>>>>>>> Incoming (Background Agent changes)
+>>>>>>> 17adb01855b2db53b9aad67dc57b4e82f530dccc
 } 
