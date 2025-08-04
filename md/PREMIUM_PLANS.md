@@ -111,158 +111,117 @@ Fal Gram, kullanıcılarına **Premium odaklı** bir deneyim sunar. Ücretsiz ku
 
 ---
 
-## 🗄️ Veritabanı Şeması
+## 💳 Ödeme Sistemi
 
-### **1. premium_plans**
-```sql
-CREATE TABLE premium_plans (
-    id SERIAL PRIMARY KEY,
-    plan_id VARCHAR(20) UNIQUE NOT NULL,
-    name VARCHAR(100) NOT NULL,
-    name_en VARCHAR(100) NOT NULL,
-    price INTEGER NOT NULL,
-    price_stars INTEGER NOT NULL,
-    features JSONB NOT NULL,
-    features_en JSONB NOT NULL,
-    is_active BOOLEAN DEFAULT true,
-    created_at TIMESTAMP DEFAULT NOW(),
-    updated_at TIMESTAMP DEFAULT NOW()
-);
-```
+### **Telegram Stars ile Ödeme**
+- ✅ **Güvenli Ödeme:** Tüm ödemeler Telegram üzerinden güvenli şekilde işlenir
+- ✅ **Anında Aktivasyon:** Başarılı ödemeden sonra anında premium özellikler aktif olur
+- ✅ **Bilgi Güvenliği:** Ödeme bilgileriniz asla saklanmaz
 
-### **2. user_subscriptions**
-```sql
-CREATE TABLE user_subscriptions (
-    id SERIAL PRIMARY KEY,
-    user_id INTEGER NOT NULL REFERENCES users(id),
-    plan_id VARCHAR(20) NOT NULL REFERENCES premium_plans(plan_id),
-    status VARCHAR(20) DEFAULT 'active',
-    start_date TIMESTAMP DEFAULT NOW(),
-    end_date TIMESTAMP NOT NULL,
-    payment_method VARCHAR(50),
-    total_paid INTEGER,
-    created_at TIMESTAMP DEFAULT NOW(),
-    updated_at TIMESTAMP DEFAULT NOW()
-);
-```
+### **Telegram Stars Nasıl Alınır?**
+- 🌟 **Telegram Premium:** Telegram Premium kullanarak yıldız kazanın
+- 💰 **Satın Alma:** Telegram'dan yıldız satın alın
+- 🎁 **Hediye:** Diğer kullanıcılardan hediye olarak yıldız alın
 
-### **3. payment_transactions**
-```sql
-CREATE TABLE payment_transactions (
-    id SERIAL PRIMARY KEY,
-    user_id INTEGER NOT NULL REFERENCES users(id),
-    plan_id VARCHAR(20) REFERENCES premium_plans(plan_id),
-    transaction_id VARCHAR(100) UNIQUE,
-    amount INTEGER NOT NULL,
-    currency VARCHAR(10) DEFAULT 'XTR',
-    status VARCHAR(20) DEFAULT 'pending',
-    payment_method VARCHAR(50),
-    telegram_payment_charge_id VARCHAR(100),
-    telegram_payment_provider_charge_id VARCHAR(100),
-    description TEXT,
-    created_at TIMESTAMP DEFAULT NOW(),
-    updated_at TIMESTAMP DEFAULT NOW()
-);
-```
+### **Ödeme Süreci**
+1. **Plan Seçimi:** Tercih ettiğiniz planı seçin
+2. **Ödeme:** "Yıldızlarla Öde" butonuna tıklayın
+3. **Onay:** Telegram'da ödemeyi tamamlayın
+4. **Aktivasyon:** Premium özelliklerinizin keyfini çıkarın!
 
 ---
 
-## 🔧 Uygulama Detayları
+## 🆕 Yeni Özellikler (v3.2.0)
 
-### **Ödeme Sistemi**
-- **Platform:** Telegram Stars
-- **Para Birimi:** XTR (Telegram Stars)
-- **Ödeme Yöntemi:** Telegram Payment API
-- **Abonelik Süresi:** 30 gün
+### **📊 Gelişmiş Plan Karşılaştırması**
+- **Yan yana karşılaştırma:** Tüm planları detaylı şekilde karşılaştırın
+- **Özellik matrisi:** Hangi özelliklerin hangi planda olduğunu görün
+- **Plan detayları:** Her planın detaylı açıklamasını inceleyin
 
-### **Kullanıcı Deneyimi**
-1. **Ücretsiz Kullanım:** 5 fal hakkı
-2. **Limit Aşımı:** Premium planlara yönlendirme
-3. **Plan Seçimi:** 3 farklı plan seçeneği
-4. **Otomatik Yenileme:** 30 günlük döngü
+### **💳 Telegram Stars Entegrasyonu**
+- **Güvenli ödeme:** Telegram Stars ile güvenli ödeme sistemi
+- **Anında aktivasyon:** Ödeme sonrası anında premium erişim
+- **Hata yönetimi:** Ödeme hatalarında otomatik geri dönüş
+
+### **🎨 Gelişmiş Kullanıcı Arayüzü**
+- **Elegant tasarım:** Modern ve kullanıcı dostu arayüz
+- **Ana menü butonları:** Her sayfada ana menüye kolay erişim
+- **Geri dönüş butonları:** Kolay navigasyon için geri butonları
+
+### **🌐 Dil Sistemi İyileştirmeleri**
+- **Dil seçimi:** Gelişmiş dil seçim menüsü
+- **Dil onayı:** Dil değişikliği onay mesajları
+- **Mevcut dil gösterimi:** Hangi dilde olduğunuzu görün
+
+---
+
+## 🔧 Teknik Özellikler
+
+### **Veritabanı Entegrasyonu**
+- **Supabase:** Premium plan bilgileri Supabase'de saklanır
+- **Otomatik yenileme:** Plan süreleri otomatik olarak takip edilir
+- **Kullanıcı geçmişi:** Tüm premium aktiviteler kaydedilir
+
+### **Güvenlik**
+- **Şifreli veri:** Tüm kullanıcı verileri şifrelenir
+- **Güvenli ödeme:** Telegram Stars güvenli ödeme sistemi
+- **Veri koruması:** Kişisel bilgiler korunur
+
+### **Performans**
+- **Hızlı yanıt:** Premium özellikler anında aktif olur
+- **Optimizasyon:** Tüm işlemler optimize edilmiştir
+- **Ölçeklenebilirlik:** Büyük kullanıcı sayılarına destek
+
+---
+
+## 📱 Kullanıcı Deneyimi
+
+### **Kolay Plan Seçimi**
+1. **Premium Menü:** Ana menüden "💎 Premium" seçin
+2. **Plan Karşılaştırması:** "📊 Planları Karşılaştır" ile detayları görün
+3. **Plan Seçimi:** Size uygun planı seçin
+4. **Ödeme:** Telegram Stars ile güvenli ödeme yapın
 
 ### **Premium Özellikler**
-- **Sınırsız Fal:** Tüm fal türleri için sınırsız erişim
-- **Gelişmiş Analiz:** AI destekli detaylı yorumlar
-- **Özel İçerikler:** Plan seviyesine göre özel içerikler
-- **Öncelikli Destek:** Hızlı ve öncelikli müşteri desteği
+- **Sınırsız fal:** İstediğiniz kadar fal çektirin
+- **Gelişmiş astroloji:** Detaylı astroloji analizleri
+- **Özel içerikler:** Sadece premium kullanıcılara özel içerikler
+- **Öncelikli destek:** Hızlı ve öncelikli müşteri desteği
 
 ---
 
-## 📈 Analitik ve Raporlama
+## 🎯 Gelecek Planları
 
-### **Admin Panel Özellikleri**
-- **Kullanıcı İstatistikleri:** Plan bazlı kullanıcı dağılımı
-- **Gelir Analizi:** Plan bazlı gelir raporları
-- **Premium Yönetimi:** Kullanıcı plan yönetimi
-- **PDF Raporları:** Detaylı analitik raporlar
+### **Yakında Gelecek**
+- 🔄 **Otomatik yenileme:** Planların otomatik yenilenmesi
+- 🎁 **Aile planları:** Birden fazla kullanıcı için indirimli planlar
+- 📊 **Kullanım istatistikleri:** Detaylı kullanım raporları
 
-### **Kullanıcı İstatistikleri**
-- **Toplam Kullanıcı:** Tüm kayıtlı kullanıcılar
-- **Premium Kullanıcı:** Aktif premium aboneler
-- **Dönüşüm Oranı:** Ücretsiz → Premium geçiş oranı
-- **Gelir Analizi:** Aylık/yıllık gelir trendleri
+### **Uzun Vadeli**
+- 🌍 **Çoklu dil desteği:** Daha fazla dil seçeneği
+- 🤖 **AI geliştirmeleri:** Daha gelişmiş AI özellikleri
+- 📱 **Mobil uygulama:** Özel mobil uygulama
 
 ---
 
-## 🚀 Gelecek Geliştirmeler
-
-### **Plan İyileştirmeleri**
-- [ ] **Yıllık Planlar:** Uzun vadeli abonelik seçenekleri
-- [ ] **Aile Planları:** Çoklu kullanıcı paketleri
-- [ ] **Kurumsal Planlar:** İşletmeler için özel paketler
-
-### **Özellik Geliştirmeleri**
-- [ ] **Video Fal:** Canlı video fal seansları
-- [ ] **AI Asistan:** Gelişmiş AI destekli rehberlik
-- [ ] **Sosyal Platform:** Kullanıcılar arası etkileşim
-- [ ] **Mobil Uygulama:** Native mobil uygulama
-
-### **Ödeme Geliştirmeleri**
-- [ ] **Çoklu Ödeme:** Farklı ödeme yöntemleri
-- [ ] **Otomatik Yenileme:** Kredi kartı ile otomatik yenileme
-- [ ] **İade Sistemi:** Memnuniyet garantisi
-- [ ] **Promosyon Kodları:** Özel indirim kodları
-
----
-
-## 📞 Destek ve İletişim
+## 📞 Destek
 
 ### **Teknik Destek**
-- **E-posta:** support@falgram.com
+- **Email:** support@falgram.com
 - **Telegram:** @FalGramSupport
-- **Dokümantasyon:** docs.falgram.com
+- **Dokümantasyon:** Bu dosya ve diğer MD dosyaları
 
-### **Satış Desteği**
-- **E-posta:** sales@falgram.com
-- **Telegram:** @FalGramSales
-- **Canlı Destek:** 7/24 chatbot desteği
-
----
-
-## 📝 Değişiklik Geçmişi
-
-### **v3.2.0 - Premium Odaklı Sistem**
-- ✅ **Ücretsiz limit:** 3 → 5 fal
-- ✅ **Tek seferlik ödemeler:** Kaldırıldı
-- ✅ **Premium planlar:** İyileştirildi
-- ✅ **Yönlendirme sistemi:** Premium odaklı
-- ✅ **Özellik matrisi:** Güncellendi
-
-### **v3.1.0 - Admin Panel**
-- ✅ **Admin paneli:** Gelişmiş yönetim
-- ✅ **Referral sistemi:** Detaylı analitik
-- ✅ **PDF raporları:** Kapsamlı raporlama
-- ✅ **Premium yönetimi:** Kullanıcı plan yönetimi
-
-### **v3.0.0 - Premium Sistemi**
-- ✅ **Premium planlar:** 3 farklı plan
-- ✅ **Ödeme sistemi:** Telegram Stars entegrasyonu
-- ✅ **Astroloji modülü:** Gelişmiş özellikler
-- ✅ **Çok dilli destek:** 9 dil desteği
+### **Ödeme Desteği**
+- **Ödeme sorunları:** Telegram Stars ile ilgili sorunlar
+- **Plan aktivasyonu:** Premium plan aktivasyon sorunları
+- **İade politikası:** 7 gün içinde iade garantisi
 
 ---
 
+<<<<<<< Current (Your changes)
 **Son Güncelleme:** 28 Temmuz 2025  
 **Versiyon:** 3.2.0  
 **Durum:** Aktif 
+=======
+*Son güncelleme: v3.2.0 - 2024* 
+>>>>>>> Incoming (Background Agent changes)
