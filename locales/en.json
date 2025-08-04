@@ -98,6 +98,35 @@
   "premium_plan_basic": "✨ Basic Plan - 500 ⭐",
   "premium_plan_premium": "✨ Premium Plan - 1000 ⭐",
   "premium_plan_vip": "✨ VIP Plan - 2000 ⭐",
+  "error": {
+    "unknown_callback": "❌ Unknown command!",
+    "plan_not_found": "❌ Plan not found!",
+    "payment_failed": "❌ Payment failed!",
+    "insufficient_stars": "❌ Insufficient stars!",
+    "network_error": "❌ Network error!",
+    "invalid_plan": "❌ Invalid plan!"
+  },
+  "premium_plans": {
+    "buttons": {
+      "buy": "🛒 Buy Now",
+      "back": "⬅️ Back",
+      "compare": "📊 Compare",
+      "manage": "⚙️ Manage"
+    },
+    "plan_details": {
+      "description_label": "Description",
+      "price_label": "Price",
+      "duration_label": "Duration",
+      "features_label": "Features"
+    }
+  },
+  "payment": {
+    "success": "✅ Payment successful!",
+    "failed": "❌ Payment failed!",
+    "processing": "⏳ Processing payment...",
+    "insufficient_funds": "❌ Insufficient funds!",
+    "cancelled": "❌ Payment cancelled!"
+  },
   "plan_comparison": {
     "title": "📊 **PLAN COMPARISON** 📊",
     "separator": "━━━━━━━━━━━━━━━━━━━━━━",
@@ -796,5 +825,88 @@
   "view_logs": "📋 View Logs",
   "settings": "⚙️ Settings",
             "download_pdf": "📄 Download PDF",
-  "premium_management": "💎 Premium Management"
+  "premium_management": "💎 Premium Management",
+  "admin_premium_users": "💎 **Premium Users**\n\nTotal premium users: {count}",
+  "admin_premium_stats": "📊 **Premium Statistics**\n\n{stats}",
+  "admin_gift_subscription": "🎁 **Gift Subscription**\n\nGift premium subscription to a user.",
+  "admin_cancel_subscription": "❌ **Cancel Subscription**\n\nCancel user's premium subscription.",
+  "admin_premium_pdf": "📄 **Premium PDF Report**\n\nDownload premium user data as PDF.",
+  "premium_users": "👥 **Premium Users**\n\nView premium subscription holders.",
+  "premium_stats": "📊 **Premium Statistics**\n\nView premium subscription statistics.",
+  "gift_subscription": "🎁 **Gift Subscription**\n\nGift premium subscriptions to users.",
+  "cancel_subscription": "❌ **Cancel Subscription**\n\nCancel user subscriptions.",
+  "premium_report": "📄 **Premium Report**\n\nDownload premium user report.",
+  "no_premium_users": "❌ No premium users yet.",
+  "premium_user_details": "💎 **Premium Users** 💎",
+  "premium_statistics": "📊 **Premium Statistics** 📊",
+  "user_distribution": "👥 **User Distribution:**",
+  "revenue_stats": "💰 **Revenue Statistics:**",
+  "active_subscriptions": "📈 **Active Subscriptions:**",
+  "gift_subscription_title": "🎁 **GIFT SUBSCRIPTION** 🎁",
+  "cancel_subscription_title": "❌ **CANCEL SUBSCRIPTION** ❌",
+  "admin_panel_back": "🔙 Admin Panel",
+  "admin_panel": {
+    "title": "🔧 *Admin Panel*",
+    "buttons": {
+      "stats": "📊 Statistics",
+      "users": "👥 User List",
+      "referrals": "👥 Referral Relations",
+      "premium": "💎 Premium Management",
+      "logs": "📋 View Logs",
+      "pdf": "📄 Download PDF",
+      "settings": "⚙️ Settings",
+      "main_menu": "🏠 Main Menu"
+    }
+  },
+  "admin_stats": {
+    "title": "**📊 Bot Statistics**",
+    "user_stats": "**👥 User Statistics:**",
+    "total_users": "• Total Users: **{count}**",
+    "daily_subscribers": "• Daily Card Subscribers: **{count}**",
+    "referral_stats": "**👤 Referral Statistics:**",
+    "total_referrers": "• Total Referrers: **{count}** users",
+    "total_referred": "• Total Referred: **{count}** people",
+    "total_earnings": "• Total Earnings: **{count}** readings",
+    "referral_rate": "• Referral Rate: **{rate:.1f}%**",
+    "buttons": {
+      "referral_details": "👥 Referral Details",
+      "back": "🔙 Admin Panel"
+    }
+  },
+  "admin_logs": {
+    "title": "**📋 Last 50 Log Entries**",
+    "no_logs": "No log entries yet.",
+    "buttons": {
+      "back": "🔙 Admin Panel"
+    }
+  },
+  "referral": {
+    "title": "🌟 **FAL GRAM REFERRAL SYSTEM** 🌟",
+    "description": "Invite your friends and earn free readings!",
+    "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+    "stats_title": "📊 **Your Referral Statistics**",
+    "referral_link": "🔗 **Your Referral Link:**",
+    "total_referrals": "👥 **Total Invites:** {count} people",
+    "free_readings_earned": "🎁 **Earned Readings:** {readings} readings",
+    "stars_earned": "⭐ **Earned Stars:** {stars} ⭐",
+    "total_rewards": "💰 **Total Rewards:** {rewards}",
+    "how_it_works": "📋 **How It Works:**",
+    "how_it_works_steps": [
+      "1. Share your referral link with friends",
+      "2. Earn 1 free reading for each friend who joins using your link",
+      "3. Get 3 bonus readings + special badges when you invite 5 friends",
+      "4. Get VIP status + unlimited daily cards when you invite 10 friends"
+    ],
+    "buttons": {
+      "copy_link": "📋 Copy Link",
+      "my_stats": "📊 My Statistics",
+      "my_rewards": "🎁 My Rewards",
+      "back": "🔙 Back"
+    }
+  },
+  "daily_subscription": {
+    "set_delivery_time_prompt": "⏰ Set daily card delivery time (HH:MM format):",
+    "stats_title": "📊 **Subscription Statistics**",
+    "feedback_prompt": "💬 Give feedback about daily cards:"
+  }
 }

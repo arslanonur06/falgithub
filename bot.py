@@ -250,10 +250,6 @@ PREMIUM_PLANS = {
     }
 }
 
-
-
-}
-
 genai.configure(api_key=GEMINI_API_KEY)
 
 # --- SupabaseManager Sınıfı ---
@@ -689,10 +685,7 @@ def get_locales():
 
 locales = get_locales()
 
-def get_text(lang: str, key: str, **kwargs) -> str:
-    """Dil dosyasından metin alır ve parametreleri yerleştirir."""
-    text = locales.get(lang, locales["tr"]).get(key, key)
-    return text.format(**kwargs) if kwargs else text
+# This duplicate function is removed - using the main get_text function above
 
 def get_user_lang(user_id: int) -> str:
     user = supabase_manager.get_user(user_id)
@@ -937,15 +930,15 @@ async def admin(update: Update, context: CallbackContext):
     
     if user_id != ADMIN_ID:
         await update.message.reply_text("❌ Bu komutu kullanma yetkiniz yok!")
-            return
+        return
         
     lang = get_user_language(user_id)
     
     await update.message.reply_text(
         get_text("admin_panel_title", lang),
         reply_markup=create_admin_panel_keyboard(lang),
-                parse_mode='Markdown'
-            )
+        parse_mode='Markdown'
+    )
 
 async def gift(update: Update, context: CallbackContext):
     """Gift subscription command - Admin only"""
@@ -1071,6 +1064,7 @@ async def handle_callback_query(update: Update, context: CallbackContext):
         'admin_view_logs': lambda: admin_view_logs(query, lang),
         'admin_settings': lambda: admin_show_settings(query, lang),
         'admin_download_pdf': lambda: admin_download_pdf(query, lang),
+        'admin_download_users_pdf': lambda: admin_download_users_pdf(query, lang),
         'admin_premium': lambda: admin_premium_management(query, lang),
         'admin_premium_users': lambda: admin_premium_users(query, lang),
         'admin_premium_stats': lambda: admin_premium_stats(query, lang),
@@ -1113,6 +1107,12 @@ async def handle_callback_query(update: Update, context: CallbackContext):
     elif query.data.startswith('premium_plan_'):
         plan_name = query.data.replace('premium_plan_', '')
         await show_premium_plan_details(query, plan_name, lang)
+    elif query.data.startswith('pay_stars_'):
+        plan_name = query.data.replace('pay_stars_', '')
+        await handle_stars_payment(query, plan_name, lang)
+    elif query.data.startswith('telegram_stars_'):
+        plan_name = query.data.replace('telegram_stars_', '')
+        await process_telegram_stars_payment(query, plan_name, lang)
     elif query.data.startswith('buy_'):
         plan_name = query.data.replace('buy_', '')
         await premium_buy_plan(update, context)
@@ -1165,45 +1165,11 @@ async def handle_callback_query(update: Update, context: CallbackContext):
         link = query.data.replace('copy_link_', '')
         await query.edit_message_text(get_text('referral.link_copied', lang).format(link=link))
     else:
-        # Unknown callback
-        await query.edit_message_text(get_text('error.unknown_callback', lang))
-        await query.edit_message_text(
-            "💬 Feedback feature coming soon!",
-            reply_markup=InlineKeyboardMarkup([
-                [InlineKeyboardButton("🔙 Back", callback_data="toggle_daily")]
-            ])
-        )
-    elif query.data == 'referral_stats':
-        await query.edit_message_text(
-            "📊 Detailed referral statistics coming soon!",
-            reply_markup=InlineKeyboardMarkup([
-                [InlineKeyboardButton("🔙 Back", callback_data="get_referral_link")]
-            ])
-        )
-    elif query.data == 'my_rewards':
-        await query.edit_message_text(
-            "🎁 Your rewards feature coming soon!",
-            reply_markup=InlineKeyboardMarkup([
-                [InlineKeyboardButton("🔙 Back", callback_data="get_referral_link")]
-            ])
-        )
-    elif query.data.startswith('copy_link_'):
-        user_id = query.data.replace('copy_link_', '')
-        bot_info = await context.bot.get_me()
-        referral_link = f"https://t.me/{bot_info.username}?start={user_id}"
-        await query.edit_message_text(
-            f"📋 **Your Referral Link Copied!**\n\n```{referral_link}```\n\nLink copied to clipboard!",
-            reply_markup=InlineKeyboardMarkup([
-                [InlineKeyboardButton("🔙 Back", callback_data="get_referral_link")]
-            ]),
-            parse_mode='Markdown'
-        )
-    else:
         # Unknown callback data
         await query.edit_message_text(
-            "❌ Bilinmeyen komut!",
+            "❌ Unknown command!",
             reply_markup=InlineKeyboardMarkup([
-                [InlineKeyboardButton("🏠 Ana Menü", callback_data="main_menu")]
+                [InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")]
             ])
         )
 
@@ -1462,10 +1428,21 @@ async def show_my_rewards(query, lang):
 
 async def show_language_menu(query):
     """Show language selection menu"""
+    user_id = query.from_user.id
+    current_lang = get_user_language(user_id)
+    
+    # Create language keyboard with back button
+    keyboard = [
+        [InlineKeyboardButton("🇹🇷 Türkçe", callback_data='set_lang_tr'),
+         InlineKeyboardButton("🇺🇸 English", callback_data='set_lang_en')],
+        [InlineKeyboardButton("🇪🇸 Español", callback_data='set_lang_es')],
+        [InlineKeyboardButton(get_text("main_menu_button", current_lang), callback_data='main_menu')]
+    ]
+    
     await safe_edit_message(
         query,
-        get_text("language_selection", "en"),  # Always show in English
-        reply_markup=create_language_keyboard(),
+        get_text("language_selection.title", current_lang),
+        reply_markup=InlineKeyboardMarkup(keyboard),
         parse_mode='Markdown'
     )
 
@@ -1478,7 +1455,7 @@ async def handle_language_change(query, new_lang):
     
     # Send confirmation in new language
     lang_name = LOCALES[new_lang].get('language_name', new_lang)
-    message = get_text("language_updated", new_lang, lang=lang_name)
+    message = get_text("language_updated", new_lang).format(lang=lang_name)
     
     await safe_edit_message(
         query,
@@ -1645,6 +1622,15 @@ async def admin_premium_pdf(query, lang):
         parse_mode='Markdown'
     )
 
+async def admin_download_users_pdf(query, lang):
+    """Show users PDF download"""
+    await safe_edit_message(
+        query,
+        get_text("admin_pdf_download", lang),
+        reply_markup=create_admin_panel_keyboard(lang),
+        parse_mode='Markdown'
+    )
+
 async def show_daily_horoscope_menu(query, lang):
     """Show daily horoscope menu"""
     await safe_edit_message(
@@ -1709,11 +1695,36 @@ async def activate_astrology_chatbot(query, lang):
     )
 
 async def show_premium_comparison(query, lang):
-    """Show premium comparison"""
+    """Show premium comparison table"""
+    # Build comparison table
+    comparison_text = get_text("plan_comparison.title", lang) + "\n"
+    comparison_text += get_text("plan_comparison.separator", lang) + "\n\n"
+    
+    # Get all plans
+    plans = get_text("plan_comparison.plans", lang, default={})
+    
+    for plan_key, plan_data in plans.items():
+        comparison_text += f"{plan_data.get('title', plan_key.title())}\n"
+        comparison_text += "━━━━━━━━━━━━━━━━━━━━━━\n"
+        
+        features = plan_data.get('features', [])
+        for feature in features:
+            comparison_text += f"• {feature}\n"
+        
+        comparison_text += "\n"
+    
+    # Create keyboard with back button
+    keyboard = [
+        [InlineKeyboardButton(
+            get_text("plan_comparison.back_button", lang),
+            callback_data="premium_menu"
+        )]
+    ]
+    
     await safe_edit_message(
         query,
-        get_text("premium_compare", lang),
-        reply_markup=create_premium_menu_keyboard(lang),
+        comparison_text,
+        reply_markup=InlineKeyboardMarkup(keyboard),
         parse_mode='Markdown'
     )
 
@@ -1820,12 +1831,177 @@ async def show_premium_plan_details(query, plan_name, lang):
     )
 
 async def initiate_premium_purchase(query, plan_name, lang):
-    """Initiate premium purchase"""
+    """Initiate premium purchase with Telegram Stars"""
+    plan = PREMIUM_PLANS.get(plan_name, {})
+    if not plan:
+        await safe_edit_message(
+            query,
+            get_text("error.plan_not_found", lang),
+            reply_markup=create_premium_menu_keyboard(lang),
+            parse_mode='Markdown'
+        )
+        return
+    
+    plan_name_display = plan.get('name', plan_name.title())
+    price_stars = plan.get('price_stars', 0)
+    duration = plan.get('duration', '30 days')
+    
+    # Create purchase message
+    purchase_text = f"💎 **{plan_name_display}** 💎\n\n"
+    purchase_text += f"💰 **Price:** {price_stars} ⭐\n"
+    purchase_text += f"⏰ **Duration:** {duration}\n\n"
+    purchase_text += f"📝 **Description:**\n{plan.get('description', '')}\n\n"
+    purchase_text += f"✨ **Features:**\n"
+    
+    features = plan.get('features', [])
+    for feature in features:
+        purchase_text += f"• {feature}\n"
+    
+    purchase_text += f"\n💳 **Payment Method:** Telegram Stars\n\n"
+    purchase_text += f"Click the button below to proceed with payment:"
+    
+    # Create keyboard with payment button
+    keyboard = [
+        [InlineKeyboardButton(
+            f"💳 Pay {price_stars} ⭐",
+            callback_data=f"pay_stars_{plan_name}"
+        )],
+        [InlineKeyboardButton(
+            get_text("premium_plans.buttons.back", lang),
+            callback_data="premium_menu"
+        )]
+    ]
+    
     await safe_edit_message(
         query,
-        get_text("premium_purchase_initiated", lang),
+        purchase_text,
+        reply_markup=InlineKeyboardMarkup(keyboard),
         parse_mode='Markdown'
     )
+
+async def handle_stars_payment(query, plan_name, lang):
+    """Handle Telegram Stars payment for premium plans"""
+    plan = PREMIUM_PLANS.get(plan_name, {})
+    if not plan:
+        await safe_edit_message(
+            query,
+            get_text("error.plan_not_found", lang),
+            reply_markup=create_premium_menu_keyboard(lang),
+            parse_mode='Markdown'
+        )
+        return
+    
+    user_id = query.from_user.id
+    price_stars = plan.get('price_stars', 0)
+    plan_name_display = plan.get('name', plan_name.title())
+    
+    # Create payment message with Telegram Stars integration
+    payment_text = f"💳 **Telegram Stars Payment** 💳\n\n"
+    payment_text += f"📦 **Plan:** {plan_name_display}\n"
+    payment_text += f"💰 **Amount:** {price_stars} ⭐\n\n"
+    payment_text += "🔗 **Payment Instructions:**\n"
+    payment_text += "1. Click the 'Pay with Stars' button below\n"
+    payment_text += "2. Confirm the payment in Telegram\n"
+    payment_text += "3. Your premium features will be activated immediately\n\n"
+    payment_text += "⚠️ **Note:** This is a one-time payment for 30 days of premium access."
+    
+    # Create keyboard with Telegram Stars payment button
+    keyboard = [
+        [InlineKeyboardButton(
+            f"💳 Pay {price_stars} ⭐ with Telegram Stars",
+            callback_data=f"telegram_stars_{plan_name}"
+        )],
+        [InlineKeyboardButton(
+            get_text("premium_plans.buttons.back", lang),
+            callback_data=f"premium_plan_{plan_name}"
+        )]
+    ]
+    
+    await safe_edit_message(
+        query,
+        payment_text,
+        reply_markup=InlineKeyboardMarkup(keyboard),
+        parse_mode='Markdown'
+    )
+
+async def process_telegram_stars_payment(query, plan_name, lang):
+    """Process Telegram Stars payment and activate premium"""
+    plan = PREMIUM_PLANS.get(plan_name, {})
+    if not plan:
+        await safe_edit_message(
+            query,
+            get_text("error.plan_not_found", lang),
+            reply_markup=create_premium_menu_keyboard(lang),
+            parse_mode='Markdown'
+        )
+        return
+    
+    user_id = query.from_user.id
+    price_stars = plan.get('price_stars', 0)
+    plan_name_display = plan.get('name', plan_name.title())
+    
+    # Calculate expiry date (30 days from now)
+    expires_at = (datetime.now() + timedelta(days=30)).isoformat()
+    
+    # Update user's premium status
+    success = supabase_manager.update_user_premium_plan(user_id, plan_name, expires_at)
+    
+    if success:
+        # Log the payment
+        supabase_manager.add_log(f"Premium payment: User {user_id} - {plan_name} - {price_stars} stars")
+        
+        # Success message
+        success_text = f"🎉 **Payment Successful!** 🎉\n\n"
+        success_text += f"✨ **Plan Activated:** {plan_name_display}\n"
+        success_text += f"💰 **Amount Paid:** {price_stars} ⭐\n"
+        success_text += f"⏰ **Expires:** {expires_at.split('T')[0]}\n\n"
+        success_text += f"🎯 **Your Premium Features:**\n"
+        
+        features = plan.get('features', [])
+        for feature in features[:5]:  # Show first 5 features
+            success_text += f"• {feature}\n"
+        
+        if len(features) > 5:
+            success_text += f"• ... and {len(features) - 5} more features!\n"
+        
+        success_text += f"\n🚀 **Enjoy your premium experience!**"
+        
+        keyboard = [
+            [InlineKeyboardButton(
+                get_text("main_menu_button", lang),
+                callback_data="main_menu"
+            )]
+        ]
+        
+        await safe_edit_message(
+            query,
+            success_text,
+            reply_markup=InlineKeyboardMarkup(keyboard),
+            parse_mode='Markdown'
+        )
+    else:
+        # Error message
+        error_text = f"❌ **Payment Failed** ❌\n\n"
+        error_text += f"Sorry, there was an error processing your payment.\n"
+        error_text += f"Please try again or contact support."
+        
+        keyboard = [
+            [InlineKeyboardButton(
+                "🔄 Try Again",
+                callback_data=f"pay_stars_{plan_name}"
+            )],
+            [InlineKeyboardButton(
+                get_text("main_menu_button", lang),
+                callback_data="main_menu"
+            )]
+        ]
+        
+        await safe_edit_message(
+            query,
+            error_text,
+            reply_markup=InlineKeyboardMarkup(keyboard),
+            parse_mode='Markdown'
+        )
 
 async def generate_tarot_interpretation(query, card, lang):
     """Generate tarot interpretation"""
@@ -1871,7 +2047,7 @@ async def generate_coffee_fortune(query, lang):
 
 async def process_dream_text_impl(update, context, text, lang):
     """Implementation of dream text processing"""
-        await update.message.reply_text(
+    await update.message.reply_text(
         get_text("dream_processing", lang),
         parse_mode='Markdown'
     )
@@ -1880,8 +2056,8 @@ async def process_birth_info_impl(update, context, text, lang):
     """Implementation of birth info processing"""
     await update.message.reply_text(
         get_text("birth_info_processing", lang),
-                parse_mode='Markdown'
-            )
+        parse_mode='Markdown'
+    )
 
 async def handle_chatbot_question_impl(update, context, text, lang):
     """Implementation of chatbot question handling"""

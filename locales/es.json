@@ -46,6 +46,35 @@
   "premium_plan_basic": "✨ Plan Básico - 500 ⭐",
   "premium_plan_premium": "✨ Plan Premium - 1000 ⭐",
   "premium_plan_vip": "✨ Plan VIP - 2000 ⭐",
+  "error": {
+    "unknown_callback": "❌ ¡Comando desconocido!",
+    "plan_not_found": "❌ ¡Plan no encontrado!",
+    "payment_failed": "❌ ¡Pago fallido!",
+    "insufficient_stars": "❌ ¡Estrellas insuficientes!",
+    "network_error": "❌ ¡Error de red!",
+    "invalid_plan": "❌ ¡Plan inválido!"
+  },
+  "premium_plans": {
+    "buttons": {
+      "buy": "🛒 Comprar Ahora",
+      "back": "⬅️ Volver",
+      "compare": "📊 Comparar",
+      "manage": "⚙️ Gestionar"
+    },
+    "plan_details": {
+      "description_label": "Descripción",
+      "price_label": "Precio",
+      "duration_label": "Duración",
+      "features_label": "Características"
+    }
+  },
+  "payment": {
+    "success": "✅ ¡Pago exitoso!",
+    "failed": "❌ ¡Pago fallido!",
+    "processing": "⏳ Procesando pago...",
+    "insufficient_funds": "❌ ¡Fondos insuficientes!",
+    "cancelled": "❌ ¡Pago cancelado!"
+  },
   "plan_comparison": {
     "title": "📊 **COMPARACIÓN DE PLANES** 📊",
     "separator": "━━━━━━━━━━━━━━━━━━━━━━",
@@ -820,5 +849,64 @@
       "pdf": "📱 PDF",
       "back": "🔙 Volver"
     }
+  },
+  "admin_premium_users": "💎 **Usuarios Premium**\n\nTotal de usuarios premium: {count}",
+  "admin_premium_stats": "📊 **Estadísticas Premium**\n\n{stats}",
+  "admin_gift_subscription": "🎁 **Regalar Suscripción**\n\nRegala una suscripción premium a un usuario.",
+  "admin_cancel_subscription": "❌ **Cancelar Suscripción**\n\nCancela la suscripción premium de un usuario.",
+  "admin_premium_pdf": "📄 **Reporte PDF Premium**\n\nDescarga los datos de usuarios premium como PDF.",
+  "premium_users": "👥 **Usuarios Premium**\n\nVer titulares de suscripciones premium.",
+  "premium_stats": "📊 **Estadísticas Premium**\n\nVer estadísticas de suscripciones premium.",
+  "gift_subscription": "🎁 **Regalar Suscripción**\n\nRegala suscripciones premium a usuarios.",
+  "cancel_subscription": "❌ **Cancelar Suscripción**\n\nCancela suscripciones de usuarios.",
+  "premium_report": "📄 **Reporte Premium**\n\nDescarga el reporte de usuarios premium.",
+  "no_premium_users": "❌ Aún no hay usuarios premium.",
+  "premium_user_details": "💎 **Usuarios Premium** 💎",
+  "premium_statistics": "📊 **Estadísticas Premium** 📊",
+  "user_distribution": "👥 **Distribución de Usuarios:**",
+  "revenue_stats": "💰 **Estadísticas de Ingresos:**",
+  "active_subscriptions": "📈 **Suscripciones Activas:**",
+  "gift_subscription_title": "🎁 **REGALAR SUSCRIPCIÓN** 🎁",
+  "cancel_subscription_title": "❌ **CANCELAR SUSCRIPCIÓN** ❌",
+  "admin_panel_back": "🔙 Panel de Admin",
+  "admin_panel": {
+    "title": "🔧 *Panel de Administración*",
+    "buttons": {
+      "stats": "📊 Estadísticas",
+      "users": "👥 Lista de Usuarios",
+      "referrals": "👥 Relaciones de Referidos",
+      "premium": "💎 Gestión Premium",
+      "logs": "📋 Ver Logs",
+      "pdf": "📄 Descargar PDF",
+      "settings": "⚙️ Configuración",
+      "main_menu": "🏠 Menú Principal"
+    }
+  },
+  "admin_stats": {
+    "title": "**📊 Estadísticas del Bot**",
+    "user_stats": "**👥 Estadísticas de Usuarios:**",
+    "total_users": "• Total de Usuarios: **{count}**",
+    "daily_subscribers": "• Suscriptores de Cartas Diarias: **{count}**",
+    "referral_stats": "**👤 Estadísticas de Referidos:**",
+    "total_referrers": "• Total de Referentes: **{count}** usuarios",
+    "total_referred": "• Total de Referidos: **{count}** personas",
+    "total_earnings": "• Ganancias Totales: **{count}** lecturas",
+    "referral_rate": "• Tasa de Referidos: **{rate:.1f}%**",
+    "buttons": {
+      "referral_details": "👥 Detalles de Referidos",
+      "back": "🔙 Panel de Admin"
+    }
+  },
+  "admin_logs": {
+    "title": "**📋 Últimas 50 Entradas de Log**",
+    "no_logs": "Aún no hay entradas de log.",
+    "buttons": {
+      "back": "🔙 Panel de Admin"
+    }
+  },
+  "daily_subscription": {
+    "set_delivery_time_prompt": "⏰ Configura la hora de entrega de cartas diarias (formato HH:MM):",
+    "stats_title": "📊 **Estadísticas de Suscripción**",
+    "feedback_prompt": "💬 Da feedback sobre las cartas diarias:"
   }
 }
