@@ -808,16 +808,13 @@
   "users": "👥 Kullanıcılar",
   "view_logs": "📋 Logları Görüntüle",
   "settings": "⚙️ Ayarlar",
-            "download_pdf": "📄 PDF İndir",
+  "download_pdf": "📄 PDF İndir",
   "premium_management": "💎 Premium Yönetimi",
   "no_logs": "Henüz log yok.",
   "admin_logs_message": "📋 **Admin Logları**\n\n{logs}",
   "admin_pdf_download": "📄 **PDF İndirme**\n\nRaporları PDF formatında indirin.",
   "astrology_chatbot_activated": "🤖 **Astroloji Chatbot Aktif**\n\nArtık astroloji sorularınızı sorabilirsiniz!",
   "moon_calendar_message": "🌙 **Ay Takvimi**\n\nAy fazları ve enerji rehberliği.",
-<<<<<<< Current (Your changes)
-  "birth_chart_prompt": "🌟 Doğum bilgilerinizi girin:\n\nFormat: GG.AA.YYYY SS:DD Şehir\nÖrnek: 15.03.1990 14:30 İstanbul"
-=======
   "birth_chart_prompt": "🌟 Doğum bilgilerinizi girin:\n\nFormat: GG.AA.YYYY SS:DD Şehir\nÖrnek: 15.03.1990 14:30 İstanbul",
   "referral": {
     "title": "🌟 **REFERANS SİSTEMİ** 🌟",
@@ -890,6 +887,34 @@
     "contact_support": "Destek ekibimizle iletişime geçin.",
     "buy_premium": "💳 Premium Satın Al",
     "back_to_plans": "🔙 Planlara Geri Dön"
+  },
+  "buttons": {
+    "copy_link": "📋 Linki Kopyala",
+    "my_stats": "📊 İstatistiklerim",
+    "share_whatsapp": "📱 WhatsApp'ta Paylaş",
+    "share_telegram": "📤 Telegram'da Paylaş",
+    "my_rewards": "🎁 Ödüllerim",
+    "leaderboard": "🏆 Lider Tablosu",
+    "progress_details": "📈 İlerleme Detayları",
+    "next_goal": "🎯 Sonraki Hedef",
+    "back_to_referral": "🔙 Referansa Geri Dön",
+    "compare_plans": "📊 Planları Karşılaştır",
+    "payment_info": "💳 Ödeme Bilgileri",
+    "plan_details": "📋 Plan Detayları",
+    "buy_now": "💳 Satın Al",
+    "back_to_comparison": "🔙 Karşılaştırmaya Geri Dön",
+    "back_to_premium": "🔙 Premium Menü",
+    "back_to_plans": "🔙 Planlara Geri Dön",
+    "back_to_menu": "🔙 Menüye Geri Dön",
+    "main_menu": "🏠 Ana Menü",
+    "back": "🔙 Geri",
+    "try_again": "🔄 Tekrar Dene",
+    "close": "❌ Kapat",
+    "subscribe": "✅ Abone Ol",
+    "unsubscribe": "❌ Aboneliği İptal Et",
+            "upgrade_vip": "👑 VIP'e Yükselt",
+        "upgrade_premium": "⭐ Premium'a Yükselt",
+        "upgrade_basic": "💎 Temel'e Yükselt",
+        "buy_premium": "💳 Premium Satın Al"
   }
->>>>>>> Incoming (Background Agent changes)
 } 

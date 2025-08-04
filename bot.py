@@ -50,17 +50,40 @@ for filename in os.listdir(locales_dir):
 
 def get_text(key: str, lang: str = 'en', **kwargs) -> str:
     """Get localized text for a given key"""
-    # Get the text from locale file
-    text = LOCALES.get(lang, {}).get(key, LOCALES.get('en', {}).get(key, key))
-    
-    # Format with any provided kwargs
-    if kwargs:
-        try:
-            text = text.format(**kwargs)
-        except:
-            pass
-    
-    return text
+    try:
+        # Handle nested keys with dot notation
+        def get_nested_value(data, key_path):
+            keys = key_path.split('.')
+            current = data
+            for k in keys:
+                if isinstance(current, dict) and k in current:
+                    current = current[k]
+                else:
+                    return None
+            return current
+        
+        # Get the text from locale file with nested key support
+        text = get_nested_value(LOCALES.get(lang, {}), key)
+        if text is None:
+            text = get_nested_value(LOCALES.get('en', {}), key)
+        if text is None:
+            text = key  # Fallback to key itself
+        
+        # Ensure text is a string
+        if not isinstance(text, str):
+            text = str(text)
+        
+        # Format with any provided kwargs
+        if kwargs:
+            try:
+                text = text.format(**kwargs)
+            except:
+                pass
+        
+        return text
+    except Exception as e:
+        # Ultimate fallback - return the key itself
+        return str(key)
 
 def get_user_language(user_id: int) -> str:
     """Get user's preferred language from database"""
@@ -1342,15 +1365,15 @@ async def show_referral_info(query, lang):
     
     # Create elegant keyboard
     keyboard = [
-        [InlineKeyboardButton("📋 Copy Link", callback_data=f"copy_link_{referral_link}"),
-         InlineKeyboardButton("📊 My Stats", callback_data="referral_stats")],
-        [InlineKeyboardButton("📱 Share on WhatsApp", callback_data="share_whatsapp"),
-         InlineKeyboardButton("📤 Share on Telegram", callback_data="share_telegram")],
-        [InlineKeyboardButton("🎁 My Rewards", callback_data="my_rewards"),
-         InlineKeyboardButton("🏆 Leaderboard", callback_data="referral_leaderboard")],
-        [InlineKeyboardButton("📈 Progress Details", callback_data="referral_progress"),
-         InlineKeyboardButton("🎯 Next Goal", callback_data="referral_next_goal")],
-        [InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")]
+        [InlineKeyboardButton(get_text("buttons.copy_link", lang), callback_data=f"copy_link_{referral_link}"),
+         InlineKeyboardButton(get_text("buttons.my_stats", lang), callback_data="referral_stats")],
+        [InlineKeyboardButton(get_text("buttons.share_whatsapp", lang), callback_data="share_whatsapp"),
+         InlineKeyboardButton(get_text("buttons.share_telegram", lang), callback_data="share_telegram")],
+        [InlineKeyboardButton(get_text("buttons.my_rewards", lang), callback_data="my_rewards"),
+         InlineKeyboardButton(get_text("buttons.leaderboard", lang), callback_data="referral_leaderboard")],
+        [InlineKeyboardButton(get_text("buttons.progress_details", lang), callback_data="referral_progress"),
+         InlineKeyboardButton(get_text("buttons.next_goal", lang), callback_data="referral_next_goal")],
+        [InlineKeyboardButton(get_text("buttons.main_menu", lang), callback_data="main_menu")]
     ]
     
     await safe_edit_message(
@@ -1389,11 +1412,11 @@ async def show_referral_stats(query, lang):
     
     keyboard = [
         [InlineKeyboardButton(
-            get_text("referral.buttons.my_rewards", lang),
+            get_text("buttons.my_rewards", lang),
             callback_data="my_rewards"
         )],
         [InlineKeyboardButton(
-            get_text("referral.buttons.back", lang),
+            get_text("buttons.back_to_referral", lang),
             callback_data="referral"
         )]
     ]
@@ -1429,11 +1452,11 @@ async def show_my_rewards(query, lang):
     
     keyboard = [
         [InlineKeyboardButton(
-            get_text("referral.buttons.my_stats", lang),
+            get_text("buttons.my_stats", lang),
             callback_data="referral_stats"
         )],
         [InlineKeyboardButton(
-            get_text("referral.buttons.back", lang),
+            get_text("buttons.back_to_referral", lang),
             callback_data="referral"
         )]
     ]
@@ -1536,11 +1559,11 @@ async def show_premium_menu(query, lang):
     
     # Add navigation buttons
     keyboard.append([
-        InlineKeyboardButton("📊 Compare Plans", callback_data="premium_compare"),
-        InlineKeyboardButton("💳 Payment Info", callback_data="payment_info")
+        InlineKeyboardButton(get_text("buttons.compare_plans", lang), callback_data="premium_compare"),
+        InlineKeyboardButton(get_text("buttons.payment_info", lang), callback_data="payment_info")
     ])
     keyboard.append([
-        InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")
+        InlineKeyboardButton(get_text("buttons.main_menu", lang), callback_data="main_menu")
     ])
     
     await safe_edit_message(
@@ -1788,12 +1811,12 @@ async def show_premium_comparison(query, lang):
     
     # Add navigation buttons
     keyboard.append([
-        InlineKeyboardButton("📋 Plan Details", callback_data="premium_details"),
-        InlineKeyboardButton("💳 Payment Info", callback_data="payment_info")
+        InlineKeyboardButton(get_text("buttons.plan_details", lang), callback_data="premium_details"),
+        InlineKeyboardButton(get_text("buttons.payment_info", lang), callback_data="payment_info")
     ])
     keyboard.append([
-        InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu"),
-        InlineKeyboardButton("🔙 Premium Menu", callback_data="premium_menu")
+        InlineKeyboardButton(get_text("buttons.main_menu", lang), callback_data="main_menu"),
+        InlineKeyboardButton(get_text("buttons.back_to_premium", lang), callback_data="premium_menu")
     ])
     
     await safe_edit_message(
@@ -2098,14 +2121,15 @@ async def handle_copy_referral_link(query, lang):
     bot_username = query.from_user.bot.username if hasattr(query.from_user, 'bot') else "FalGramBot"
     referral_link = f"https://t.me/{bot_username}?start={user_id}"
     
-    message = "📋 **Referral Link Copied!** 📋\n\n"
-    message += f"Your referral link has been copied to clipboard:\n"
+    message = "📋 **" + get_text("referral.link_copied", lang, link=referral_link) + "** 📋\n\n"
+    message += f"✨ **{get_text('referral.title', lang)}** ✨\n\n"
+    message += f"🔗 **{get_text('referral.description', lang)}**\n"
     message += f"`{referral_link}`\n\n"
-    message += "Share this link with your friends to earn rewards!"
+    message += "🌟 Share this link with your friends to earn rewards!"
     
     keyboard = [
-        [InlineKeyboardButton("🔙 Back to Referral", callback_data="referral")],
-        [InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")]
+        [InlineKeyboardButton(get_text("buttons.back_to_referral", lang), callback_data="referral")],
+        [InlineKeyboardButton(get_text("buttons.main_menu", lang), callback_data="main_menu")]
     ]
     
     await safe_edit_message(
@@ -2123,14 +2147,15 @@ async def handle_share_whatsapp(query, lang):
     
     whatsapp_url = f"https://wa.me/?text=🔮 Check out this amazing fortune telling bot! {referral_link}"
     
-    message = "📱 **Share on WhatsApp** 📱\n\n"
-    message += "Click the button below to share on WhatsApp:\n\n"
-    message += "Your referral link will be automatically included!"
+    message = "📱 **" + get_text("buttons.share_whatsapp", lang) + "** 📱\n\n"
+    message += "✨ **Share your referral link on WhatsApp!** ✨\n\n"
+    message += "🌟 Click the button below to share on WhatsApp:\n\n"
+    message += "🔗 Your referral link will be automatically included!"
     
     keyboard = [
-        [InlineKeyboardButton("📱 Share on WhatsApp", url=whatsapp_url)],
-        [InlineKeyboardButton("🔙 Back to Referral", callback_data="referral")],
-        [InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")]
+        [InlineKeyboardButton(get_text("buttons.share_whatsapp", lang), url=whatsapp_url)],
+        [InlineKeyboardButton(get_text("buttons.back_to_referral", lang), callback_data="referral")],
+        [InlineKeyboardButton(get_text("buttons.main_menu", lang), callback_data="main_menu")]
     ]
     
     await safe_edit_message(
@@ -2148,14 +2173,15 @@ async def handle_share_telegram(query, lang):
     
     telegram_url = f"https://t.me/share/url?url={referral_link}&text=🔮 Check out this amazing fortune telling bot!"
     
-    message = "📤 **Share on Telegram** 📤\n\n"
-    message += "Click the button below to share on Telegram:\n\n"
-    message += "Your referral link will be automatically included!"
+    message = "📤 **" + get_text("buttons.share_telegram", lang) + "** 📤\n\n"
+    message += "✨ **Share your referral link on Telegram!** ✨\n\n"
+    message += "🌟 Click the button below to share on Telegram:\n\n"
+    message += "🔗 Your referral link will be automatically included!"
     
     keyboard = [
-        [InlineKeyboardButton("📤 Share on Telegram", url=telegram_url)],
-        [InlineKeyboardButton("🔙 Back to Referral", callback_data="referral")],
-        [InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")]
+        [InlineKeyboardButton(get_text("buttons.share_telegram", lang), url=telegram_url)],
+        [InlineKeyboardButton(get_text("buttons.back_to_referral", lang), callback_data="referral")],
+        [InlineKeyboardButton(get_text("buttons.main_menu", lang), callback_data="main_menu")]
     ]
     
     await safe_edit_message(
@@ -2171,17 +2197,20 @@ async def show_referral_leaderboard(query, lang):
     users = supabase_manager.get_all_users()
     top_referrers = sorted(users, key=lambda x: x.get('referred_count', 0), reverse=True)[:10]
     
-    message = "🏆 **REFERRAL LEADERBOARD** 🏆\n\n"
-    message += "Top 10 referrers:\n\n"
+    message = "🏆 **" + get_text("referral.leaderboard_title", lang) + "** 🏆\n\n"
+    message += "✨ **Top 10 referrers:** ✨\n\n"
     
     for i, user in enumerate(top_referrers, 1):
         username = user.get('username', f"User{user.get('id')}")
         referred_count = user.get('referred_count', 0)
-        message += f"{i}. @{username} - {referred_count} referrals\n"
+        if i <= 3:
+            message += f"🥇 **{i}.** @{username} - **{referred_count}** referrals\n"
+        else:
+            message += f"**{i}.** @{username} - {referred_count} referrals\n"
     
     keyboard = [
-        [InlineKeyboardButton("🔙 Back to Referral", callback_data="referral")],
-        [InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")]
+        [InlineKeyboardButton(get_text("buttons.back_to_referral", lang), callback_data="referral")],
+        [InlineKeyboardButton(get_text("buttons.main_menu", lang), callback_data="main_menu")]
     ]
     
     await safe_edit_message(
@@ -2221,8 +2250,8 @@ async def show_referral_progress(query, lang):
         message += "🎉 **Congratulations! You've reached all milestones!** 🎉\n\n"
     
     keyboard = [
-        [InlineKeyboardButton("🔙 Back to Referral", callback_data="referral")],
-        [InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")]
+        [InlineKeyboardButton(get_text("buttons.back_to_referral", lang), callback_data="referral")],
+        [InlineKeyboardButton(get_text("buttons.main_menu", lang), callback_data="main_menu")]
     ]
     
     await safe_edit_message(
@@ -2273,8 +2302,8 @@ async def show_referral_next_goal(query, lang):
         message += "You're now a referral master! 🌟"
     
     keyboard = [
-        [InlineKeyboardButton("🔙 Back to Referral", callback_data="referral")],
-        [InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")]
+        [InlineKeyboardButton(get_text("buttons.back_to_referral", lang), callback_data="referral")],
+        [InlineKeyboardButton(get_text("buttons.main_menu", lang), callback_data="main_menu")]
     ]
     
     await safe_edit_message(
@@ -2318,28 +2347,31 @@ async def show_premium_details(query, lang):
 
 async def show_payment_info(query, lang):
     """Show payment information"""
-    message = "💳 **PAYMENT INFORMATION** 💳\n\n"
-    message += "We accept Telegram Stars for all premium plans.\n\n"
-    message += "🔒 **Secure Payment:**\n"
-    message += "• All payments are processed securely through Telegram\n"
-    message += "• Your payment information is never stored\n"
-    message += "• Instant activation after successful payment\n\n"
-    message += "💰 **How to get Telegram Stars:**\n"
-    message += "• Earn stars by using Telegram Premium\n"
-    message += "• Purchase stars from Telegram\n"
-    message += "• Receive stars as gifts from other users\n\n"
-    message += "📱 **Payment Process:**\n"
-    message += "1. Select your preferred plan\n"
-    message += "2. Click 'Pay with Stars'\n"
-    message += "3. Complete payment in Telegram\n"
-    message += "4. Enjoy your premium features!\n\n"
-    message += "❓ **Need Help?**\n"
-    message += "Contact our support team for assistance."
+    message = get_text("payment.title", lang) + "\n\n"
+    message += get_text("payment.description", lang) + "\n\n"
+    message += get_text("payment.secure_payment", lang) + "\n"
+    
+    secure_features = get_text("payment.secure_features", lang)
+    for feature in secure_features:
+        message += feature + "\n"
+    
+    message += "\n" + get_text("payment.how_to_get_stars", lang) + "\n"
+    stars_sources = get_text("payment.stars_sources", lang)
+    for source in stars_sources:
+        message += source + "\n"
+    
+    message += "\n" + get_text("payment.payment_process", lang) + "\n"
+    payment_steps = get_text("payment.payment_steps", lang)
+    for step in payment_steps:
+        message += step + "\n"
+    
+    message += "\n" + get_text("payment.need_help", lang) + "\n"
+    message += get_text("payment.contact_support", lang)
     
     keyboard = [
-        [InlineKeyboardButton("💳 Buy Premium", callback_data="premium_menu")],
-        [InlineKeyboardButton("🔙 Back to Plans", callback_data="premium_compare")],
-        [InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")]
+        [InlineKeyboardButton(get_text("buttons.buy_premium", lang), callback_data="premium_menu")],
+        [InlineKeyboardButton(get_text("buttons.back_to_plans", lang), callback_data="premium_compare")],
+        [InlineKeyboardButton(get_text("buttons.main_menu", lang), callback_data="main_menu")]
     ]
     
     await safe_edit_message(
