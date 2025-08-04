@@ -98,6 +98,35 @@
   "premium_plan_basic": "✨ Temel Plan - 500 ⭐",
   "premium_plan_premium": "✨ Premium Plan - 1000 ⭐",
   "premium_plan_vip": "✨ VIP Plan - 2000 ⭐",
+  "error": {
+    "unknown_callback": "❌ Bilinmeyen komut!",
+    "plan_not_found": "❌ Plan bulunamadı!",
+    "payment_failed": "❌ Ödeme başarısız!",
+    "insufficient_stars": "❌ Yetersiz yıldız!",
+    "network_error": "❌ Ağ hatası!",
+    "invalid_plan": "❌ Geçersiz plan!"
+  },
+  "premium_plans": {
+    "buttons": {
+      "buy": "🛒 Satın Al",
+      "back": "⬅️ Geri",
+      "compare": "📊 Karşılaştır",
+      "manage": "⚙️ Yönet"
+    },
+    "plan_details": {
+      "description_label": "Açıklama",
+      "price_label": "Fiyat",
+      "duration_label": "Süre",
+      "features_label": "Özellikler"
+    }
+  },
+  "payment": {
+    "success": "✅ Ödeme başarılı!",
+    "failed": "❌ Ödeme başarısız!",
+    "processing": "⏳ Ödeme işleniyor...",
+    "insufficient_funds": "❌ Yetersiz bakiye!",
+    "cancelled": "❌ Ödeme iptal edildi!"
+  },
   "plan_comparison": {
     "title": "📊 **PLAN KARŞILAŞTIRMASI** 📊",
     "separator": "━━━━━━━━━━━━━━━━━━━━━━",

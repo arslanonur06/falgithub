@@ -46,6 +46,35 @@
   "premium_plan_basic": "✨ Plan Básico - 500 ⭐",
   "premium_plan_premium": "✨ Plan Premium - 1000 ⭐",
   "premium_plan_vip": "✨ Plan VIP - 2000 ⭐",
+  "error": {
+    "unknown_callback": "❌ ¡Comando desconocido!",
+    "plan_not_found": "❌ ¡Plan no encontrado!",
+    "payment_failed": "❌ ¡Pago fallido!",
+    "insufficient_stars": "❌ ¡Estrellas insuficientes!",
+    "network_error": "❌ ¡Error de red!",
+    "invalid_plan": "❌ ¡Plan inválido!"
+  },
+  "premium_plans": {
+    "buttons": {
+      "buy": "🛒 Comprar Ahora",
+      "back": "⬅️ Volver",
+      "compare": "📊 Comparar",
+      "manage": "⚙️ Gestionar"
+    },
+    "plan_details": {
+      "description_label": "Descripción",
+      "price_label": "Precio",
+      "duration_label": "Duración",
+      "features_label": "Características"
+    }
+  },
+  "payment": {
+    "success": "✅ ¡Pago exitoso!",
+    "failed": "❌ ¡Pago fallido!",
+    "processing": "⏳ Procesando pago...",
+    "insufficient_funds": "❌ ¡Fondos insuficientes!",
+    "cancelled": "❌ ¡Pago cancelado!"
+  },
   "plan_comparison": {
     "title": "📊 **COMPARACIÓN DE PLANES** 📊",
     "separator": "━━━━━━━━━━━━━━━━━━━━━━",
