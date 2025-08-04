@@ -1064,6 +1064,7 @@ async def handle_callback_query(update: Update, context: CallbackContext):
         'admin_view_logs': lambda: admin_view_logs(query, lang),
         'admin_settings': lambda: admin_show_settings(query, lang),
         'admin_download_pdf': lambda: admin_download_pdf(query, lang),
+        'admin_download_users_pdf': lambda: admin_download_users_pdf(query, lang),
         'admin_premium': lambda: admin_premium_management(query, lang),
         'admin_premium_users': lambda: admin_premium_users(query, lang),
         'admin_premium_stats': lambda: admin_premium_stats(query, lang),
@@ -1106,6 +1107,12 @@ async def handle_callback_query(update: Update, context: CallbackContext):
     elif query.data.startswith('premium_plan_'):
         plan_name = query.data.replace('premium_plan_', '')
         await show_premium_plan_details(query, plan_name, lang)
+    elif query.data.startswith('pay_stars_'):
+        plan_name = query.data.replace('pay_stars_', '')
+        await handle_stars_payment(query, plan_name, lang)
+    elif query.data.startswith('telegram_stars_'):
+        plan_name = query.data.replace('telegram_stars_', '')
+        await process_telegram_stars_payment(query, plan_name, lang)
     elif query.data.startswith('buy_'):
         plan_name = query.data.replace('buy_', '')
         await premium_buy_plan(update, context)
@@ -1615,6 +1622,15 @@ async def admin_premium_pdf(query, lang):
         parse_mode='Markdown'
     )
 
+async def admin_download_users_pdf(query, lang):
+    """Show users PDF download"""
+    await safe_edit_message(
+        query,
+        get_text("admin_pdf_download", lang),
+        reply_markup=create_admin_panel_keyboard(lang),
+        parse_mode='Markdown'
+    )
+
 async def show_daily_horoscope_menu(query, lang):
     """Show daily horoscope menu"""
     await safe_edit_message(
@@ -1679,11 +1695,36 @@ async def activate_astrology_chatbot(query, lang):
     )
 
 async def show_premium_comparison(query, lang):
-    """Show premium comparison"""
+    """Show premium comparison table"""
+    # Build comparison table
+    comparison_text = get_text("plan_comparison.title", lang) + "\n"
+    comparison_text += get_text("plan_comparison.separator", lang) + "\n\n"
+    
+    # Get all plans
+    plans = get_text("plan_comparison.plans", lang, default={})
+    
+    for plan_key, plan_data in plans.items():
+        comparison_text += f"{plan_data.get('title', plan_key.title())}\n"
+        comparison_text += "━━━━━━━━━━━━━━━━━━━━━━\n"
+        
+        features = plan_data.get('features', [])
+        for feature in features:
+            comparison_text += f"• {feature}\n"
+        
+        comparison_text += "\n"
+    
+    # Create keyboard with back button
+    keyboard = [
+        [InlineKeyboardButton(
+            get_text("plan_comparison.back_button", lang),
+            callback_data="premium_menu"
+        )]
+    ]
+    
     await safe_edit_message(
         query,
-        get_text("premium_compare", lang),
-        reply_markup=create_premium_menu_keyboard(lang),
+        comparison_text,
+        reply_markup=InlineKeyboardMarkup(keyboard),
         parse_mode='Markdown'
     )
 

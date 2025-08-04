@@ -830,5 +830,89 @@
   "admin_pdf_download": "📄 **PDF İndirme**\n\nRaporları PDF formatında indirin.",
   "astrology_chatbot_activated": "🤖 **Astroloji Chatbot Aktif**\n\nArtık astroloji sorularınızı sorabilirsiniz!",
   "moon_calendar_message": "🌙 **Ay Takvimi**\n\nAy fazları ve enerji rehberliği.",
-  "birth_chart_prompt": "🌟 Doğum bilgilerinizi girin:\n\nFormat: GG.AA.YYYY SS:DD Şehir\nÖrnek: 15.03.1990 14:30 İstanbul"
+  "birth_chart_prompt": "🌟 Doğum bilgilerinizi girin:\n\nFormat: GG.AA.YYYY SS:DD Şehir\nÖrnek: 15.03.1990 14:30 İstanbul",
+  "admin_premium_users": "💎 **Premium Kullanıcılar**\n\nToplam premium kullanıcı: {count}",
+  "admin_premium_stats": "📊 **Premium İstatistikleri**\n\n{stats}",
+  "admin_gift_subscription": "🎁 **Hediye Abonelik**\n\nKullanıcıya premium abonelik hediye edin.",
+  "admin_cancel_subscription": "❌ **Abonelik İptal**\n\nKullanıcının premium aboneliğini iptal edin.",
+  "admin_premium_pdf": "📄 **Premium PDF Raporu**\n\nPremium kullanıcı verilerini PDF olarak indirin.",
+  "premium_management": "💎 **Premium Yönetimi**\n\nPremium abonelikleri yönetin.",
+  "premium_users": "👥 **Premium Kullanıcılar**\n\nPremium abonelik sahiplerini görüntüleyin.",
+  "premium_stats": "📊 **Premium İstatistikleri**\n\nPremium abonelik istatistiklerini görüntüleyin.",
+  "gift_subscription": "🎁 **Hediye Abonelik**\n\nKullanıcılara premium abonelik hediye edin.",
+  "cancel_subscription": "❌ **Abonelik İptal**\n\nKullanıcı aboneliklerini iptal edin.",
+  "premium_report": "📄 **Premium Rapor**\n\nPremium kullanıcı raporunu indirin.",
+  "no_premium_users": "❌ Henüz premium kullanıcı yok.",
+  "premium_user_details": "💎 **Premium Kullanıcılar** 💎",
+  "premium_statistics": "📊 **Premium İstatistikleri** 📊",
+  "user_distribution": "👥 **Kullanıcı Dağılımı:**",
+  "revenue_stats": "💰 **Gelir İstatistikleri:**",
+  "active_subscriptions": "📈 **Aktif Abonelikler:**",
+  "gift_subscription_title": "🎁 **HEDİYE ABONELİK** 🎁",
+  "cancel_subscription_title": "❌ **ABONELİK İPTAL** ❌",
+  "admin_panel_back": "🔙 Admin Paneli",
+  "admin_panel": {
+    "title": "🔧 *Admin Paneli*",
+    "buttons": {
+      "stats": "📊 İstatistikler",
+      "users": "👥 Kullanıcı Listesi",
+      "referrals": "👥 Referans İlişkileri",
+      "premium": "💎 Premium Yönetimi",
+      "logs": "📋 Logları Görüntüle",
+      "pdf": "📄 PDF İndir",
+      "settings": "⚙️ Ayarlar",
+      "main_menu": "🏠 Ana Menü"
+    }
+  },
+  "admin_stats": {
+    "title": "**📊 Bot İstatistikleri**",
+    "user_stats": "**👥 Kullanıcı İstatistikleri:**",
+    "total_users": "• Toplam Kullanıcı: **{count}**",
+    "daily_subscribers": "• Günlük Kart Aboneleri: **{count}**",
+    "referral_stats": "**👤 Referans İstatistikleri:**",
+    "total_referrers": "• Toplam Referans Veren: **{count}** kullanıcı",
+    "total_referred": "• Toplam Referans Edilen: **{count}** kişi",
+    "total_earnings": "• Toplam Kazanç: **{count}** fal",
+    "referral_rate": "• Referans Oranı: **{rate:.1f}%**",
+    "buttons": {
+      "referral_details": "👥 Referans Detayları",
+      "back": "🔙 Admin Paneli"
+    }
+  },
+  "admin_logs": {
+    "title": "**📋 Son 50 Log Kaydı**",
+    "no_logs": "Henüz log kaydı yok.",
+    "buttons": {
+      "back": "🔙 Admin Paneli"
+    }
+  },
+  "referral": {
+    "title": "🌟 **FAL GRAM REFERANS SİSTEMİ** 🌟",
+    "description": "Arkadaşlarınızı davet edin ve ücretsiz fal kazanın!",
+    "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+    "stats_title": "📊 **Referans İstatistikleriniz**",
+    "referral_link": "🔗 **Referans Linkiniz:**",
+    "total_referrals": "👥 **Toplam Davet:** {count} kişi",
+    "free_readings_earned": "🎁 **Kazanılan Fallar:** {readings} fal",
+    "stars_earned": "⭐ **Kazanılan Yıldızlar:** {stars} ⭐",
+    "total_rewards": "💰 **Toplam Ödül:** {rewards}",
+    "how_it_works": "📋 **Nasıl Çalışır:**",
+    "how_it_works_steps": [
+      "1. Referans linkinizi arkadaşlarınızla paylaşın",
+      "2. Linkinizi kullanarak katılan her arkadaş için 1 ücretsiz fal kazanın",
+      "3. 5 arkadaş davet ettiğinizde 3 bonus fal + özel rozetler kazanın",
+      "4. 10 arkadaş davet ettiğinizde VIP statü + sınırsız günlük kartlar kazanın"
+    ],
+    "buttons": {
+      "copy_link": "📋 Linki Kopyala",
+      "my_stats": "📊 İstatistiklerim",
+      "my_rewards": "🎁 Ödüllerim",
+      "back": "🔙 Geri"
+    }
+  },
+  "daily_subscription": {
+    "set_delivery_time_prompt": "⏰ Günlük kart gönderim saatini ayarlayın (SS:DD formatında):",
+    "stats_title": "📊 **Abonelik İstatistikleri**",
+    "feedback_prompt": "💬 Günlük kartlar hakkında geri bildirim verin:"
+  }
 } 
