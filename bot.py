@@ -1093,6 +1093,22 @@ async def handle_callback_query(update: Update, context: CallbackContext):
     elif query.data.startswith('telegram_stars_'):
         plan_name = query.data.replace('telegram_stars_', '')
         await process_telegram_stars_payment(query, plan_name, lang)
+    elif query.data.startswith('copy_link_'):
+        await handle_copy_referral_link(query, lang)
+    elif query.data == 'share_whatsapp':
+        await handle_share_whatsapp(query, lang)
+    elif query.data == 'share_telegram':
+        await handle_share_telegram(query, lang)
+    elif query.data == 'referral_leaderboard':
+        await show_referral_leaderboard(query, lang)
+    elif query.data == 'referral_progress':
+        await show_referral_progress(query, lang)
+    elif query.data == 'referral_next_goal':
+        await show_referral_next_goal(query, lang)
+    elif query.data == 'premium_details':
+        await show_premium_details(query, lang)
+    elif query.data == 'payment_info':
+        await show_payment_info(query, lang)
     elif query.data.startswith('set_lang_'):
         new_lang = query.data.replace('set_lang_', '')
         await handle_language_change(query, new_lang)
@@ -1257,7 +1273,7 @@ async def handle_daily_card(query, lang):
     )
 
 async def show_referral_info(query, lang):
-    """Show enhanced referral information"""
+    """Show enhanced referral information with elegant UI"""
     user_id = query.from_user.id
     user = supabase_manager.get_user(user_id)
     
@@ -1269,46 +1285,60 @@ async def show_referral_info(query, lang):
     free_readings_earned = user.get('free_readings_earned', 0)
     stars_earned = user.get('stars_earned', 0)
     
-    # Calculate rewards
+    # Calculate rewards and progress
     total_rewards = free_readings_earned + stars_earned
+    progress = min(referred_count, 5)  # Progress bar for first 5 referrals
     
-    # Build enhanced referral message
-    message = get_text("referral.title", lang) + "\n\n"
-    message += get_text("referral.description", lang) + "\n\n"
-    message += get_text("referral.separator", lang) + "\n\n"
+    # Build elegant referral message
+    message = "🌟 **FAL GRAM REFERRAL SYSTEM** 🌟\n\n"
+    message += "🎁 **Earn rewards by inviting friends!**\n\n"
+    message += "━━━━━━━━━━━━━━━━━━━━━━\n\n"
     
-    # Add statistics
-    message += get_text("referral.stats_title", lang) + "\n"
-    message += get_text("referral.referral_link", lang) + "\n"
+    # Your Stats Section
+    message += "📊 **Your Statistics:**\n"
+    message += f"👥 **Total Referrals:** {referred_count}\n"
+    message += f"🎁 **Free Readings Earned:** {free_readings_earned}\n"
+    message += f"⭐ **Stars Earned:** {stars_earned}\n"
+    message += f"💰 **Total Rewards:** {total_rewards}\n\n"
+    
+    # Progress Bar
+    message += "📈 **Progress Bar:**\n"
+    progress_bar = "█" * progress + "░" * (5 - progress)
+    message += f"`{progress_bar}` ({referred_count}/5)\n\n"
+    
+    # Your Referral Link
+    message += "🔗 **Your Referral Link:**\n"
     message += f"`{referral_link}`\n\n"
-    message += get_text("referral.total_referrals", lang).format(count=referred_count) + "\n"
-    message += get_text("referral.free_readings_earned", lang).format(readings=free_readings_earned) + "\n"
-    message += get_text("referral.stars_earned", lang).format(stars=stars_earned) + "\n"
-    message += get_text("referral.total_rewards", lang).format(rewards=total_rewards) + "\n\n"
     
-    # Add how it works
-    message += get_text("referral.how_it_works", lang) + "\n"
-    for step in get_text("referral.how_it_works_steps", lang):
-        message += f"• {step}\n"
+    # Rewards System
+    message += "🏆 **Rewards System:**\n"
+    message += "• 1️⃣ **1 Referral** = 1 Free Reading ✨\n"
+    message += "• 5️⃣ **5 Referrals** = 3 Bonus Readings + Special Badge 🏅\n"
+    message += "• 🔟 **10 Referrals** = VIP Status + Unlimited Daily Cards 👑\n"
+    message += "• 2️⃣5️⃣ **25 Referrals** = Elite Member + Priority Support 🌟\n"
+    message += "• 5️⃣0️⃣ **50 Referrals** = Premium Reader Access 💎\n\n"
     
-    # Create enhanced keyboard
+    # How it works
+    message += "📋 **How it works:**\n"
+    message += "1. Share your referral link with friends\n"
+    message += "2. When they join using your link, you both get rewards\n"
+    message += "3. Track your progress and earn more rewards\n"
+    message += "4. Unlock special features as you refer more people\n\n"
+    
+    message += "━━━━━━━━━━━━━━━━━━━━━━\n"
+    message += "✨ *Start sharing and earn amazing rewards!* ✨"
+    
+    # Create elegant keyboard
     keyboard = [
-        [InlineKeyboardButton(
-            get_text("referral.buttons.copy_link", lang),
-            callback_data=f"copy_link_{referral_link}"
-        )],
-        [InlineKeyboardButton(
-            get_text("referral.buttons.my_stats", lang),
-            callback_data="referral_stats"
-        )],
-        [InlineKeyboardButton(
-            get_text("referral.buttons.my_rewards", lang),
-            callback_data="my_rewards"
-        )],
-        [InlineKeyboardButton(
-            get_text("referral.buttons.back", lang),
-            callback_data="main_menu"
-        )]
+        [InlineKeyboardButton("📋 Copy Link", callback_data=f"copy_link_{referral_link}"),
+         InlineKeyboardButton("📊 My Stats", callback_data="referral_stats")],
+        [InlineKeyboardButton("📱 Share on WhatsApp", callback_data="share_whatsapp"),
+         InlineKeyboardButton("📤 Share on Telegram", callback_data="share_telegram")],
+        [InlineKeyboardButton("🎁 My Rewards", callback_data="my_rewards"),
+         InlineKeyboardButton("🏆 Leaderboard", callback_data="referral_leaderboard")],
+        [InlineKeyboardButton("📈 Progress Details", callback_data="referral_progress"),
+         InlineKeyboardButton("🎯 Next Goal", callback_data="referral_next_goal")],
+        [InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")]
     ]
     
     await safe_edit_message(
@@ -1404,21 +1434,31 @@ async def show_my_rewards(query, lang):
     )
 
 async def show_language_menu(query):
-    """Show language selection menu"""
+    """Show language selection menu with elegant UI"""
     user_id = query.from_user.id
     current_lang = get_user_language(user_id)
     
-    # Create language keyboard with back button
+    # Create elegant language selection message
+    message = "🌐 **LANGUAGE SELECTION** 🌐\n\n"
+    message += "Please select your preferred language:\n"
+    message += "Lütfen tercih ettiğiniz dili seçin:\n"
+    message += "Por favor selecciona tu idioma preferido:\n\n"
+    message += "━━━━━━━━━━━━━━━━━━━━━━\n\n"
+    message += "Current language / Mevcut dil / Idioma actual:\n"
+    message += f"**{current_lang.upper()}**\n\n"
+    message += "Choose from the options below:\n"
+    
+    # Create elegant language keyboard
     keyboard = [
         [InlineKeyboardButton("🇹🇷 Türkçe", callback_data='set_lang_tr'),
          InlineKeyboardButton("🇺🇸 English", callback_data='set_lang_en')],
         [InlineKeyboardButton("🇪🇸 Español", callback_data='set_lang_es')],
-        [InlineKeyboardButton(get_text("main_menu_button", current_lang), callback_data='main_menu')]
+        [InlineKeyboardButton("🏠 Main Menu", callback_data='main_menu')]
     ]
     
     await safe_edit_message(
         query,
-        get_text("language_selection.title", current_lang),
+        message,
         reply_markup=InlineKeyboardMarkup(keyboard),
         parse_mode='Markdown'
     )
@@ -1445,10 +1485,10 @@ async def handle_language_change(query, new_lang):
 
 async def show_premium_menu(query, lang):
     """Show premium menu with all available plans"""
-    # Build premium menu text
-    menu_text = get_text("premium_plans.title", lang) + "\n\n"
-    menu_text += get_text("premium_plans.description", lang) + "\n\n"
-    menu_text += get_text("premium_plans.separator", lang) + "\n\n"
+    # Build elegant premium menu text
+    menu_text = "💎 **PREMIUM PLANS** 💎\n\n"
+    menu_text += "✨ **Unlock unlimited features and exclusive content!**\n\n"
+    menu_text += "━━━━━━━━━━━━━━━━━━━━━━\n\n"
     
     # Add available plans
     for plan_id, plan in PREMIUM_PLANS.items():
@@ -1463,7 +1503,10 @@ async def show_premium_menu(query, lang):
         menu_text += f"⏰ {duration}\n"
         menu_text += f"📝 {plan.get('description', '')}\n\n"
     
-    # Create keyboard with plan buttons
+    menu_text += "━━━━━━━━━━━━━━━━━━━━━━\n\n"
+    menu_text += "💡 **Choose your plan or compare all options:**\n\n"
+    
+    # Create elegant keyboard with plan buttons
     keyboard = []
     for plan_id, plan in PREMIUM_PLANS.items():
         if plan_id == 'free':
@@ -1474,17 +1517,18 @@ async def show_premium_menu(query, lang):
         
         keyboard.append([
             InlineKeyboardButton(
-                f"✨ {plan_name} - {price} ⭐",
+                f"💎 {plan_name} - {price} ⭐",
                 callback_data=f"premium_plan_{plan_id}"
             )
         ])
     
-    # Add back button
+    # Add navigation buttons
     keyboard.append([
-        InlineKeyboardButton(
-            get_text("main_menu_button", lang),
-            callback_data="main_menu"
-        )
+        InlineKeyboardButton("📊 Compare Plans", callback_data="premium_compare"),
+        InlineKeyboardButton("💳 Payment Info", callback_data="payment_info")
+    ])
+    keyboard.append([
+        InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")
     ])
     
     await safe_edit_message(
@@ -1663,12 +1707,13 @@ async def activate_astrology_chatbot(query, lang):
     )
 
 async def show_premium_comparison(query, lang):
-    """Show premium plan comparison table"""
-    # Build comparison table
-    comparison_text = get_text("premium_plans.comparison", lang) + "\n\n"
-    comparison_text += get_text("premium_plans.separator", lang) + "\n\n"
+    """Show premium plan comparison table with elegant UI"""
+    # Build elegant comparison table
+    comparison_text = "💎 **PREMIUM PLAN COMPARISON** 💎\n\n"
+    comparison_text += "━━━━━━━━━━━━━━━━━━━━━━\n\n"
     
-    # Create comparison table
+    # Plan Overview Table
+    comparison_text += "📊 **Plan Overview:**\n\n"
     comparison_text += "| Plan | Price | Duration | Features |\n"
     comparison_text += "|------|-------|----------|----------|\n"
     
@@ -1683,10 +1728,10 @@ async def show_premium_comparison(query, lang):
         
         comparison_text += f"| {plan_name} | {price} ⭐ | {duration} | {feature_count} features |\n"
     
-    comparison_text += "\n" + get_text("premium_plans.separator", lang) + "\n\n"
+    comparison_text += "\n━━━━━━━━━━━━━━━━━━━━━━\n\n"
     
-    # Add detailed feature comparison
-    comparison_text += "**📊 Detailed Feature Comparison:**\n\n"
+    # Detailed Feature Comparison
+    comparison_text += "🔍 **Detailed Feature Comparison:**\n\n"
     
     # Get all unique features
     all_features = set()
@@ -1710,7 +1755,10 @@ async def show_premium_comparison(query, lang):
             row += " ✅ |" if has_feature else " ❌ |"
         comparison_text += row + "\n"
     
-    # Create keyboard with plan selection buttons
+    comparison_text += "\n━━━━━━━━━━━━━━━━━━━━━━\n\n"
+    comparison_text += "💡 **Choose your plan and click below to purchase:**\n\n"
+    
+    # Create elegant keyboard with plan selection buttons
     keyboard = []
     for plan_id, plan in PREMIUM_PLANS.items():
         if plan_id == 'free':
@@ -1721,17 +1769,19 @@ async def show_premium_comparison(query, lang):
         
         keyboard.append([
             InlineKeyboardButton(
-                f"🛒 {plan_name} - {price} ⭐",
+                f"💎 {plan_name} - {price} ⭐",
                 callback_data=f"premium_plan_{plan_id}"
             )
         ])
     
-    # Add back button
+    # Add navigation buttons
     keyboard.append([
-        InlineKeyboardButton(
-            get_text("premium_plans.back_to_menu", lang),
-            callback_data="premium_menu"
-        )
+        InlineKeyboardButton("📋 Plan Details", callback_data="premium_details"),
+        InlineKeyboardButton("💳 Payment Info", callback_data="payment_info")
+    ])
+    keyboard.append([
+        InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu"),
+        InlineKeyboardButton("🔙 Premium Menu", callback_data="premium_menu")
     ])
     
     await safe_edit_message(
@@ -2028,6 +2078,264 @@ async def process_telegram_stars_payment(query, plan_name, lang):
             reply_markup=InlineKeyboardMarkup(keyboard),
             parse_mode='Markdown'
         )
+
+# New referral and premium handler functions
+async def handle_copy_referral_link(query, lang):
+    """Handle copy referral link action"""
+    user_id = query.from_user.id
+    bot_username = query.from_user.bot.username if hasattr(query.from_user, 'bot') else "FalGramBot"
+    referral_link = f"https://t.me/{bot_username}?start={user_id}"
+    
+    message = "📋 **Referral Link Copied!** 📋\n\n"
+    message += f"Your referral link has been copied to clipboard:\n"
+    message += f"`{referral_link}`\n\n"
+    message += "Share this link with your friends to earn rewards!"
+    
+    keyboard = [
+        [InlineKeyboardButton("🔙 Back to Referral", callback_data="referral")],
+        [InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")]
+    ]
+    
+    await safe_edit_message(
+        query,
+        message,
+        reply_markup=InlineKeyboardMarkup(keyboard),
+        parse_mode='Markdown'
+    )
+
+async def handle_share_whatsapp(query, lang):
+    """Handle share on WhatsApp action"""
+    user_id = query.from_user.id
+    bot_username = query.from_user.bot.username if hasattr(query.from_user, 'bot') else "FalGramBot"
+    referral_link = f"https://t.me/{bot_username}?start={user_id}"
+    
+    whatsapp_url = f"https://wa.me/?text=🔮 Check out this amazing fortune telling bot! {referral_link}"
+    
+    message = "📱 **Share on WhatsApp** 📱\n\n"
+    message += "Click the button below to share on WhatsApp:\n\n"
+    message += "Your referral link will be automatically included!"
+    
+    keyboard = [
+        [InlineKeyboardButton("📱 Share on WhatsApp", url=whatsapp_url)],
+        [InlineKeyboardButton("🔙 Back to Referral", callback_data="referral")],
+        [InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")]
+    ]
+    
+    await safe_edit_message(
+        query,
+        message,
+        reply_markup=InlineKeyboardMarkup(keyboard),
+        parse_mode='Markdown'
+    )
+
+async def handle_share_telegram(query, lang):
+    """Handle share on Telegram action"""
+    user_id = query.from_user.id
+    bot_username = query.from_user.bot.username if hasattr(query.from_user, 'bot') else "FalGramBot"
+    referral_link = f"https://t.me/{bot_username}?start={user_id}"
+    
+    telegram_url = f"https://t.me/share/url?url={referral_link}&text=🔮 Check out this amazing fortune telling bot!"
+    
+    message = "📤 **Share on Telegram** 📤\n\n"
+    message += "Click the button below to share on Telegram:\n\n"
+    message += "Your referral link will be automatically included!"
+    
+    keyboard = [
+        [InlineKeyboardButton("📤 Share on Telegram", url=telegram_url)],
+        [InlineKeyboardButton("🔙 Back to Referral", callback_data="referral")],
+        [InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")]
+    ]
+    
+    await safe_edit_message(
+        query,
+        message,
+        reply_markup=InlineKeyboardMarkup(keyboard),
+        parse_mode='Markdown'
+    )
+
+async def show_referral_leaderboard(query, lang):
+    """Show referral leaderboard"""
+    # Get top referrers from database
+    users = supabase_manager.get_all_users()
+    top_referrers = sorted(users, key=lambda x: x.get('referred_count', 0), reverse=True)[:10]
+    
+    message = "🏆 **REFERRAL LEADERBOARD** 🏆\n\n"
+    message += "Top 10 referrers:\n\n"
+    
+    for i, user in enumerate(top_referrers, 1):
+        username = user.get('username', f"User{user.get('id')}")
+        referred_count = user.get('referred_count', 0)
+        message += f"{i}. @{username} - {referred_count} referrals\n"
+    
+    keyboard = [
+        [InlineKeyboardButton("🔙 Back to Referral", callback_data="referral")],
+        [InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")]
+    ]
+    
+    await safe_edit_message(
+        query,
+        message,
+        reply_markup=InlineKeyboardMarkup(keyboard),
+        parse_mode='Markdown'
+    )
+
+async def show_referral_progress(query, lang):
+    """Show detailed referral progress"""
+    user_id = query.from_user.id
+    user = supabase_manager.get_user(user_id)
+    referred_count = user.get('referred_count', 0)
+    
+    message = "📈 **YOUR REFERRAL PROGRESS** 📈\n\n"
+    message += f"Current referrals: **{referred_count}**\n\n"
+    
+    # Progress to next milestone
+    milestones = [1, 5, 10, 25, 50]
+    next_milestone = None
+    for milestone in milestones:
+        if referred_count < milestone:
+            next_milestone = milestone
+            break
+    
+    if next_milestone:
+        remaining = next_milestone - referred_count
+        message += f"🎯 **Next milestone:** {next_milestone} referrals\n"
+        message += f"📊 **Remaining:** {remaining} more referrals\n\n"
+        
+        # Progress bar
+        progress = min(referred_count, next_milestone)
+        progress_bar = "█" * progress + "░" * (next_milestone - progress)
+        message += f"Progress: `{progress_bar}` ({referred_count}/{next_milestone})\n\n"
+    else:
+        message += "🎉 **Congratulations! You've reached all milestones!** 🎉\n\n"
+    
+    keyboard = [
+        [InlineKeyboardButton("🔙 Back to Referral", callback_data="referral")],
+        [InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")]
+    ]
+    
+    await safe_edit_message(
+        query,
+        message,
+        reply_markup=InlineKeyboardMarkup(keyboard),
+        parse_mode='Markdown'
+    )
+
+async def show_referral_next_goal(query, lang):
+    """Show next referral goal"""
+    user_id = query.from_user.id
+    user = supabase_manager.get_user(user_id)
+    referred_count = user.get('referred_count', 0)
+    
+    message = "🎯 **YOUR NEXT GOAL** 🎯\n\n"
+    
+    # Find next milestone
+    milestones = [1, 5, 10, 25, 50]
+    next_milestone = None
+    for milestone in milestones:
+        if referred_count < milestone:
+            next_milestone = milestone
+            break
+    
+    if next_milestone:
+        remaining = next_milestone - referred_count
+        message += f"📊 **Current:** {referred_count} referrals\n"
+        message += f"🎯 **Next Goal:** {next_milestone} referrals\n"
+        message += f"📈 **Remaining:** {remaining} more referrals\n\n"
+        
+        # Reward for next milestone
+        if next_milestone == 1:
+            reward = "1 Free Reading ✨"
+        elif next_milestone == 5:
+            reward = "3 Bonus Readings + Special Badge 🏅"
+        elif next_milestone == 10:
+            reward = "VIP Status + Unlimited Daily Cards 👑"
+        elif next_milestone == 25:
+            reward = "Elite Member + Priority Support 🌟"
+        elif next_milestone == 50:
+            reward = "Premium Reader Access 💎"
+        
+        message += f"🏆 **Reward:** {reward}\n\n"
+        message += "💡 **Tip:** Share your referral link with friends and family!"
+    else:
+        message += "🎉 **Congratulations! You've reached all goals!** 🎉\n\n"
+        message += "You're now a referral master! 🌟"
+    
+    keyboard = [
+        [InlineKeyboardButton("🔙 Back to Referral", callback_data="referral")],
+        [InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")]
+    ]
+    
+    await safe_edit_message(
+        query,
+        message,
+        reply_markup=InlineKeyboardMarkup(keyboard),
+        parse_mode='Markdown'
+    )
+
+async def show_premium_details(query, lang):
+    """Show detailed premium plan information"""
+    message = "📋 **PREMIUM PLAN DETAILS** 📋\n\n"
+    message += "Here's what each plan includes:\n\n"
+    
+    for plan_id, plan in PREMIUM_PLANS.items():
+        plan_name = plan.get('name', plan_id.title())
+        price = plan.get('price_stars', 0)
+        duration = plan.get('duration', '30 days')
+        
+        message += f"💎 **{plan_name}** - {price} ⭐\n"
+        message += f"⏰ Duration: {duration}\n"
+        message += f"📝 {plan.get('description', '')}\n\n"
+        
+        features = plan.get('features', [])
+        for feature in features:
+            message += f"• {feature}\n"
+        message += "\n"
+    
+    keyboard = [
+        [InlineKeyboardButton("💳 Buy Now", callback_data="premium_menu")],
+        [InlineKeyboardButton("🔙 Back to Comparison", callback_data="premium_compare")],
+        [InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")]
+    ]
+    
+    await safe_edit_message(
+        query,
+        message,
+        reply_markup=InlineKeyboardMarkup(keyboard),
+        parse_mode='Markdown'
+    )
+
+async def show_payment_info(query, lang):
+    """Show payment information"""
+    message = "💳 **PAYMENT INFORMATION** 💳\n\n"
+    message += "We accept Telegram Stars for all premium plans.\n\n"
+    message += "🔒 **Secure Payment:**\n"
+    message += "• All payments are processed securely through Telegram\n"
+    message += "• Your payment information is never stored\n"
+    message += "• Instant activation after successful payment\n\n"
+    message += "💰 **How to get Telegram Stars:**\n"
+    message += "• Earn stars by using Telegram Premium\n"
+    message += "• Purchase stars from Telegram\n"
+    message += "• Receive stars as gifts from other users\n\n"
+    message += "📱 **Payment Process:**\n"
+    message += "1. Select your preferred plan\n"
+    message += "2. Click 'Pay with Stars'\n"
+    message += "3. Complete payment in Telegram\n"
+    message += "4. Enjoy your premium features!\n\n"
+    message += "❓ **Need Help?**\n"
+    message += "Contact our support team for assistance."
+    
+    keyboard = [
+        [InlineKeyboardButton("💳 Buy Premium", callback_data="premium_menu")],
+        [InlineKeyboardButton("🔙 Back to Plans", callback_data="premium_compare")],
+        [InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")]
+    ]
+    
+    await safe_edit_message(
+        query,
+        message,
+        reply_markup=InlineKeyboardMarkup(keyboard),
+        parse_mode='Markdown'
+    )
 
 async def generate_tarot_interpretation(query, card, lang):
     """Generate tarot interpretation"""
