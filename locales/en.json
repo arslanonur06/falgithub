@@ -1,4 +1,82 @@
 {
+  "menu": {
+    "main_title": "🔮 **FAL GRAM** - Mystical Services",
+    "astrology": "⭐ Astrology",
+    "fortune": "🔮 Fortune Telling",
+    "profile": "👤 Profile",
+    "premium": "💎 Premium",
+    "referral": "👥 Referral",
+    "help": "❓ Help"
+  },
+  "common": {
+    "back": "🔙 Back",
+    "yes": "✅ Yes",
+    "no": "❌ No",
+    "cancel": "❌ Cancel"
+  },
+  "error": {
+    "general": "❌ An error occurred. Please try again.",
+    "user_not_found": "❌ User not found."
+  },
+  "profile": {
+    "title": "👤 **Profile**",
+    "name": "Name",
+    "username": "Username",
+    "language": "Language",
+    "premium_status": "Premium Status",
+    "premium_active": "Active",
+    "premium_inactive": "Inactive",
+    "premium_expires": "Expires"
+  },
+  "language": {
+    "select": "🌐 Select your language:",
+    "changed": "✅ Language changed successfully!"
+  },
+  "help": {
+    "message": "❓ **Help**\n\nThis bot provides mystical services including astrology, fortune telling, and more. Use the menu to navigate."
+  },
+  "message": {
+    "default_response": "Please use the menu to navigate."
+  },
+  "referral": {
+    "my_info": "📊 My Info",
+    "stats": "📈 Statistics",
+    "leaderboard": "🏆 Leaderboard",
+    "rewards": "🎁 Rewards",
+    "share": "📤 Share",
+    "link_copied": "✅ Referral link copied!",
+    "copy_link": "📋 Copy Link",
+    "share_telegram": "📤 Share on Telegram",
+    "share_whatsapp": "📱 Share on WhatsApp",
+    "share_text": "Check out this amazing mystical bot!"
+  },
+  "astrology": {
+    "birth_chart": "🌟 Birth Chart",
+    "daily_horoscope": "📅 Daily Horoscope",
+    "weekly_horoscope": "📅 Weekly Horoscope",
+    "monthly_horoscope": "📅 Monthly Horoscope",
+    "compatibility": "💕 Compatibility",
+    "moon_calendar": "🌙 Moon Calendar"
+  },
+  "fortune": {
+    "tarot_reading": "🃏 Tarot Reading",
+    "coffee_reading": "☕ Coffee Reading",
+    "dream_interpretation": "💭 Dream Interpretation",
+    "palm_reading": "🤲 Palm Reading"
+  },
+  "payment": {
+    "premium_plans": "💎 Premium Plans",
+    "plan_details": "📋 Plan Details",
+    "buy_plan": "💳 Buy Plan",
+    "subscription_management": "⚙️ Subscription Management"
+  },
+  "admin": {
+    "stats": "📊 Statistics",
+    "users": "👥 Users",
+    "premium": "💎 Premium",
+    "logs": "📝 Logs",
+    "settings": "⚙️ Settings"
+  },
   "start_message": "✨🔮 **WELCOME TO FAL GRAM** 🔮✨\n━━━━━━━━━━━━━━━━━━━━━━\n\n🌟 *The doors of the mystical world are opening...*\n\n☕ **Coffee Fortune** - Discover the future in your cup\n🃏 **Tarot Reading** - The cards have something to tell you\n💭 **Dream Analysis** - Decode your subconscious messages\n⭐ **Astrology** - Guidance from the stars\n🌅 **Daily Card** - Personal guidance every morning\n👥 **Invite Friends** - Blessings multiply when shared\n\n━━━━━━━━━━━━━━━━━━━━━━\n✨ *Are you ready to discover your destiny?* ✨",
   "main_menu_button": "🏠 Main Menu",
   "referral_prompt": "Earn free readings by sharing Fal Gram with your friends! Copy the link below and send it to them. You'll get 1 FREE reading for each friend who joins using your link.\n\nYour special link: {referral_link}",

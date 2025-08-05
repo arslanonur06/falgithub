@@ -1,4 +1,82 @@
 {
+  "menu": {
+    "main_title": "🔮 **FAL GRAM** - Mistik Hizmetler",
+    "astrology": "⭐ Astroloji",
+    "fortune": "🔮 Fal",
+    "profile": "👤 Profil",
+    "premium": "💎 Premium",
+    "referral": "👥 Referans",
+    "help": "❓ Yardım"
+  },
+  "common": {
+    "back": "🔙 Geri",
+    "yes": "✅ Evet",
+    "no": "❌ Hayır",
+    "cancel": "❌ İptal"
+  },
+  "error": {
+    "general": "❌ Bir hata oluştu. Lütfen tekrar deneyin.",
+    "user_not_found": "❌ Kullanıcı bulunamadı."
+  },
+  "profile": {
+    "title": "👤 **Profil**",
+    "name": "Ad",
+    "username": "Kullanıcı adı",
+    "language": "Dil",
+    "premium_status": "Premium Durumu",
+    "premium_active": "Aktif",
+    "premium_inactive": "Pasif",
+    "premium_expires": "Bitiş"
+  },
+  "language": {
+    "select": "🌐 Dilinizi seçin:",
+    "changed": "✅ Dil başarıyla değiştirildi!"
+  },
+  "help": {
+    "message": "❓ **Yardım**\n\nBu bot astroloji, fal ve daha fazlası gibi mistik hizmetler sunar. Navigasyon için menüyü kullanın."
+  },
+  "message": {
+    "default_response": "Lütfen navigasyon için menüyü kullanın."
+  },
+  "referral": {
+    "my_info": "📊 Bilgilerim",
+    "stats": "📈 İstatistikler",
+    "leaderboard": "🏆 Lider Tablosu",
+    "rewards": "🎁 Ödüller",
+    "share": "📤 Paylaş",
+    "link_copied": "✅ Referans linki kopyalandı!",
+    "copy_link": "📋 Linki Kopyala",
+    "share_telegram": "📤 Telegram'da Paylaş",
+    "share_whatsapp": "📱 WhatsApp'ta Paylaş",
+    "share_text": "Bu harika mistik botu kontrol edin!"
+  },
+  "astrology": {
+    "birth_chart": "🌟 Doğum Haritası",
+    "daily_horoscope": "📅 Günlük Burç",
+    "weekly_horoscope": "📅 Haftalık Burç",
+    "monthly_horoscope": "📅 Aylık Burç",
+    "compatibility": "💕 Uyumluluk",
+    "moon_calendar": "🌙 Ay Takvimi"
+  },
+  "fortune": {
+    "tarot_reading": "🃏 Tarot Falı",
+    "coffee_reading": "☕ Kahve Falı",
+    "dream_interpretation": "💭 Rüya Yorumu",
+    "palm_reading": "🤲 El Falı"
+  },
+  "payment": {
+    "premium_plans": "💎 Premium Planlar",
+    "plan_details": "📋 Plan Detayları",
+    "buy_plan": "💳 Plan Satın Al",
+    "subscription_management": "⚙️ Abonelik Yönetimi"
+  },
+  "admin": {
+    "stats": "📊 İstatistikler",
+    "users": "👥 Kullanıcılar",
+    "premium": "💎 Premium",
+    "logs": "📝 Loglar",
+    "settings": "⚙️ Ayarlar"
+  },
   "start_message": "✨🔮 **FAL GRAM'A HOŞ GELDİNİZ** 🔮✨\n━━━━━━━━━━━━━━━━━━━━━━\n\n🌟 *Mistik dünyanın kapıları açılıyor...*\n\n☕ **Kahve Falı** - Fincanınızda geleceği keşfedin\n🃏 **Tarot Falı** - Kartların size söyleyecekleri var\n💭 **Rüya Analizi** - Bilinçaltı mesajlarınızı çözün\n⭐ **Astroloji** - Yıldızlardan rehberlik\n🌅 **Günlük Kart** - Her sabah kişisel rehberlik\n👥 **Arkadaş Davet Et** - Paylaşıldıkça bereket çoğalır\n\n━━━━━━━━━━━━━━━━━━━━━━\n✨ *Kaderinizi keşfetmeye hazır mısınız?* ✨",
   "main_menu_button": "🏠 Ana Menü",
   "referral_prompt": "Fal Gram'ı arkadaşlarınızla paylaşarak ücretsiz fal kazanın! Aşağıdaki linki kopyalayıp onlara gönderin. Linkinizi kullanarak katılan her arkadaş için 1 ÜCRETSİZ fal kazanacaksınız.\n\nÖzel linkiniz: {referral_link}",
@@ -974,18 +1052,8 @@
     "subscribe": "✅ Abone Ol",
     "unsubscribe": "❌ Aboneliği İptal Et",
             "upgrade_vip": "👑 VIP'e Yükselt",
-        "upgrade_premium": "⭐ Premium'a Yükselt",
-        "upgrade_basic": "💎 Temel'e Yükselt",
-        "buy_premium": "💳 Premium Satın Al"
+    "upgrade_premium": "⭐ Premium'a Yükselt",
+    "upgrade_basic": "💎 Temel'e Yükselt",
+    "buy_premium": "💳 Premium Satın Al"
   }
-<<<<<<< Current (Your changes)
-<<<<<<< HEAD
-=======
-<<<<<<< Current (Your changes)
->>>>>>> Incoming (Background Agent changes)
-=======
->>>>>>> Incoming (Background Agent changes)
->>>>>>> 17adb01855b2db53b9aad67dc57b4e82f530dccc
-=======
->>>>>>> Incoming (Background Agent changes)
 } 
