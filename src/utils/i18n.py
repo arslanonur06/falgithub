@@ -42,16 +42,35 @@ class I18n:
         """Get translated text for a key."""
         lang = language or self.current_language
         
-        # Get translation
-        translation = self.translations.get(lang, {}).get(key)
+        # Handle nested keys (e.g., "menu.main_title")
+        keys = key.split('.')
+        translation = self.translations.get(lang, {})
+        
+        # Navigate through nested dictionary
+        for k in keys:
+            if isinstance(translation, dict) and k in translation:
+                translation = translation[k]
+            else:
+                translation = None
+                break
         
         # Fallback to default language if translation not found
         if not translation and lang != settings.DEFAULT_LANGUAGE:
-            translation = self.translations.get(settings.DEFAULT_LANGUAGE, {}).get(key)
+            translation = self.translations.get(settings.DEFAULT_LANGUAGE, {})
+            for k in keys:
+                if isinstance(translation, dict) and k in translation:
+                    translation = translation[k]
+                else:
+                    translation = None
+                    break
         
         # Fallback to key itself if no translation found
         if not translation:
             translation = key
+        
+        # Ensure translation is a string
+        if not isinstance(translation, str):
+            translation = str(translation) if translation is not None else key
         
         # Format with kwargs if provided
         if kwargs:
