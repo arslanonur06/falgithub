@@ -17,6 +17,12 @@ class Settings:
     BOT_NAME: str = "Fal Gram Bot"
     BOT_VERSION: str = "3.1.1"
     
+    # Admin Configuration
+    ADMIN_ID: str = os.getenv("ADMIN_ID", "")
+    
+    # Payment Configuration
+    PAYMENT_PROVIDER_TOKEN: str = os.getenv("PAYMENT_PROVIDER_TOKEN", "")
+    
     # API Keys
     GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "")
     DEEPSEEK_API_KEY: str = os.getenv("DEEPSEEK_API_KEY", "")
@@ -59,7 +65,8 @@ class Settings:
             "BOT_TOKEN",
             "GEMINI_API_KEY", 
             "SUPABASE_URL",
-            "SUPABASE_KEY"
+            "SUPABASE_KEY",
+            "PAYMENT_PROVIDER_TOKEN"
         ]
         
         missing_vars = []
@@ -70,6 +77,10 @@ class Settings:
         if missing_vars:
             print(f"❌ Missing required environment variables: {', '.join(missing_vars)}")
             return False
+        
+        # Check admin ID (optional but recommended)
+        if not cls.ADMIN_ID:
+            print("⚠️  Warning: ADMIN_ID not set. Admin features will be disabled.")
         
         return True
     
