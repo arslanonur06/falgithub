@@ -191,7 +191,7 @@ def check_prompts():
     print("=" * 50)
     
     prompt_files = [
-        'prompts.json',
+        'config/prompts.json',
         'locales/en.json',
         'locales/tr.json'
     ]
