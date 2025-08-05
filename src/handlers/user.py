@@ -214,5 +214,165 @@ class UserHandlers:
         except Exception as e:
             logger.error(f"Error sending error message: {e}")
 
+    @staticmethod
+    async def show_main_menu(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+        """Show main menu."""
+        query = update.callback_query
+        await query.answer()
+        
+        user = update.effective_user
+        language = user.language_code or "en" if user else "en"
+        
+        keyboard = MainKeyboards.get_main_menu(language)
+        text = i18n.get_text("menu.main_title", language)
+        
+        await query.edit_message_text(text, reply_markup=keyboard)
+    
+    @staticmethod
+    async def show_profile(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+        """Show user profile."""
+        query = update.callback_query
+        await query.answer()
+        
+        user = update.effective_user
+        language = user.language_code or "en" if user else "en"
+        
+        # Get user data from database
+        user_data = await db_service.get_user(user.id)
+        
+        if not user_data:
+            text = i18n.get_text("error.user_not_found", language)
+            keyboard = MainKeyboards.get_back_button(language, "main_menu")
+            await query.edit_message_text(text, reply_markup=keyboard)
+            return
+        
+        # Format profile text
+        text = i18n.get_text("profile.title", language)
+        text += f"\n\n{i18n.get_text('profile.name', language)}: {user_data.get('first_name', 'N/A')}"
+        text += f"\n{i18n.get_text('profile.username', language)}: @{user_data.get('username', 'N/A')}"
+        text += f"\n{i18n.get_text('profile.language', language)}: {user_data.get('language_code', 'en')}"
+        
+        if user_data.get('is_premium'):
+            text += f"\n{i18n.get_text('profile.premium_status', language)}: ✅ {i18n.get_text('profile.premium_active', language)}"
+            if user_data.get('premium_expires_at'):
+                text += f"\n{i18n.get_text('profile.premium_expires', language)}: {user_data.get('premium_expires_at')}"
+        else:
+            text += f"\n{i18n.get_text('profile.premium_status', language)}: ❌ {i18n.get_text('profile.premium_inactive', language)}"
+        
+        keyboard = MainKeyboards.get_back_button(language, "main_menu")
+        await query.edit_message_text(text, reply_markup=keyboard)
+    
+    @staticmethod
+    async def show_language_menu(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+        """Show language selection menu."""
+        query = update.callback_query
+        await query.answer()
+        
+        user = update.effective_user
+        language = user.language_code or "en" if user else "en"
+        
+        keyboard = MainKeyboards.get_language_selection(language)
+        text = i18n.get_text("language.select", language)
+        
+        await query.edit_message_text(text, reply_markup=keyboard)
+    
+    @staticmethod
+    async def handle_language_change(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+        """Handle language change."""
+        query = update.callback_query
+        await query.answer()
+        
+        user = update.effective_user
+        new_language = query.data.replace("set_lang_", "")
+        
+        if new_language not in i18n.supported_languages:
+            new_language = "en"
+        
+        # Update user language in database
+        await db_service.update_user(user.id, {'language_code': new_language})
+        
+        text = i18n.get_text("language.changed", new_language)
+        keyboard = MainKeyboards.get_back_button(new_language, "main_menu")
+        
+        await query.edit_message_text(text, reply_markup=keyboard)
+    
+    @staticmethod
+    async def show_help(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+        """Show help information."""
+        query = update.callback_query
+        await query.answer()
+        
+        user = update.effective_user
+        language = user.language_code or "en" if user else "en"
+        
+        help_text = i18n.get_text("help.message", language)
+        keyboard = MainKeyboards.get_back_button(language, "main_menu")
+        
+        await query.edit_message_text(help_text, reply_markup=keyboard)
+    
+    @staticmethod
+    async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+        """Handle text messages."""
+        user = update.effective_user
+        language = user.language_code or "en" if user else "en"
+        
+        text = i18n.get_text("message.default_response", language)
+        keyboard = MainKeyboards.get_main_menu(language)
+        
+        await update.message.reply_text(text, reply_markup=keyboard)
+    
+    @staticmethod
+    async def handle_copy_referral_link(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+        """Handle copy referral link."""
+        query = update.callback_query
+        await query.answer()
+        
+        user = update.effective_user
+        language = user.language_code or "en" if user else "en"
+        
+        # Get user's referral code
+        user_data = await db_service.get_user(user.id)
+        if not user_data:
+            text = i18n.get_text("error.user_not_found", language)
+            keyboard = MainKeyboards.get_back_button(language, "main_menu")
+            await query.edit_message_text(text, reply_markup=keyboard)
+            return
+        
+        referral_code = user_data.get('referral_code')
+        if not referral_code:
+            referral_code = generate_referral_code(user.id)
+            await db_service.update_user(user.id, {'referral_code': referral_code})
+        
+        # Format referral link
+        bot_username = context.bot.username
+        referral_link = f"https://t.me/{bot_username}?start={referral_code}"
+        
+        text = i18n.get_text("referral.link_copied", language)
+        text += f"\n\n`{referral_link}`"
+        
+        keyboard = MainKeyboards.get_back_button(language, "referral_menu")
+        await query.edit_message_text(text, reply_markup=keyboard, parse_mode='Markdown')
+    
+    @staticmethod
+    async def handle_back_button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+        """Handle back button navigation."""
+        query = update.callback_query
+        await query.answer()
+        
+        user = update.effective_user
+        language = user.language_code or "en" if user else "en"
+        
+        # Extract target from callback data
+        target = query.data.replace("back_to_", "")
+        
+        if target == "main_menu":
+            await UserHandlers.show_main_menu(update, context)
+        elif target == "referral_menu":
+            from src.handlers.referral import referral_handlers
+            await referral_handlers.show_referral_menu(update, context)
+        else:
+            # Default to main menu
+            await UserHandlers.show_main_menu(update, context)
+
 # Global handlers instance
 user_handlers = UserHandlers()

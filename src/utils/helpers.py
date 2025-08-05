@@ -158,3 +158,51 @@ def format_duration(seconds: int) -> str:
     else:
         days = seconds // 86400
         return f"{days} days"
+
+def calculate_moon_phase(date=None):
+    """Calculate moon phase for a given date."""
+    if date is None:
+        date = datetime.now()
+    
+    # Known new moon date (January 6, 2000)
+    known_new_moon = datetime(2000, 1, 6, 18, 14, 0)
+    
+    # Calculate days since known new moon
+    days_since = (date - known_new_moon).days
+    
+    # Moon cycle is approximately 29.530588853 days
+    moon_cycle = 29.530588853
+    phase = (days_since % moon_cycle) / moon_cycle
+    
+    # Calculate illumination percentage
+    if phase <= 0.5:
+        illumination = phase * 2
+    else:
+        illumination = (1 - phase) * 2
+    
+    # Determine moon phase name
+    if phase < 0.0625:
+        phase_name = "New Moon"
+    elif phase < 0.1875:
+        phase_name = "Waxing Crescent"
+    elif phase < 0.3125:
+        phase_name = "First Quarter"
+    elif phase < 0.4375:
+        phase_name = "Waxing Gibbous"
+    elif phase < 0.5625:
+        phase_name = "Full Moon"
+    elif phase < 0.6875:
+        phase_name = "Waning Gibbous"
+    elif phase < 0.8125:
+        phase_name = "Last Quarter"
+    elif phase < 0.9375:
+        phase_name = "Waning Crescent"
+    else:
+        phase_name = "New Moon"
+    
+    return {
+        'phase': phase_name,
+        'illumination': round(illumination * 100, 1),
+        'phase_value': phase,
+        'days_since_new': days_since % moon_cycle
+    }

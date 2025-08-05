@@ -162,7 +162,7 @@ class MainKeyboards:
         return InlineKeyboardMarkup(keyboard)
     
     @staticmethod
-    def get_language_selection() -> InlineKeyboardMarkup:
+    def get_language_selection(language: str = "en") -> InlineKeyboardMarkup:
         """Get language selection keyboard."""
         keyboard = []
         
@@ -170,14 +170,14 @@ class MainKeyboards:
             keyboard.append([
                 InlineKeyboardButton(
                     lang_name,
-                    callback_data=f"set_language_{lang_code}"
+                    callback_data=f"set_lang_{lang_code}"
                 )
             ])
         
         keyboard.append([
             InlineKeyboardButton(
-                "Back",
-                callback_data="profile_menu"
+                i18n.get_text("common.back", language),
+                callback_data="main_menu"
             )
         ])
         
