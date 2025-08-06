@@ -9,6 +9,7 @@ import requests
 from datetime import datetime, timedelta
 from collections import defaultdict
 from functools import lru_cache
+from urllib.parse import quote
 from dotenv import load_dotenv
 import google.generativeai as genai
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, LabeledPrice
@@ -1070,10 +1071,14 @@ async def handle_callback_query(update: Update, context: CallbackContext):
         await process_telegram_stars_payment(query, plan_name, lang)
     elif query.data.startswith('copy_link_'):
         await handle_copy_referral_link(query, lang)
-    elif query.data == 'share_whatsapp':
-        await handle_share_whatsapp(query, lang)
+    elif query.data == 'share_twitter':
+        await handle_share_twitter(query, lang)
     elif query.data == 'share_telegram':
         await handle_share_telegram(query, lang)
+    elif query.data.startswith('share_coffee_twitter_'):
+        await handle_share_coffee_twitter(query, lang)
+    elif query.data.startswith('copy_coffee_link_'):
+        await handle_copy_coffee_link(query, lang)
     elif query.data == 'referral_leaderboard':
         await show_referral_leaderboard(query, lang)
     elif query.data == 'referral_progress':
@@ -1339,7 +1344,7 @@ async def show_referral_info(query, lang):
     keyboard = [
         [InlineKeyboardButton("📋 Copy Link", callback_data=f"copy_link_{referral_link}"),
          InlineKeyboardButton("📊 My Stats", callback_data="referral_stats")],
-        [InlineKeyboardButton("📱 Share on WhatsApp", callback_data="share_whatsapp"),
+        [InlineKeyboardButton("🐦 Share on X", callback_data="share_twitter"),
          InlineKeyboardButton("📤 Share on Telegram", callback_data="share_telegram")],
         [InlineKeyboardButton("🎁 My Rewards", callback_data="my_rewards"),
          InlineKeyboardButton("🏆 Leaderboard", callback_data="referral_leaderboard")],
@@ -2078,20 +2083,21 @@ async def handle_copy_referral_link(query, lang):
         parse_mode='Markdown'
     )
 
-async def handle_share_whatsapp(query, lang):
-    """Handle share on WhatsApp action"""
+async def handle_share_twitter(query, lang):
+    """Handle share on Twitter/X action"""
     user_id = query.from_user.id
     bot_username = query.from_user.bot.username if hasattr(query.from_user, 'bot') else "FalGramBot"
     referral_link = f"https://t.me/{bot_username}?start={user_id}"
     
-    whatsapp_url = f"https://wa.me/?text=🔮 Check out this amazing fortune telling bot! {referral_link}"
+    # Create Twitter/X share message
+    share_text = f"🔮 Check out this amazing fortune telling bot! {referral_link}"
+    twitter_url = f"https://twitter.com/intent/tweet?text={quote(share_text)}"
     
-    message = "📱 **Share on WhatsApp** 📱\n\n"
-    message += "Click the button below to share on WhatsApp:\n\n"
-    message += "Your referral link will be automatically included!"
+    message = get_text("referral.share_twitter_message", lang)
     
     keyboard = [
-        [InlineKeyboardButton("📱 Share on WhatsApp", url=whatsapp_url)],
+        [InlineKeyboardButton("🐦 Share on X", url=twitter_url)],
+        [InlineKeyboardButton("📋 Copy Link", callback_data="copy_link_twitter")],
         [InlineKeyboardButton("🔙 Back to Referral", callback_data="referral")],
         [InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")]
     ]
@@ -2422,10 +2428,89 @@ async def handle_chatbot_question_impl(update, context, text, lang):
 
 async def generate_coffee_fortune_impl(update, photo_bytes, lang):
     """Implementation of coffee fortune generation"""
-    await update.message.reply_text(
-        get_text("coffee_fortune_processing", lang),
-        parse_mode='Markdown'
-    )
+    user_id = update.effective_user.id
+    user_id_str = str(user_id)
+    
+    try:
+        # Use faster model for better performance
+        try:
+            model = genai.GenerativeModel('gemini-1.5-flash')
+        except Exception:
+            model = genai.GenerativeModel('gemini-pro')
+        
+        # Get prompt from Supabase with proper language
+        prompt = supabase_manager.get_prompt("coffee", lang)
+        if not prompt:
+            # Fallback prompts for each language
+            fallback_prompts = {
+                'tr': f"Sen deneyimli bir kahve falı yorumcususun. {update.effective_user.first_name} için kahve fincanındaki işaretleri yorumla.\n\nFincanın içindeki şekilleri, sembolleri ve işaretleri detaylı bir şekilde açıkla. Kişisel bir yorum yap ve gelecekteki fırsatları belirt.\n\n150-200 kelime.",
+                'en': f"You are an experienced coffee fortune reader. Interpret the signs in the coffee cup for {update.effective_user.first_name}.\n\nExplain the shapes, symbols, and signs in the cup in detail. Make a personal interpretation and indicate future opportunities.\n\n150-200 words.",
+                'es': f"Eres un lector de café experimentado. Interpreta los signos en la taza de café para {update.effective_user.first_name}.\n\nExplica las formas, símbolos y signos en la taza en detalle. Haz una interpretación personal e indica oportunidades futuras.\n\n150-200 palabras."
+            }
+            prompt = fallback_prompts.get(lang, fallback_prompts['en'])
+        
+        # Prepare prompt with proper language instruction
+        final_prompt = prompt.replace("{username}", update.effective_user.first_name)
+        
+        # Add explicit language instruction
+        language_instructions = {
+            'tr': f"KAHVE FALI YORUMCUSU. SADECE TÜRKÇE KAHVE FALI YORUMU YAZ.\n\n{final_prompt}\n\nTÜRKÇE YORUM:",
+            'en': f"COFFEE FORTUNE READER. WRITE ONLY COFFEE FORTUNE INTERPRETATION IN ENGLISH.\n\n{final_prompt}\n\nENGLISH INTERPRETATION:",
+            'es': f"LECTOR DE CAFÉ. ESCRIBE SOLO LA INTERPRETACIÓN DEL CAFÉ EN ESPAÑOL.\n\n{final_prompt}\n\nINTERPRETACIÓN EN ESPAÑOL:"
+        }
+        final_prompt = language_instructions.get(lang, language_instructions['en'])
+        
+        supabase_manager.add_log(f"Coffee fortune prompt prepared ({lang}): {len(final_prompt)} characters")
+        supabase_manager.add_log(f"Gemini API call in progress (coffee, {lang}): {user_id_str}")
+        
+        # Send to Gemini (async API) - with timeout
+        try:
+            loop = asyncio.get_event_loop()
+            response = await asyncio.wait_for(
+                loop.run_in_executor(None, lambda: model.generate_content([final_prompt, photo_bytes])),
+                timeout=8.0  # Reduced timeout for faster response
+            )
+            
+            supabase_manager.add_log(f"Gemini API response successfully received: {user_id_str}")
+        except asyncio.TimeoutError:
+            supabase_manager.add_log(f"Gemini API timeout (8s): {user_id_str}")
+            # Try DeepSeek as fallback
+            try:
+                deepseek_response = await asyncio.wait_for(
+                    loop.run_in_executor(None, call_deepseek_api, final_prompt),
+                    timeout=10.0
+                )
+                response = type('Response', (), {'text': deepseek_response})()
+                supabase_manager.add_log(f"DeepSeek fallback successful: {user_id_str}")
+            except Exception as deepseek_error:
+                supabase_manager.add_log(f"DeepSeek fallback failed: {str(deepseek_error)[:100]}")
+                raise Exception("AI API did not respond (timeout)")
+        except Exception as e:
+            supabase_manager.add_log(f"Gemini API error: {str(e)[:100]}")
+            raise Exception(f"Gemini API error: {str(e)[:100]}")
+        
+        if not response:
+            raise Exception("No response received from AI API")
+        
+        if not response.text:
+            raise Exception("Empty response received from AI API")
+        
+        supabase_manager.add_log(f"Coffee fortune response received: {len(response.text)} characters")
+        
+        # Reduce free reading count (if not admin)
+        if update.effective_user.id != ADMIN_ID:
+            user_data = supabase_manager.get_user(update.effective_user.id)
+            current_readings = user_data.get("readings_count", 0) if user_data else 0
+            supabase_manager.update_user(update.effective_user.id, {
+                'readings_count': current_readings + 1
+            })
+            supabase_manager.add_log(f"Coffee fortune completed (free reading reduced): {user_id_str}")
+        
+        return response.text
+        
+    except Exception as e:
+        logger.error(f"Coffee fortune generation error: {e}")
+        return None
 
 # --- Missing Keyboard Functions ---
 
@@ -2664,15 +2749,44 @@ async def check_and_send_moon_notifications():
     pass
 
 async def process_coffee_fortune_paid(update, context, is_paid=False):
-    """Process paid coffee fortune"""
+    """Process paid coffee fortune with sharing options"""
     user_id = update.effective_user.id
     user = supabase_manager.get_user(user_id)
-    lang = user.get('language', 'tr')
+    lang = get_user_language(user_id)
     
-    await update.message.reply_text(
-        get_text("coffee_fortune_paid", lang),
-        parse_mode='Markdown'
-    )
+    # Generate coffee fortune
+    try:
+        # Get photo from update
+        photo = update.message.photo[-1] if update.message.photo else None
+        if not photo:
+            await update.message.reply_text(
+                get_text("coffee_fortune_no_photo", lang),
+                reply_markup=get_main_menu_keyboard(user_id)
+            )
+            return
+        
+        # Download photo
+        photo_file = await context.bot.get_file(photo.file_id)
+        photo_bytes = await photo_file.download_as_bytearray()
+        
+        # Generate fortune using AI
+        fortune_result = await generate_coffee_fortune_impl(update, photo_bytes, lang)
+        
+        if fortune_result:
+            # Show fortune with sharing options
+            await show_coffee_fortune_with_sharing(update, fortune_result, lang)
+        else:
+            await update.message.reply_text(
+                get_text("fortune_error", lang),
+                reply_markup=get_main_menu_keyboard(user_id)
+            )
+            
+    except Exception as e:
+        logger.error(f"Coffee fortune error: {e}")
+        await update.message.reply_text(
+            get_text("fortune_error", lang),
+            reply_markup=get_main_menu_keyboard(user_id)
+        )
 
 async def process_paid_tarot(update, context):
     """Process paid tarot reading"""
@@ -3793,6 +3907,75 @@ def detect_dream_language(text: str) -> str:
     
     # Default to English if no clear indicators
     return 'en'
+
+async def show_coffee_fortune_with_sharing(update, fortune_text, lang):
+    """Show coffee fortune with sharing options"""
+    user_id = update.effective_user.id
+    bot_username = update.message.from_user.bot.username if hasattr(update.message.from_user, 'bot') else "FalGramBot"
+    referral_link = f"https://t.me/{bot_username}?start={user_id}"
+    
+    # Create sharing message
+    share_text = f"🔮 {fortune_text[:100]}...\n\n✨ Get your own coffee fortune reading!\n🔗 {referral_link}\n\n#FalGram #CoffeeFortune #AI"
+    
+    # Create sharing keyboard
+    keyboard = [
+        [InlineKeyboardButton("🐦 Share on X", callback_data=f"share_coffee_twitter_{quote(share_text)}")],
+        [InlineKeyboardButton("📋 Copy Link", callback_data=f"copy_coffee_link_{referral_link}")],
+        [InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")]
+    ]
+    
+    # Show fortune with sharing prompt
+    message = f"{fortune_text}\n\n{get_text('coffee_fortune_share_prompt', lang)}"
+    
+    await update.message.reply_text(
+        message,
+        reply_markup=InlineKeyboardMarkup(keyboard),
+        parse_mode='Markdown'
+    )
+
+
+async def handle_share_coffee_twitter(query, lang):
+    """Handle sharing coffee fortune on Twitter/X"""
+    # Extract share text from callback data
+    callback_data = query.data
+    if callback_data.startswith("share_coffee_twitter_"):
+        share_text = callback_data.replace("share_coffee_twitter_", "")
+        # Decode the URL-encoded text
+        from urllib.parse import unquote
+        share_text = unquote(share_text)
+        
+        # Create Twitter/X share URL
+        twitter_url = f"https://twitter.com/intent/tweet?text={quote(share_text)}"
+        
+        keyboard = [
+            [InlineKeyboardButton("🐦 Open X", url=twitter_url)],
+            [InlineKeyboardButton("🔙 Back", callback_data="main_menu")]
+        ]
+        
+        await safe_edit_message(
+            query,
+            get_text("coffee_fortune_share_twitter_message", lang),
+            reply_markup=InlineKeyboardMarkup(keyboard),
+            parse_mode='Markdown'
+        )
+
+
+async def handle_copy_coffee_link(query, lang):
+    """Handle copying coffee fortune referral link"""
+    callback_data = query.data
+    if callback_data.startswith("copy_coffee_link_"):
+        referral_link = callback_data.replace("copy_coffee_link_", "")
+        
+        keyboard = [
+            [InlineKeyboardButton("🔙 Back", callback_data="main_menu")]
+        ]
+        
+        await safe_edit_message(
+            query,
+            get_text("coffee_fortune_link_copied", lang, link=referral_link),
+            reply_markup=InlineKeyboardMarkup(keyboard),
+            parse_mode='Markdown'
+        )
 
 # --- Main Function ---
 
