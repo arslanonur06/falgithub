@@ -1025,6 +1025,13 @@ async def handle_callback_query(update: Update, context: CallbackContext):
         'weekly_astro_report': lambda: show_weekly_horoscope_menu(query, lang),
         'monthly_horoscope_menu': lambda: show_monthly_horoscope_menu(query, lang),
         'astro_chatbot': lambda: activate_astrology_chatbot(query, lang),
+        'daily_horoscope': lambda: show_daily_horoscope_menu(query, lang),
+        'weekly_horoscope': lambda: show_weekly_horoscope_menu(query, lang),
+        'monthly_horoscope': lambda: show_monthly_horoscope_menu(query, lang),
+        'compatibility': lambda: show_compatibility_menu(query, lang),
+        'birth_chart': lambda: handle_birth_chart(query, lang),
+        'moon_calendar': lambda: show_moon_calendar(query, lang),
+        'astrology_chatbot': lambda: activate_astrology_chatbot(query, lang),
         
         # Premium handlers
         'premium_compare': lambda: show_premium_comparison(query, lang),
@@ -2000,29 +2007,41 @@ async def process_telegram_stars_payment(query, plan_name, lang):
             parse_mode='Markdown'
         )
         return
+    
     user_id = query.from_user.id
     price_stars = plan.get('price_stars', 0)
     plan_name_display = plan.get('name', plan_name.title())
+    
     try:
-        # Simulate payment success
-        from datetime import datetime, timedelta
-        expiry_date = datetime.now() + timedelta(days=30)
-        expiry_date_str = expiry_date.isoformat()
-        supabase_manager.update_user_premium_plan(user_id, plan_name, expiry_date_str)
-        supabase_manager.add_log(f"Premium payment: User {user_id} purchased {plan_name} for {price_stars} stars")
-        success_text = get_text('premium.payment_success', lang) + f"\n\n💎 **Plan:** {plan_name_display}\n💰 **Amount:** {price_stars} ⭐\n⏰ **Expires:** {expiry_date.strftime('%Y-%m-%d %H:%M')}\n"
-        keyboard = [
-            [InlineKeyboardButton(get_text('buttons.main_menu', lang), callback_data="main_menu")],
-            [InlineKeyboardButton(get_text('buttons.back_to_menu', lang), callback_data="premium_menu")]
-        ]
-        await safe_edit_message(
-            query,
-            success_text,
-            reply_markup=InlineKeyboardMarkup(keyboard),
-            parse_mode='Markdown'
+        # Create Telegram Stars payment
+        payment_data = {
+            "title": f"Fal Gram - {plan_name_display}",
+            "description": f"Premium plan subscription for {plan_name_display}",
+            "payload": f"premium_{plan_name}_{user_id}",
+            "provider_token": os.getenv("TELEGRAM_PAYMENT_TOKEN"),  # Your payment provider token
+            "currency": "XTR",  # Telegram Stars currency
+            "prices": [LabeledPrice(f"{plan_name_display} Plan", price_stars * 100)]  # Convert to cents
+        }
+        
+        # Send invoice to user
+        await query.message.reply_invoice(
+            **payment_data,
+            reply_markup=InlineKeyboardMarkup([
+                [InlineKeyboardButton("💳 Pay Now", pay=True)],
+                [InlineKeyboardButton("❌ Cancel", callback_data="premium_menu")]
+            ])
         )
+        
+        # Update user state to waiting for payment
+        supabase_manager.update_user(user_id, {
+            'payment_state': f'waiting_{plan_name}',
+            'payment_amount': price_stars
+        })
+        
+        supabase_manager.add_log(f"Payment initiated: User {user_id} for {plan_name} ({price_stars} stars)")
+        
     except Exception as e:
-        logger.error(f"Payment error: {e}")
+        logger.error(f"Payment initiation error: {e}")
         error_text = get_text('premium.payment_error', lang)
         keyboard = [
             [InlineKeyboardButton(get_text('buttons.try_again', lang), callback_data=f"pay_stars_{plan_name}")],
@@ -2672,7 +2691,7 @@ async def process_paid_tarot(update, context):
 
 # Missing functions from the previous bot.py
 async def draw_tarot_card(update: Update, context: CallbackContext):
-    """Draw tarot card and create interpretation."""
+    """Draw tarot card and create interpretation with optimized performance."""
     query = update.callback_query
     await query.answer()
     
@@ -2692,60 +2711,24 @@ async def draw_tarot_card(update: Update, context: CallbackContext):
     # Admin check - admin has unlimited access
     if query.from_user.id == ADMIN_ID:
         supabase_manager.add_log(f"Admin user requested tarot: {user_id_str}")
-        await query.edit_message_text(get_text(lang, "tarot_drawing"))
+        await query.edit_message_text(get_text("tarot_drawing", lang))
         
         try:
             tarot_cards = supabase_manager.get_tarot_cards()
             card = random.choice(tarot_cards) if tarot_cards else "The Fool"
             
-            # Simple model selection
-            try:
-                model = genai.GenerativeModel('gemini-1.5-flash')
-            except Exception:
-                model = genai.GenerativeModel('gemini-pro')
+            # Optimized prompt for faster response
+            optimized_prompt = f"Tarot reader: {user.get('first_name', 'Friend')} drew {card}. Brief interpretation in {lang}, 80 words max."
             
-            # Simple prompt
-            simple_prompt = f"You are a tarot reader. Write a short interpretation for {user.get('first_name', 'Friend')} who drew the {card} card. 100 words, in {lang}."
-            
-            # Try Gemini API first, then fallback to DeepSeek
-            try:
-                loop = asyncio.get_event_loop()
-                response = await asyncio.wait_for(
-                    loop.run_in_executor(None, model.generate_content, simple_prompt),
-                    timeout=10.0  # 10 second timeout
-                )
-                
-                supabase_manager.add_log(f"✅ Tarot Gemini API call completed ({lang})")
-            except Exception as gemini_error:
-                supabase_manager.add_log(f"❌ Gemini API error, switching to DeepSeek: {str(gemini_error)[:100]}")
-                
-                # Fallback to DeepSeek API
-                try:
-                    deepseek_response = await asyncio.wait_for(
-                        loop.run_in_executor(None, call_deepseek_api, simple_prompt),
-                        timeout=15.0  # 15 second timeout for DeepSeek
-                    )
-                    
-                    # Create a response object similar to Gemini
-                    response = type('Response', (), {'text': deepseek_response})()
-                    supabase_manager.add_log(f"✅ Tarot DeepSeek API call completed ({lang})")
-                except Exception as deepseek_error:
-                    supabase_manager.add_log(f"❌ DeepSeek API error: {str(deepseek_error)[:100]}")
-                    # Fallback response
-                    response = type('Response', (), {'text': f"""🔮 **{card} Card Interpretation**
-
-**Card Meaning:** The {card} card heralds new beginnings and opportunities.
-
-**Personal Message:** {user.get('first_name', 'Friend')}, important changes are approaching in your life.
-
-**Advice:** Gather your courage and seize new opportunities."""})()
+            # Try both APIs concurrently for faster response
+            response = await get_fastest_ai_response(optimized_prompt, lang)
             
             supabase_manager.add_log(f"Admin tarot reading generated. User: {user_id_str}. Card: {card}")
-            await query.message.reply_text(response.text, reply_markup=get_main_menu_keyboard(query.from_user.id))
+            await query.message.reply_text(response, reply_markup=get_main_menu_keyboard(query.from_user.id))
         except Exception as e:
             logger.error(f"Admin tarot reading error: {e}")
             await query.edit_message_text(
-                get_text(lang, "fortune_error"), 
+                get_text("fortune_error", lang), 
                 reply_markup=get_main_menu_keyboard(query.from_user.id)
             )
         return
@@ -2759,64 +2742,28 @@ async def draw_tarot_card(update: Update, context: CallbackContext):
             [InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")]
         ])
         await query.edit_message_text(
-            f"{get_text(lang, 'fortune_limit_reached')}\n\n💫 **Continue with Telegram Stars:**", 
+            f"{get_text('fortune_limit_reached', lang)}\n\n💫 **Continue with Telegram Stars:**", 
             reply_markup=keyboard,
             parse_mode='Markdown'
         )
         return
     
-    await query.edit_message_text(get_text(lang, "tarot_drawing"))
+    await query.edit_message_text(get_text("tarot_drawing", lang))
     
     try:
         tarot_cards = supabase_manager.get_tarot_cards()
         card = random.choice(tarot_cards) if tarot_cards else "The Fool"
         
-        # Simple and reliable model selection
-        try:
-            model = genai.GenerativeModel('gemini-1.5-flash')
-        except Exception:
-            model = genai.GenerativeModel('gemini-pro')
+        # Optimized prompt for faster response
+        optimized_prompt = f"Tarot reader: {user.get('first_name', 'Friend')} drew {card}. Brief interpretation in {lang}, 80 words max."
         
-        # Simple and fast prompt
-        simple_prompt = f"You are a tarot reader. Write a short interpretation for {user.get('first_name', 'Friend')} who drew the {card} card. 100 words, in {lang}."
+        # Try both APIs concurrently for faster response
+        response = await get_fastest_ai_response(optimized_prompt, lang)
         
-        # Try Gemini API first, then fallback to DeepSeek
-        try:
-            loop = asyncio.get_event_loop()
-            response = await asyncio.wait_for(
-                loop.run_in_executor(None, model.generate_content, simple_prompt),
-                timeout=10.0  # 10 second timeout
-            )
-            
-            supabase_manager.add_log(f"✅ Tarot Gemini API call completed ({lang})")
-        except Exception as gemini_error:
-            supabase_manager.add_log(f"❌ Gemini API error, switching to DeepSeek: {str(gemini_error)[:100]}")
-            
-            # Fallback to DeepSeek API
-            try:
-                deepseek_response = await asyncio.wait_for(
-                    loop.run_in_executor(None, call_deepseek_api, simple_prompt),
-                    timeout=15.0  # 15 second timeout for DeepSeek
-                )
-                
-                # Create a response object similar to Gemini
-                response = type('Response', (), {'text': deepseek_response})()
-                supabase_manager.add_log(f"✅ Tarot DeepSeek API call completed ({lang})")
-            except Exception as deepseek_error:
-                supabase_manager.add_log(f"❌ DeepSeek API error: {str(deepseek_error)[:100]}")
-                # Fallback response
-                response = type('Response', (), {'text': f"""🔮 **{card} Card Interpretation**
-
-**Card Meaning:** The {card} card heralds new beginnings and opportunities.
-
-**Personal Message:** {user.get('first_name', 'Friend')}, important changes are approaching in your life.
-
-**Advice:** Gather your courage and seize new opportunities."""})()
+        if not response:
+            raise Exception("No response from AI APIs")
         
-        if not response or not response.text:
-            raise Exception("Empty response from Gemini API")
-        
-        supabase_manager.add_log(f"Gemini tarot response received ({lang}): {len(response.text)} characters")
+        supabase_manager.add_log(f"Tarot response received ({lang}): {len(response)} characters")
         
         # Update reading count
         supabase_manager.update_user(query.from_user.id, {
@@ -2824,13 +2771,82 @@ async def draw_tarot_card(update: Update, context: CallbackContext):
         })
         
         supabase_manager.add_log(f"Tarot reading generated. User: {user_id_str}. Card: {card}")
-        await query.message.reply_text(response.text, reply_markup=get_main_menu_keyboard(query.from_user.id))
+        await query.message.reply_text(response, reply_markup=get_main_menu_keyboard(query.from_user.id))
     except Exception as e:
         logger.error(f"Tarot reading error: {e}")
         await query.edit_message_text(
-            get_text(lang, "fortune_error"), 
+            get_text("fortune_error", lang), 
             reply_markup=get_main_menu_keyboard(query.from_user.id)
         )
+
+
+async def get_fastest_ai_response(prompt: str, lang: str) -> str:
+    """Get the fastest response from either Gemini or DeepSeek API."""
+    loop = asyncio.get_event_loop()
+    
+    # Create tasks for both APIs
+    gemini_task = asyncio.create_task(
+        asyncio.wait_for(
+            loop.run_in_executor(None, lambda: call_gemini_api(prompt)),
+            timeout=6.0  # Reduced timeout for faster response
+        )
+    )
+    
+    deepseek_task = asyncio.create_task(
+        asyncio.wait_for(
+            loop.run_in_executor(None, lambda: call_deepseek_api(prompt)),
+            timeout=8.0  # Slightly longer timeout for DeepSeek
+        )
+    )
+    
+    # Wait for the first successful response
+    try:
+        # Wait for either task to complete
+        done, pending = await asyncio.wait(
+            [gemini_task, deepseek_task],
+            return_when=asyncio.FIRST_COMPLETED
+        )
+        
+        # Cancel the other task
+        for task in pending:
+            task.cancel()
+        
+        # Get the result from the completed task
+        for task in done:
+            try:
+                result = task.result()
+                if result:
+                    return result
+            except Exception as e:
+                supabase_manager.add_log(f"API task failed: {str(e)[:100]}")
+        
+        # If both failed, return fallback response
+        return get_fallback_tarot_response(lang)
+        
+    except Exception as e:
+        supabase_manager.add_log(f"All AI APIs failed: {str(e)[:100]}")
+        return get_fallback_tarot_response(lang)
+
+
+def call_gemini_api(prompt: str) -> str:
+    """Call Gemini API with error handling."""
+    try:
+        model = genai.GenerativeModel('gemini-1.5-flash')
+        response = model.generate_content(prompt)
+        return response.text if response and response.text else ""
+    except Exception as e:
+        supabase_manager.add_log(f"Gemini API error: {str(e)[:100]}")
+        return ""
+
+
+def get_fallback_tarot_response(lang: str) -> str:
+    """Get fallback tarot response when APIs fail."""
+    fallback_responses = {
+        'tr': "🔮 **Tarot Yorumu**\n\nKartınız size yeni fırsatlar ve değişimler getiriyor. Cesaretinizi toplayın ve yeni başlangıçlar yapın.",
+        'en': "🔮 **Tarot Interpretation**\n\nYour card brings new opportunities and changes. Gather your courage and make new beginnings.",
+        'es': "🔮 **Interpretación de Tarot**\n\nTu carta trae nuevas oportunidades y cambios. Reúne tu coraje y haz nuevos comienzos."
+    }
+    return fallback_responses.get(lang, fallback_responses['en'])
 
 async def handle_dream_text(update: Update, context: CallbackContext):
     """Handle dream text, birth chart information, and chatbot questions."""
@@ -2846,36 +2862,46 @@ async def handle_dream_text(update: Update, context: CallbackContext):
         lang = get_user_language(update.effective_user.id)
         dream_text = update.message.text
         
-        supabase_manager.add_log(f"Dream text received: {user_id_str}. Text: {dream_text[:50]}...")
+        # Detect language from dream text for better accuracy
+        detected_lang = detect_dream_language(dream_text)
+        if detected_lang and detected_lang != lang:
+            # Update user language if different from detected
+            supabase_manager.update_user(update.effective_user.id, {'language': detected_lang})
+            lang = detected_lang
+            supabase_manager.add_log(f"Language updated to {lang} based on dream text")
         
-        await update.message.reply_text(get_text(lang, "dream_analyzing"))
+        supabase_manager.add_log(f"Dream text received: {user_id_str}. Text: {dream_text[:50]}... Language: {lang}")
+        
+        await update.message.reply_text(get_text("dream_analyzing", lang))
         
         try:
-            # Simple and reliable model selection
+            # Use faster model for better performance
             try:
                 model = genai.GenerativeModel('gemini-1.5-flash')
             except Exception:
                 model = genai.GenerativeModel('gemini-pro')
             
-            # Get prompt from Supabase
+            # Get prompt from Supabase with proper language
             prompt = supabase_manager.get_prompt("dream", lang)
             if not prompt:
-                prompt = f"You are an experienced dream interpreter. Create a dream interpretation for {update.effective_user.first_name}.\n\nDescribe what they saw in their dream first. For example: 'In your dream, you saw a butterfly...'\n\nThen explain the meaning of these symbols and make a personal interpretation for {update.effective_user.first_name}.\n\n150-200 words."
+                # Fallback prompts for each language
+                fallback_prompts = {
+                    'tr': f"Sen deneyimli bir rüya yorumcususun. {update.effective_user.first_name} için rüya yorumu yap.\n\nRüyasında ne gördüğünü önce anlat. Örneğin: 'Rüyanda bir kelebek gördün...'\n\nSonra bu sembollerin anlamını açıkla ve {update.effective_user.first_name} için kişisel bir yorum yap.\n\n150-200 kelime.",
+                    'en': f"You are an experienced dream interpreter. Create a dream interpretation for {update.effective_user.first_name}.\n\nDescribe what they saw in their dream first. For example: 'In your dream, you saw a butterfly...'\n\nThen explain the meaning of these symbols and make a personal interpretation for {update.effective_user.first_name}.\n\n150-200 words.",
+                    'es': f"Eres un intérprete de sueños experimentado. Crea una interpretación de sueños para {update.effective_user.first_name}.\n\nPrimero describe lo que vieron en su sueño. Por ejemplo: 'En tu sueño, viste una mariposa...'\n\nLuego explica el significado de estos símbolos y haz una interpretación personal para {update.effective_user.first_name}.\n\n150-200 palabras."
+                }
+                prompt = fallback_prompts.get(lang, fallback_prompts['en'])
             
-            # Prepare prompt
+            # Prepare prompt with proper language instruction
             final_prompt = prompt.replace("{username}", update.effective_user.first_name).replace("{dream_text}", dream_text)
             
-            # Add language instruction
-            if lang == 'tr':
-                final_prompt = f"YOU ARE A DREAM INTERPRETER. WRITE ONLY DREAM INTERPRETATION IN TURKISH.\n\n{final_prompt}\n\nTURKISH INTERPRETATION:"
-            elif lang == 'en':
-                final_prompt = f"YOU ARE A DREAM INTERPRETER. WRITE ONLY DREAM INTERPRETATION IN ENGLISH.\n\n{final_prompt}\n\nENGLISH INTERPRETATION:"
-            elif lang == 'es':
-                final_prompt = f"ERES UN INTÉRPRETE DE SUEÑOS. ESCRIBE SOLO LA INTERPRETACIÓN DEL SUEÑO EN ESPAÑOL.\n\n{final_prompt}\n\nINTERPRETACIÓN EN ESPAÑOL:"
-            elif lang == 'fr':
-                final_prompt = f"VOUS ÊTES UN INTERPRÈTE DE RÊVES. ÉCRIVEZ SEULEMENT L'INTERPRÉTATION DU RÊVE EN FRANÇAIS.\n\n{final_prompt}\n\nINTERPRÉTATION EN FRANÇAIS:"
-            else:
-                final_prompt = f"YOU ARE A DREAM INTERPRETER. WRITE ONLY DREAM INTERPRETATION.\n\n{final_prompt}\n\nINTERPRETATION:"
+            # Add explicit language instruction
+            language_instructions = {
+                'tr': f"RÜYA YORUMCUSU. SADECE TÜRKÇE RÜYA YORUMU YAZ.\n\n{final_prompt}\n\nTÜRKÇE YORUM:",
+                'en': f"DREAM INTERPRETER. WRITE ONLY DREAM INTERPRETATION IN ENGLISH.\n\n{final_prompt}\n\nENGLISH INTERPRETATION:",
+                'es': f"INTÉRPRETE DE SUEÑOS. ESCRIBE SOLO LA INTERPRETACIÓN DEL SUEÑO EN ESPAÑOL.\n\n{final_prompt}\n\nINTERPRETACIÓN EN ESPAÑOL:"
+            }
+            final_prompt = language_instructions.get(lang, language_instructions['en'])
             
             supabase_manager.add_log(f"Dream prompt prepared ({lang}): {len(final_prompt)} characters")
             supabase_manager.add_log(f"Gemini API call in progress (dream, {lang}): {user_id_str}")
@@ -2885,13 +2911,23 @@ async def handle_dream_text(update: Update, context: CallbackContext):
                 loop = asyncio.get_event_loop()
                 response = await asyncio.wait_for(
                     loop.run_in_executor(None, model.generate_content, final_prompt),
-                    timeout=10.0  # 10 second timeout
+                    timeout=8.0  # Reduced timeout for faster response
                 )
                 
                 supabase_manager.add_log(f"Gemini API response successfully received: {user_id_str}")
             except asyncio.TimeoutError:
-                supabase_manager.add_log(f"Gemini API timeout (10s): {user_id_str}")
-                raise Exception("Gemini API did not respond (10 second timeout)")
+                supabase_manager.add_log(f"Gemini API timeout (8s): {user_id_str}")
+                # Try DeepSeek as fallback
+                try:
+                    deepseek_response = await asyncio.wait_for(
+                        loop.run_in_executor(None, call_deepseek_api, final_prompt),
+                        timeout=10.0
+                    )
+                    response = type('Response', (), {'text': deepseek_response})()
+                    supabase_manager.add_log(f"DeepSeek fallback successful: {user_id_str}")
+                except Exception as deepseek_error:
+                    supabase_manager.add_log(f"DeepSeek fallback failed: {str(deepseek_error)[:100]}")
+                    raise Exception("AI API did not respond (timeout)")
             except Exception as e:
                 supabase_manager.add_log(f"Gemini API error: {str(e)[:100]}")
                 raise Exception(f"Gemini API error: {str(e)[:100]}")
@@ -2899,12 +2935,12 @@ async def handle_dream_text(update: Update, context: CallbackContext):
             supabase_manager.add_log(f"Gemini API response received: {response}")
             
             if not response:
-                raise Exception("No response received from Gemini API")
+                raise Exception("No response received from AI API")
             
             if not response.text:
-                raise Exception("Empty response received from Gemini API")
+                raise Exception("Empty response received from AI API")
             
-            supabase_manager.add_log(f"Gemini dream response received: {len(response.text)} characters")
+            supabase_manager.add_log(f"Dream response received: {len(response.text)} characters")
             supabase_manager.add_log(f"Response content: {response.text[:500]}...")
             
             # Reduce free reading count (if not admin)
@@ -2923,7 +2959,7 @@ async def handle_dream_text(update: Update, context: CallbackContext):
         except Exception as e:
             logger.error(f"Dream analysis error: {e}")
             await update.message.reply_text(
-                get_text(lang, "fortune_error"), 
+                get_text("fortune_error", lang), 
                 reply_markup=get_main_menu_keyboard(update.effective_user.id)
             )
             
@@ -3734,6 +3770,29 @@ def get_main_menu_keyboard(user_id: int):
     """Get main menu keyboard for user"""
     lang = get_user_language(user_id)
     return create_main_menu_keyboard(lang)
+
+def detect_dream_language(text: str) -> str:
+    """Detect language from dream text for better accuracy."""
+    # Simple language detection based on common words
+    text_lower = text.lower()
+    
+    # Turkish indicators
+    turkish_words = ['rüya', 'gördüm', 'gördü', 'gördüğüm', 'gördüğü', 'uykuda', 'uyurken', 'rüyamda', 'rüyamda']
+    if any(word in text_lower for word in turkish_words):
+        return 'tr'
+    
+    # Spanish indicators
+    spanish_words = ['sueño', 'soñé', 'soñaba', 'soñé que', 'en mi sueño', 'durmiendo', 'mientras dormía']
+    if any(word in text_lower for word in spanish_words):
+        return 'es'
+    
+    # English indicators (default)
+    english_words = ['dream', 'dreamed', 'dreamt', 'dreaming', 'saw', 'saw in my dream', 'while sleeping']
+    if any(word in text_lower for word in english_words):
+        return 'en'
+    
+    # Default to English if no clear indicators
+    return 'en'
 
 # --- Main Function ---
 
