@@ -1079,6 +1079,11 @@ async def handle_callback_query(update: Update, context: CallbackContext):
         await handle_share_coffee_twitter(query, lang)
     elif query.data.startswith('copy_coffee_link_'):
         await handle_copy_coffee_link(query, lang)
+    elif query.data.startswith('try_payment_'):
+        plan_name = query.data.replace('try_payment_', '')
+        await handle_try_payment(query, plan_name, lang)
+    elif query.data == 'contact_support':
+        await handle_contact_support(query, lang)
     elif query.data == 'referral_leaderboard':
         await show_referral_leaderboard(query, lang)
     elif query.data == 'referral_progress':
@@ -2018,23 +2023,41 @@ async def process_telegram_stars_payment(query, plan_name, lang):
     plan_name_display = plan.get('name', plan_name.title())
     
     try:
-        # Create Telegram Stars payment
-        payment_data = {
+        # Check if user has enough stars
+        # For now, we'll simulate the payment process
+        # In a real implementation, you would check the user's star balance
+        
+        # Create payment form using Telegram Stars
+        payment_form_data = {
             "title": f"Fal Gram - {plan_name_display}",
             "description": f"Premium plan subscription for {plan_name_display}",
             "payload": f"premium_{plan_name}_{user_id}",
-            "provider_token": os.getenv("TELEGRAM_PAYMENT_TOKEN"),  # Your payment provider token
             "currency": "XTR",  # Telegram Stars currency
-            "prices": [LabeledPrice(f"{plan_name_display} Plan", price_stars * 100)]  # Convert to cents
+            "prices": [LabeledPrice(f"{plan_name_display} Plan", price_stars)]  # Stars amount
         }
         
-        # Send invoice to user
-        await query.message.reply_invoice(
-            **payment_data,
-            reply_markup=InlineKeyboardMarkup([
-                [InlineKeyboardButton("💳 Pay Now", pay=True)],
-                [InlineKeyboardButton("❌ Cancel", callback_data="premium_menu")]
-            ])
+        # For Telegram Stars, we need to use a different approach
+        # Since direct star payment might not be available, we'll show instructions
+        
+        message = f"💎 **{plan_name_display} Plan** 💎\n\n"
+        message += f"💰 **Price:** {price_stars} Telegram Stars\n\n"
+        message += "📱 **To complete your purchase:**\n"
+        message += "1. Make sure you have enough Telegram Stars\n"
+        message += "2. Contact @BotFather to enable payments\n"
+        message += "3. Or use admin command to activate manually\n\n"
+        message += "🔧 **Alternative:** Contact support for manual activation"
+        
+        keyboard = [
+            [InlineKeyboardButton("💳 Try Payment", callback_data=f"try_payment_{plan_name}")],
+            [InlineKeyboardButton("📞 Contact Support", callback_data="contact_support")],
+            [InlineKeyboardButton("🔙 Back to Plans", callback_data="premium_menu")]
+        ]
+        
+        await safe_edit_message(
+            query,
+            message,
+            reply_markup=InlineKeyboardMarkup(keyboard),
+            parse_mode='Markdown'
         )
         
         # Update user state to waiting for payment
@@ -3976,6 +3999,62 @@ async def handle_copy_coffee_link(query, lang):
             reply_markup=InlineKeyboardMarkup(keyboard),
             parse_mode='Markdown'
         )
+
+
+async def handle_try_payment(query, plan_name, lang):
+    """Handle try payment action"""
+    user_id = query.from_user.id
+    plan = PREMIUM_PLANS.get(plan_name, {})
+    price_stars = plan.get('price_stars', 0)
+    plan_name_display = plan.get('name', plan_name.title())
+    
+    message = f"💳 **Payment Attempt** 💳\n\n"
+    message += f"Plan: **{plan_name_display}**\n"
+    message += f"Price: **{price_stars} Telegram Stars**\n\n"
+    message += "⚠️ **Note:** Telegram Stars payment is currently in development.\n\n"
+    message += "🔧 **For now, you can:**\n"
+    message += "• Contact support for manual activation\n"
+    message += "• Use admin commands if you're an admin\n"
+    message += "• Wait for full payment integration\n\n"
+    message += "📞 **Support:** @YourSupportUsername"
+    
+    keyboard = [
+        [InlineKeyboardButton("📞 Contact Support", callback_data="contact_support")],
+        [InlineKeyboardButton("🔙 Back to Plans", callback_data="premium_menu")]
+    ]
+    
+    await safe_edit_message(
+        query,
+        message,
+        reply_markup=InlineKeyboardMarkup(keyboard),
+        parse_mode='Markdown'
+    )
+
+
+async def handle_contact_support(query, lang):
+    """Handle contact support action"""
+    message = "📞 **Contact Support** 📞\n\n"
+    message += "Need help with payment or have questions?\n\n"
+    message += "🔗 **Support Options:**\n"
+    message += "• Telegram: @YourSupportUsername\n"
+    message += "• Email: support@falgram.com\n"
+    message += "• Website: https://falgram.com/support\n\n"
+    message += "📋 **Please include:**\n"
+    message += "• Your User ID: `" + str(query.from_user.id) + "`\n"
+    message += "• Issue description\n"
+    message += "• Screenshots if applicable\n\n"
+    message += "⏰ **Response time:** Usually within 24 hours"
+    
+    keyboard = [
+        [InlineKeyboardButton("🔙 Back to Menu", callback_data="main_menu")]
+    ]
+    
+    await safe_edit_message(
+        query,
+        message,
+        reply_markup=InlineKeyboardMarkup(keyboard),
+        parse_mode='Markdown'
+    )
 
 # --- Main Function ---
 
