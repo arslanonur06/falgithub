@@ -45,8 +45,13 @@ for filename in os.listdir(locales_dir):
     if filename.endswith('.json'):
         lang_code = filename.replace('.json', '')
         filepath = os.path.join(locales_dir, filename)
-        with open(filepath, 'r', encoding='utf-8') as f:
-            LOCALES[lang_code] = json.load(f)
+        try:
+            with open(filepath, 'r', encoding='utf-8') as f:
+                LOCALES[lang_code] = json.load(f)
+            print(f"✅ Loaded translations for {lang_code}")
+        except Exception as e:
+            print(f"❌ Error loading {lang_code} translations: {e}")
+            continue
 
 def get_text(key: str, lang: str = 'en', **kwargs) -> str:
     """Get localized text for a given key, with robust fallback and logging"""
@@ -59,17 +64,30 @@ def get_text(key: str, lang: str = 'en', **kwargs) -> str:
             else:
                 return None
         return current
+    
+    # Get the translation
     text = get_nested_value(LOCALES.get(lang, {}), key)
     if text is None:
         text = get_nested_value(LOCALES.get('en', {}), key)
     if text is None:
         logger.warning(f"Missing translation key: {key} (lang={lang})")
         text = key  # Fallback to key itself
+    
+    # Ensure text is a string, not a dict or other type
+    if not isinstance(text, str):
+        if isinstance(text, dict):
+            # If it's a dict, try to get a title or description
+            text = text.get('title', text.get('description', key))
+        else:
+            text = str(text) if text is not None else key
+    
+    # Format with kwargs if provided
     if kwargs:
         try:
             text = text.format(**kwargs)
         except Exception as e:
             logger.warning(f"Format error for key {key}: {e}")
+    
     return text
 
 def get_user_language(user_id: int) -> str:
@@ -752,9 +770,9 @@ def create_main_menu_keyboard(lang='tr'):
         [InlineKeyboardButton(get_text("dream_analysis", lang), callback_data='select_dream')],
         [InlineKeyboardButton(get_text("astrology", lang), callback_data='select_astrology')],
         [InlineKeyboardButton(get_text("daily_card", lang), callback_data='daily_card')],
-        [InlineKeyboardButton(get_text("referral", lang), callback_data='referral')],
+        [InlineKeyboardButton("👥 Invite Friends", callback_data='referral')],
         [InlineKeyboardButton(get_text("premium_menu", lang), callback_data='premium_menu')],
-        [InlineKeyboardButton(get_text("language", lang), callback_data='change_language')]
+        [InlineKeyboardButton("🌐 Language", callback_data='change_language')]
     ]
     return InlineKeyboardMarkup(keyboard)
 
@@ -770,13 +788,13 @@ def create_language_keyboard():
 def create_admin_panel_keyboard(lang='tr'):
     """Admin panel klavyesini oluştur"""
     keyboard = [
-        [InlineKeyboardButton(get_text("statistics", lang), callback_data='admin_stats')],
-        [InlineKeyboardButton(get_text("users", lang), callback_data='admin_users')],
-        [InlineKeyboardButton(get_text("view_logs", lang), callback_data='admin_view_logs')],
-        [InlineKeyboardButton(get_text("settings", lang), callback_data='admin_settings')],
-        [InlineKeyboardButton(get_text("download_pdf", lang), callback_data='admin_download_pdf')],
-        [InlineKeyboardButton(get_text("premium_management", lang), callback_data='admin_premium')],
-        [InlineKeyboardButton(get_text("main_menu", lang), callback_data='main_menu')]
+        [InlineKeyboardButton("📊 Statistics", callback_data='admin_stats')],
+        [InlineKeyboardButton("👥 Users", callback_data='admin_users')],
+        [InlineKeyboardButton("📋 View Logs", callback_data='admin_view_logs')],
+        [InlineKeyboardButton("⚙️ Settings", callback_data='admin_settings')],
+        [InlineKeyboardButton("📄 Download PDF", callback_data='admin_download_pdf')],
+        [InlineKeyboardButton("⭐ Premium Management", callback_data='admin_premium')],
+        [InlineKeyboardButton("🏠 Main Menu", callback_data='main_menu')]
     ]
     return InlineKeyboardMarkup(keyboard)
 
@@ -858,16 +876,14 @@ async def start(update: Update, context: CallbackContext):
     # Send welcome message
     await update.message.reply_text(
         get_text("start_message", lang),
-        reply_markup=create_main_menu_keyboard(lang),
-        parse_mode='Markdown'
+        reply_markup=create_main_menu_keyboard(lang)
     )
     
     # Send language detection message if auto-detected
     if not user_data:
         lang_name = LOCALES[lang].get('language_name', lang)
         await update.message.reply_text(
-            get_text("language_detected", lang, lang=lang_name),
-            parse_mode='Markdown'
+            f"🌐 Your language automatically detected as {lang_name}. Use language button to change if needed."
         )
 
 async def admin(update: Update, context: CallbackContext):
@@ -881,10 +897,9 @@ async def admin(update: Update, context: CallbackContext):
     lang = get_user_language(user_id)
     
     await update.message.reply_text(
-        get_text("admin_panel_title", lang),
-        reply_markup=create_admin_panel_keyboard(lang),
-                parse_mode='Markdown'
-            )
+        "🔧 Admin Panel",
+        reply_markup=create_admin_panel_keyboard(lang)
+    )
 
 async def gift(update: Update, context: CallbackContext):
     """Gift subscription command - Admin only"""
