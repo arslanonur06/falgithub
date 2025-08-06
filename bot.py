@@ -152,6 +152,11 @@ DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY", "")
 if not GEMINI_API_KEY and not DEEPSEEK_API_KEY:
     logger.warning("No AI API keys found. Some features may not work properly.")
 
+# Payment configuration
+PAYMENT_PROVIDER_TOKEN = os.getenv("PAYMENT_PROVIDER_TOKEN", "")
+if not PAYMENT_PROVIDER_TOKEN:
+    logger.warning("PAYMENT_PROVIDER_TOKEN not set, payment features will be disabled")
+
 FREE_READING_LIMIT = 5
 PAID_READING_STARS = 250  # Artık kullanılmayacak, premium planlara yönlendirme
 CHOOSING, TYPING_REPLY = range(2)
