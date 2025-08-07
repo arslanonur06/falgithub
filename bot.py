@@ -1094,6 +1094,11 @@ async def handle_callback_query(update: Update, context: CallbackContext):
         await handle_share_coffee_twitter(query, lang)
     elif query.data.startswith('copy_coffee_link_'):
         await handle_copy_coffee_link(query, lang)
+    elif query.data.startswith('try_payment_'):
+        plan_name = query.data.replace('try_payment_', '')
+        await handle_try_payment(query, plan_name, lang)
+    elif query.data == 'contact_support':
+        await handle_contact_support(query, lang)
     elif query.data == 'referral_leaderboard':
         await show_referral_leaderboard(query, lang)
     elif query.data == 'referral_progress':
