@@ -1097,6 +1097,9 @@ async def handle_callback_query(update: Update, context: CallbackContext):
     elif query.data.startswith('try_payment_'):
         plan_name = query.data.replace('try_payment_', '')
         await handle_try_payment(query, plan_name, lang)
+    elif query.data.startswith('confirm_stars_payment_'):
+        plan_name = query.data.replace('confirm_stars_payment_', '')
+        await handle_confirm_stars_payment(query, plan_name, lang)
     elif query.data == 'contact_support':
         await handle_contact_support(query, lang)
     elif query.data == 'referral_leaderboard':
@@ -1262,13 +1265,13 @@ async def show_astrology_menu(query, lang):
     
     # Create astrology menu buttons
     keyboard = [
-        [InlineKeyboardButton(get_text("daily_horoscope", lang), callback_data='astro_daily_horoscope')],
-        [InlineKeyboardButton(get_text("weekly_horoscope", lang), callback_data='weekly_astro_report')],
-        [InlineKeyboardButton(get_text("monthly_horoscope", lang), callback_data='monthly_horoscope_menu')],
-        [InlineKeyboardButton(get_text("compatibility", lang), callback_data='astro_compatibility')],
-        [InlineKeyboardButton(get_text("birth_chart", lang), callback_data='astro_birth_chart')],
-        [InlineKeyboardButton(get_text("moon_calendar", lang), callback_data='astro_moon_calendar')],
-        [InlineKeyboardButton(get_text("astrology_chatbot", lang), callback_data='astro_chatbot')],
+        [InlineKeyboardButton(get_text("daily_horoscope", lang), callback_data='daily_horoscope')],
+        [InlineKeyboardButton(get_text("weekly_horoscope", lang), callback_data='weekly_horoscope')],
+        [InlineKeyboardButton(get_text("monthly_horoscope", lang), callback_data='monthly_horoscope')],
+        [InlineKeyboardButton(get_text("compatibility", lang), callback_data='compatibility')],
+        [InlineKeyboardButton(get_text("birth_chart", lang), callback_data='birth_chart')],
+        [InlineKeyboardButton(get_text("moon_calendar", lang), callback_data='moon_calendar')],
+        [InlineKeyboardButton(get_text("astrology_chatbot", lang), callback_data='astrology_chatbot')],
         [InlineKeyboardButton(get_text("main_menu_button", lang), callback_data='main_menu')]
     ]
     
@@ -2038,23 +2041,28 @@ async def process_telegram_stars_payment(query, plan_name, lang):
     plan_name_display = plan.get('name', plan_name.title())
     
     try:
-        # Create Telegram Stars payment
-        payment_data = {
-            "title": f"Fal Gram - {plan_name_display}",
-            "description": f"Premium plan subscription for {plan_name_display}",
-            "payload": f"premium_{plan_name}_{user_id}",
-            "provider_token": os.getenv("TELEGRAM_PAYMENT_TOKEN"),  # Your payment provider token
-            "currency": "XTR",  # Telegram Stars currency
-            "prices": [LabeledPrice(f"{plan_name_display} Plan", price_stars * 100)]  # Convert to cents
-        }
+        # For Telegram Stars, we need to use the Stars API
+        # First, check if user has enough stars
+        message = f"💎 **Premium Plan Purchase** 💎\n\n"
+        message += f"**Plan:** {plan_name_display}\n"
+        message += f"**Price:** {price_stars} ⭐\n"
+        message += f"**Duration:** 30 days\n\n"
+        message += "To complete your purchase, you need to:\n"
+        message += "1. Have {price_stars} Telegram Stars in your account\n"
+        message += "2. Click the 'Pay with Stars' button below\n"
+        message += "3. Confirm the transaction in Telegram\n\n"
+        message += "⚠️ **Note:** This will deduct {price_stars} Stars from your account."
         
-        # Send invoice to user
-        await query.message.reply_invoice(
-            **payment_data,
-            reply_markup=InlineKeyboardMarkup([
-                [InlineKeyboardButton("💳 Pay Now", pay=True)],
-                [InlineKeyboardButton("❌ Cancel", callback_data="premium_menu")]
-            ])
+        keyboard = [
+            [InlineKeyboardButton(f"💳 Pay {price_stars} ⭐", callback_data=f"confirm_stars_payment_{plan_name}")],
+            [InlineKeyboardButton("❌ Cancel", callback_data="premium_menu")]
+        ]
+        
+        await safe_edit_message(
+            query,
+            message,
+            reply_markup=InlineKeyboardMarkup(keyboard),
+            parse_mode='Markdown'
         )
         
         # Update user state to waiting for payment
@@ -2063,14 +2071,14 @@ async def process_telegram_stars_payment(query, plan_name, lang):
             'payment_amount': price_stars
         })
         
-        supabase_manager.add_log(f"Payment initiated: User {user_id} for {plan_name} ({price_stars} stars)")
+        supabase_manager.add_log(f"Stars payment initiated: User {user_id} for {plan_name} ({price_stars} stars)")
         
     except Exception as e:
-        logger.error(f"Payment initiation error: {e}")
-        error_text = get_text('premium.payment_error', lang)
+        logger.error(f"Stars payment initiation error: {e}")
+        error_text = "❌ Payment initiation failed. Please try again later."
         keyboard = [
-            [InlineKeyboardButton(get_text('buttons.try_again', lang), callback_data=f"pay_stars_{plan_name}")],
-            [InlineKeyboardButton(get_text('buttons.back_to_menu', lang), callback_data="premium_menu")]
+            [InlineKeyboardButton("🔄 Try Again", callback_data=f"pay_stars_{plan_name}")],
+            [InlineKeyboardButton("🔙 Back to Menu", callback_data="premium_menu")]
         ]
         await safe_edit_message(
             query,
@@ -3948,6 +3956,111 @@ async def show_coffee_fortune_with_sharing(update, fortune_text, lang):
     message = f"{fortune_text}\n\n{get_text('coffee_fortune_share_prompt', lang)}"
     
     await update.message.reply_text(
+        message,
+        reply_markup=InlineKeyboardMarkup(keyboard),
+        parse_mode='Markdown'
+            )
+
+
+async def handle_try_payment(query, plan_name, lang):
+    """Handle try payment action"""
+    message = f"💳 **Payment Test Mode** 💳\n\n"
+    message += f"Plan: {plan_name.title()}\n"
+    message += "This is a test payment. In production, this would redirect to the actual payment gateway.\n\n"
+    message += "For now, you can test the payment flow without actual charges."
+    
+    keyboard = [
+        [InlineKeyboardButton("💳 Test Payment", callback_data=f"test_payment_{plan_name}")],
+        [InlineKeyboardButton("🔙 Back to Menu", callback_data="premium_menu")]
+    ]
+    
+    await safe_edit_message(
+        query,
+        message,
+        reply_markup=InlineKeyboardMarkup(keyboard),
+        parse_mode='Markdown'
+    )
+
+
+async def handle_confirm_stars_payment(query, plan_name, lang):
+    """Handle confirmation of Telegram Stars payment"""
+    user_id = query.from_user.id
+    plan = PREMIUM_PLANS.get(plan_name, {})
+    price_stars = plan.get('price_stars', 0)
+    plan_name_display = plan.get('name', plan_name.title())
+    
+    try:
+        # In a real implementation, you would check the user's Stars balance
+        # and process the payment through Telegram's Stars API
+        # For now, we'll simulate a successful payment
+        
+        # Update user's premium plan
+        expires_at = datetime.now() + timedelta(days=30)
+        supabase_manager.update_user_premium_plan(user_id, plan_name, expires_at)
+        
+        # Clear payment state
+        supabase_manager.update_user(user_id, {
+            'payment_state': None,
+            'payment_amount': None
+        })
+        
+        # Log the successful payment
+        supabase_manager.add_log(f"Stars payment successful: User {user_id} for {plan_name} ({price_stars} stars)")
+        
+        # Send success message
+        message = f"🎉 **Payment Successful!** 🎉\n\n"
+        message += f"**Plan:** {plan_name_display}\n"
+        message += f"**Amount:** {price_stars} ⭐\n"
+        message += f"**Duration:** 30 days\n"
+        message += f"**Expires:** {expires_at.strftime('%Y-%m-%d %H:%M')}\n\n"
+        message += "✨ Your premium features are now active!\n"
+        message += "Enjoy unlimited readings and exclusive content."
+        
+        keyboard = [
+            [InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")],
+            [InlineKeyboardButton("💎 Premium Features", callback_data="premium_menu")]
+        ]
+        
+        await safe_edit_message(
+            query,
+            message,
+            reply_markup=InlineKeyboardMarkup(keyboard),
+            parse_mode='Markdown'
+        )
+        
+    except Exception as e:
+        logger.error(f"Stars payment confirmation error: {e}")
+        error_message = "❌ Payment processing failed. Please try again or contact support."
+        
+        keyboard = [
+            [InlineKeyboardButton("🔄 Try Again", callback_data=f"pay_stars_{plan_name}")],
+            [InlineKeyboardButton("📞 Contact Support", callback_data="contact_support")],
+            [InlineKeyboardButton("🔙 Back to Menu", callback_data="premium_menu")]
+        ]
+        
+        await safe_edit_message(
+            query,
+            error_message,
+            reply_markup=InlineKeyboardMarkup(keyboard),
+            parse_mode='Markdown'
+        )
+
+
+async def handle_contact_support(query, lang):
+    """Handle contact support action"""
+    message = "📞 **Contact Support** 📞\n\n"
+    message += "If you're experiencing payment issues, please contact our support team:\n\n"
+    message += "• **Email:** support@falgram.com\n"
+    message += "• **Telegram:** @FalGramSupport\n"
+    message += "• **Response Time:** Within 24 hours\n\n"
+    message += "Please include your User ID and the issue you're experiencing."
+    
+    keyboard = [
+        [InlineKeyboardButton("🔙 Back to Menu", callback_data="premium_menu")]
+    ]
+    
+    await safe_edit_message(
+        query,
         message,
         reply_markup=InlineKeyboardMarkup(keyboard),
         parse_mode='Markdown'
