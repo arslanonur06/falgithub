@@ -807,9 +807,6 @@
   "admin_pdf_download": "📄 **PDF İndirme**\n\nRaporları PDF formatında indirin.",
   "astrology_chatbot_activated": "🤖 **Astroloji Chatbot Aktif**\n\nArtık astroloji sorularınızı sorabilirsiniz!",
   "moon_calendar_message": "🌙 **Ay Takvimi**\n\nAy fazları ve enerji rehberliği.",
-<<<<<<< Current (Your changes)
-  "birth_chart_prompt": "🌟 Doğum bilgilerinizi girin:\n\nFormat: GG.AA.YYYY SS:DD Şehir\nÖrnek: 15.03.1990 14:30 İstanbul"
-=======
   "birth_chart_prompt": "🌟 Doğum bilgilerinizi girin:\n\nFormat: GG.AA.YYYY SS:DD Şehir\nÖrnek: 15.03.1990 14:30 İstanbul",
   "referral": {
     "title": "🌟 **REFERANS SİSTEMİ** 🌟",
@@ -933,5 +930,4 @@
     "buy_premium": "💳 Premium Satın Al",
     "back_to_plans": "🔙 Planlara Geri Dön"
   }
->>>>>>> Incoming (Background Agent changes)
-} 
+}
