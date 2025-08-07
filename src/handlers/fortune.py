@@ -278,15 +278,19 @@ class FortuneHandlers:
     async def _process_coffee_photo(update: Update, context: ContextTypes.DEFAULT_TYPE, photo_bytes: bytes, language: str) -> None:
         """Process coffee cup photo for reading."""
         try:
+            # Send processing message in correct language
+            processing_text = i18n.get_text("coffee_fortune_processing", language)
+            await update.message.reply_text(processing_text)
+
             # Create prompt for coffee reading
-            prompt = i18n.get_text("fortune.coffee_reading_prompt", language)
+            prompt = i18n.get_text("coffee_fortune_prompt", language)
             
             # Generate interpretation using AI with image
             interpretation = await ai_service.generate_image_interpretation(prompt, photo_bytes, language)
             
             # Format response
-            text = i18n.get_text("fortune.coffee_reading_title", language)
-            text += f"\n\n{interpretation}"
+            title = i18n.get_text("coffee_fortune", language)
+            text = f"{title}\n\n{interpretation}"
             
             keyboard = FortuneKeyboards.get_back_button(language, "fortune_menu")
             await update.message.reply_text(text, reply_markup=keyboard)

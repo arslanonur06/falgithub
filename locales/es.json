@@ -32,23 +32,6 @@
   "daily_card_unsubscribe": "Entendido. La entrega de cartas diarias ya no estará activa.",
   "daily_card_already_subscribed": "Tu suscripción a 'Carta del Día' ya está activa. Recibirás tu carta cada mañana.",
   "referral": "👥 Invitar Amigos",
-  "language": "🌐 Selección de Idioma",
-  "language_selection": {
-    "title": "🌐 **Selección de Idioma**",
-    "description": "Por favor selecciona tu idioma preferido:",
-    "buttons": {
-      "turkish": "🇹🇷 Türkçe",
-      "english": "🇺🇸 English",
-      "spanish": "🇪🇸 Español",
-      "french": "🇫🇷 Français",
-      "russian": "🇷🇺 Русский",
-      "german": "🇩🇪 Deutsch",
-      "arabic": "🇸🇦 العربية",
-      "italian": "🇮🇹 Italiano",
-      "portuguese": "🇵🇹 Português",
-      "back": "⬅️ Volver"
-    }
-  },
   "language": {
     "current_language": "🌐 Idioma Actual: {lang}",
     "selection_title": "🌐 **Selección de Idioma**",

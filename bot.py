@@ -757,26 +757,15 @@ async def get_or_create_user_old(user_id: int, effective_user):
 
 # --- Menü ve Buton Oluşturucular ---
 
-def safe_button_text(key, lang):
-    # Always prefer the string variant if both string and object exist
-    text = get_text(key, lang)
-    # If the text is a dict (object), try to get a 'title' or 'label' or fallback to key
-    if isinstance(text, dict):
-        # Try to get a simple string value from the dict
-        for subkey in ['title', 'label', 'name', 'text']:
-            if subkey in text and isinstance(text[subkey], str):
-                text = text[subkey]
-                break
-        else:
-            # Fallback to key name
-            text = key
-    if not isinstance(text, str):
-        logger.error(f"Button text is not string for key {key}: {type(text)} - {text}")
-        text = str(text) if text is not None else key
-    return text
-
 def create_main_menu_keyboard(lang='tr'):
     """Ana menü klavyesini oluştur"""
+    def safe_button_text(key, lang):
+        text = get_text(key, lang)
+        if not isinstance(text, str):
+            logger.error(f"Button text is not string for key {key}: {type(text)} - {text}")
+            text = str(text) if text is not None else key
+        return text
+    
     keyboard = [
         [InlineKeyboardButton(safe_button_text("coffee_fortune", lang), callback_data='select_coffee')],
         [InlineKeyboardButton(safe_button_text("tarot_fortune", lang), callback_data='select_tarot')],
@@ -1384,15 +1373,15 @@ async def show_referral_info(query, lang):
     
     # Create elegant keyboard using proper locale keys
     keyboard = [
-        [InlineKeyboardButton(safe_button_text("referral.copy_link", lang), callback_data=f"copy_link_{referral_link}"),
-         InlineKeyboardButton(safe_button_text("referral.buttons.my_stats", lang), callback_data="referral_stats")],
-        [InlineKeyboardButton(safe_button_text("referral.share_twitter", lang), callback_data="share_twitter"),
-         InlineKeyboardButton(safe_button_text("referral.share_telegram", lang), callback_data="share_telegram")],
-        [InlineKeyboardButton(safe_button_text("referral.buttons.my_rewards", lang), callback_data="my_rewards"),
-         InlineKeyboardButton(safe_button_text("referral.leaderboard", lang), callback_data="referral_leaderboard")],
-        [InlineKeyboardButton(safe_button_text("referral.progress", lang), callback_data="referral_progress"),
-         InlineKeyboardButton(safe_button_text("referral.next_goal", lang), callback_data="referral_next_goal")],
-        [InlineKeyboardButton(safe_button_text("main_menu", lang), callback_data="main_menu")]
+        [InlineKeyboardButton(get_text("referral.copy_link", lang), callback_data=f"copy_link_{referral_link}"),
+         InlineKeyboardButton(get_text("referral.buttons.my_stats", lang), callback_data="referral_stats")],
+        [InlineKeyboardButton(get_text("referral.share_twitter", lang), callback_data="share_twitter"),
+         InlineKeyboardButton(get_text("referral.share_telegram", lang), callback_data="share_telegram")],
+        [InlineKeyboardButton(get_text("referral.buttons.my_rewards", lang), callback_data="my_rewards"),
+         InlineKeyboardButton(get_text("referral.leaderboard", lang), callback_data="referral_leaderboard")],
+        [InlineKeyboardButton(get_text("referral.progress", lang), callback_data="referral_progress"),
+         InlineKeyboardButton(get_text("referral.next_goal", lang), callback_data="referral_next_goal")],
+        [InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")]
     ]
     
     await safe_edit_message(
@@ -1431,11 +1420,11 @@ async def show_referral_stats(query, lang):
     
     keyboard = [
         [InlineKeyboardButton(
-            safe_button_text("referral.buttons.my_rewards", lang),
+            get_text("referral.buttons.my_rewards", lang),
             callback_data="my_rewards"
         )],
         [InlineKeyboardButton(
-            safe_button_text("referral.buttons.back", lang),
+            get_text("referral.buttons.back", lang),
             callback_data="referral"
         )]
     ]
@@ -1471,11 +1460,11 @@ async def show_my_rewards(query, lang):
     
     keyboard = [
         [InlineKeyboardButton(
-            safe_button_text("referral.buttons.my_stats", lang),
+            get_text("referral.buttons.my_stats", lang),
             callback_data="referral_stats"
         )],
         [InlineKeyboardButton(
-            safe_button_text("referral.buttons.back", lang),
+            get_text("referral.buttons.back", lang),
             callback_data="referral"
         )]
     ]
@@ -1493,18 +1482,18 @@ async def show_language_menu(query):
     current_lang = get_user_language(user_id)
     
     # Create elegant language selection message using proper locale keys
-    message = get_text("language_selection.title", current_lang) + "\n\n"
-    message += get_text("language_selection.description", current_lang) + "\n\n"
+    message = get_text("language.selection_title", current_lang) + "\n\n"
+    message += get_text("language.selection_description", current_lang) + "\n\n"
     message += "━━━━━━━━━━━━━━━━━━━━━━\n\n"
     message += get_text("language.current_language", current_lang).format(lang=current_lang.upper()) + "\n\n"
     message += "Choose from the options below:\n"
     
-    # Create elegant language keyboard using locale keys
+    # Create elegant language keyboard
     keyboard = [
-        [InlineKeyboardButton(safe_button_text("language_selection.buttons.turkish", current_lang), callback_data='set_lang_tr'),
-         InlineKeyboardButton(safe_button_text("language_selection.buttons.english", current_lang), callback_data='set_lang_en')],
-        [InlineKeyboardButton(safe_button_text("language_selection.buttons.spanish", current_lang), callback_data='set_lang_es')],
-        [InlineKeyboardButton(safe_button_text("language_selection.buttons.back", current_lang), callback_data='main_menu')]
+        [InlineKeyboardButton("🇹🇷 Türkçe", callback_data='set_lang_tr'),
+         InlineKeyboardButton("🇺🇸 English", callback_data='set_lang_en')],
+        [InlineKeyboardButton("🇪🇸 Español", callback_data='set_lang_es')],
+        [InlineKeyboardButton(get_text("language.back_to_menu", current_lang), callback_data='main_menu')]
     ]
     
     await safe_edit_message(
@@ -1917,17 +1906,6 @@ async def generate_daily_horoscope_impl(query, sign_index, lang):
         get_text("daily_horoscope_generating", lang),
         parse_mode='Markdown'
     )
-    user = supabase_manager.get_user(query.from_user.id)
-    username = user.get('first_name', 'Friend') if user else 'Friend'
-    sign = get_text(f"signs.{sign_index}", lang) if sign_index is not None else "Burç"
-    from datetime import datetime
-    date = datetime.now().strftime("%Y-%m-%d")
-    prompt = supabase_manager.get_prompt("daily_horoscope", lang)
-    if not prompt:
-        prompt = f"You are an experienced astrologer. Write today's daily horoscope for {sign} for {username}."
-    final_prompt = prompt.replace("{username}", username).replace("{sign}", sign).replace("{date}", date)
-    response = await get_fastest_ai_response(final_prompt, lang)
-    await query.message.reply_text(response, reply_markup=get_main_menu_keyboard(query.from_user.id))
 
 async def generate_weekly_horoscope_impl(query, sign_index, lang):
     """Implementation of weekly horoscope generation"""
@@ -1936,18 +1914,6 @@ async def generate_weekly_horoscope_impl(query, sign_index, lang):
         get_text("weekly_horoscope_generating", lang),
         parse_mode='Markdown'
     )
-    user = supabase_manager.get_user(query.from_user.id)
-    username = user.get('first_name', 'Friend') if user else 'Friend'
-    sign = get_text(f"signs.{sign_index}", lang) if sign_index is not None else "Burç"
-    from datetime import datetime, timedelta
-    today = datetime.now()
-    week_range = f"{today.strftime('%Y-%m-%d')} - {(today + timedelta(days=6)).strftime('%Y-%m-%d')}"
-    prompt = supabase_manager.get_prompt("weekly_horoscope", lang)
-    if not prompt:
-        prompt = f"You are an experienced astrologer. Write this week's horoscope for {sign} for {username}."
-    final_prompt = prompt.replace("{username}", username).replace("{sign}", sign).replace("{date}", week_range)
-    response = await get_fastest_ai_response(final_prompt, lang)
-    await query.message.reply_text(response, reply_markup=get_main_menu_keyboard(query.from_user.id))
 
 async def generate_monthly_horoscope_impl(query, sign_index, lang):
     """Implementation of monthly horoscope generation"""
@@ -1956,17 +1922,6 @@ async def generate_monthly_horoscope_impl(query, sign_index, lang):
         get_text("monthly_horoscope_generating", lang),
         parse_mode='Markdown'
     )
-    user = supabase_manager.get_user(query.from_user.id)
-    username = user.get('first_name', 'Friend') if user else 'Friend'
-    sign = get_text(f"signs.{sign_index}", lang) if sign_index is not None else "Burç"
-    from datetime import datetime
-    month = datetime.now().strftime("%B %Y")
-    prompt = supabase_manager.get_prompt("monthly_horoscope", lang)
-    if not prompt:
-        prompt = f"You are an experienced astrologer. Write this month's horoscope for {sign} for {username}."
-    final_prompt = prompt.replace("{username}", username).replace("{sign}", sign).replace("{date}", month)
-    response = await get_fastest_ai_response(final_prompt, lang)
-    await query.message.reply_text(response, reply_markup=get_main_menu_keyboard(query.from_user.id))
 
 async def handle_compatibility_selection(query, lang):
     """Handle compatibility selection"""
@@ -1975,19 +1930,6 @@ async def handle_compatibility_selection(query, lang):
         get_text("compatibility_processing", lang),
         parse_mode='Markdown'
     )
-    user = supabase_manager.get_user(query.from_user.id)
-    username = user.get('first_name', 'Friend') if user else 'Friend'
-    # For demonstration, use two random signs (replace with actual user input in production)
-    import random
-    signs = [get_text(f"signs.{i}", lang) for i in range(12)]
-    first_sign = random.choice(signs)
-    second_sign = random.choice(signs)
-    prompt = supabase_manager.get_prompt("compatibility", lang)
-    if not prompt:
-        prompt = f"You are an experienced astrologer. Analyze the compatibility between {first_sign} and {second_sign} for {username}."
-    final_prompt = prompt.replace("{username}", username).replace("{first_sign}", first_sign).replace("{second_sign}", second_sign)
-    response = await get_fastest_ai_response(final_prompt, lang)
-    await query.message.reply_text(response, reply_markup=get_main_menu_keyboard(query.from_user.id))
 
 async def show_premium_plan_details(query, plan_name, lang):
     """Show premium plan details"""
@@ -2083,8 +2025,40 @@ async def initiate_premium_purchase(query, plan_name, lang):
 
 async def handle_stars_payment(query, plan_name, lang):
     """Handle Telegram Stars payment for premium plans"""
-    # Redirect to real Telegram Stars payment
-    await process_telegram_stars_payment(query, plan_name, lang)
+    plan = PREMIUM_PLANS.get(plan_name, {})
+    if not plan:
+        await safe_edit_message(
+            query,
+            get_text("error.plan_not_found", lang),
+            reply_markup=create_premium_menu_keyboard(lang),
+            parse_mode='Markdown'
+        )
+        return
+    user_id = query.from_user.id
+    price_stars = plan.get('price_stars', 0)
+    plan_name_display = plan.get('name', plan_name.title())
+    # Simulate payment process (replace with real payment integration)
+    try:
+        # Payment logic here (simulate success)
+        await safe_edit_message(
+            query,
+            get_text('premium.payment_success', lang),
+            reply_markup=InlineKeyboardMarkup([
+                [InlineKeyboardButton(get_text('buttons.main_menu', lang), callback_data="main_menu")]
+            ]),
+            parse_mode='Markdown'
+        )
+    except Exception as e:
+        logger.error(f"Payment error: {e}")
+        await safe_edit_message(
+            query,
+            get_text('premium.payment_error', lang),
+            reply_markup=InlineKeyboardMarkup([
+                [InlineKeyboardButton(get_text('buttons.try_again', lang), callback_data=f"pay_stars_{plan_name}")],
+                [InlineKeyboardButton(get_text('buttons.back_to_menu', lang), callback_data="premium_menu")]
+            ]),
+            parse_mode='Markdown'
+        )
 
 async def process_telegram_stars_payment(query, plan_name, lang):
     """Process Telegram Stars payment and activate premium plan"""
@@ -2387,34 +2361,28 @@ async def show_premium_details(query, lang):
         )
 
 async def show_payment_info(query, lang):
-    """Show payment information with clear UI"""
+    """Show payment information"""
     try:
-        message = "💳 **ÖDEME SİSTEMİ** 💳\n\n"
-        message += "💰 **Telegram Yıldızları ile Ödeme**\n\n"
-        message += "━━━━━━━━━━━━━━━━━━━━━━\n\n"
+        message = get_text("payment.title", lang) + "\n\n"
+        message += get_text("payment.description", lang) + "\n\n"
         
-        message += "🔒 **Güvenli Ödeme:**\n"
-        message += "• Tüm ödemeler Telegram üzerinden güvenli şekilde işlenir\n"
-        message += "• Ödeme bilgileriniz asla saklanmaz\n"
-        message += "• Başarılı ödemeden sonra anında aktivasyon\n\n"
+        message += get_text("payment.secure_payment", lang) + "\n"
+        for feature in get_text("payment.secure_features", lang, default=[]):
+            message += f"{feature}\n"
+        message += "\n"
         
-        message += "⭐ **Yıldızları Nasıl Kazanırsınız:**\n"
-        message += "• Telegram Premium kullanarak yıldız kazanın\n"
-        message += "• Telegram'dan yıldız satın alın\n"
-        message += "• Diğer kullanıcılardan hediye olarak yıldız alın\n\n"
+        message += get_text("payment.how_to_get_stars", lang) + "\n"
+        for source in get_text("payment.stars_sources", lang, default=[]):
+            message += f"{source}\n"
+        message += "\n"
         
-        message += "📱 **Ödeme Süreci:**\n"
-        message += "1. Plan seçin ve 'Öde' butonuna tıklayın\n"
-        message += "2. Telegram ödeme sayfası açılacak\n"
-        message += "3. Yıldızlarınızla ödeme yapın\n"
-        message += "4. Anında premium özellikleriniz aktif olacak\n\n"
-        
-        message += "━━━━━━━━━━━━━━━━━━━━━━\n"
-        message += "✨ *Güvenli ve hızlı ödeme deneyimi* ✨"
+        message += get_text("payment.payment_process", lang) + "\n"
+        for step in get_text("payment.payment_steps", lang, default=[]):
+            message += f"{step}\n"
         
         keyboard = [
-            [InlineKeyboardButton("💎 Premium Planlar", callback_data="premium_menu")],
-            [InlineKeyboardButton("🔙 Geri", callback_data="premium_compare")]
+            [InlineKeyboardButton(get_text("payment.buy_premium", lang), callback_data="premium_menu")],
+            [InlineKeyboardButton(get_text("payment.back_to_plans", lang), callback_data="premium_compare")]
         ]
         
         await safe_edit_message(
@@ -2427,9 +2395,9 @@ async def show_payment_info(query, lang):
         logger.error(f"Error showing payment info: {e}")
         await safe_edit_message(
             query,
-            "❌ Ödeme bilgileri gösterilirken hata oluştu.",
+            get_text('error_occurred', lang),
             reply_markup=InlineKeyboardMarkup([
-                [InlineKeyboardButton("🏠 Ana Menü", callback_data="main_menu")]
+                [InlineKeyboardButton(get_text('buttons.main_menu', lang), callback_data="main_menu")]
             ])
         )
 
@@ -2466,20 +2434,12 @@ def get_level_rewards(level):
     return rewards.get(level, "Special rewards")
 
 async def generate_tarot_interpretation(query, card, lang):
-    """Generate tarot interpretation using SQL prompt"""
+    """Generate tarot interpretation"""
     await safe_edit_message(
         query,
         get_text("tarot_interpretation", lang, card=card),
         parse_mode='Markdown'
     )
-    user = supabase_manager.get_user(query.from_user.id)
-    username = user.get('first_name', 'Friend') if user else 'Friend'
-    prompt = supabase_manager.get_prompt("tarot", lang)
-    if not prompt:
-        prompt = f"You are an experienced tarot reader. Create a brief interpretation for {username} who drew the {card} card."
-    final_prompt = prompt.replace("{username}", username).replace("{card}", card)
-    response = await get_fastest_ai_response(final_prompt, lang)
-    await query.message.reply_text(response, reply_markup=get_main_menu_keyboard(query.from_user.id))
 
 async def process_dream_text(query, lang):
     """Process dream text"""
@@ -2540,17 +2500,18 @@ async def generate_coffee_fortune_impl(update, photo_bytes, lang):
     """Implementation of coffee fortune generation"""
     user_id = update.effective_user.id
     user_id_str = str(user_id)
-    
     try:
-        # Use Gemini 2.5 as primary, fallback to 1.5-flash, then pro
+        # Use faster model for better performance
         try:
-            model = genai.GenerativeModel('gemini-2.0-flash-exp')
+            model = genai.GenerativeModel('gemini-2.5-pro')
         except Exception:
             try:
-                model = genai.GenerativeModel('gemini-1.5-flash')
+                model = genai.GenerativeModel('deepseek-chat')
             except Exception:
-                model = genai.GenerativeModel('gemini-pro')
-        
+                try:
+                    model = genai.GenerativeModel('gemini-pro')
+                except Exception:
+                    model = genai.GenerativeModel('gemini-1.5-flash')
         # Get prompt from Supabase with proper language
         prompt = supabase_manager.get_prompt("coffee", lang)
         if not prompt:
@@ -2561,10 +2522,8 @@ async def generate_coffee_fortune_impl(update, photo_bytes, lang):
                 'es': f"Eres un lector de café experimentado. Interpreta los signos en la taza de café para {update.effective_user.first_name}.\n\nExplica las formas, símbolos y signos en la taza en detalle. Haz una interpretación personal e indica oportunidades futuras.\n\n150-200 palabras."
             }
             prompt = fallback_prompts.get(lang, fallback_prompts['en'])
-        
         # Prepare prompt with proper language instruction
         final_prompt = prompt.replace("{username}", update.effective_user.first_name)
-        
         # Add explicit language instruction
         language_instructions = {
             'tr': f"KAHVE FALI YORUMCUSU. SADECE TÜRKÇE KAHVE FALI YORUMU YAZ.\n\n{final_prompt}\n\nTÜRKÇE YORUM:",
@@ -2572,22 +2531,15 @@ async def generate_coffee_fortune_impl(update, photo_bytes, lang):
             'es': f"LECTOR DE CAFÉ. ESCRIBE SOLO LA INTERPRETACIÓN DEL CAFÉ EN ESPAÑOL.\n\n{final_prompt}\n\nINTERPRETACIÓN EN ESPAÑOL:"
         }
         final_prompt = language_instructions.get(lang, language_instructions['en'])
-        
         supabase_manager.add_log(f"Coffee fortune prompt prepared ({lang}): {len(final_prompt)} characters")
         supabase_manager.add_log(f"Gemini API call in progress (coffee, {lang}): {user_id_str}")
-        
-        # Send to Gemini (async API) - with timeout
+        # Send to Gemini (async API) - with timeout and fallback
         try:
             loop = asyncio.get_event_loop()
-            # Convert photo_bytes to proper format for Gemini
-            import PIL.Image
-            import io
-            image = PIL.Image.open(io.BytesIO(photo_bytes))
             response = await asyncio.wait_for(
-                loop.run_in_executor(None, lambda: model.generate_content([final_prompt, image])),
-                timeout=8.0  # Reduced timeout for faster response
+                loop.run_in_executor(None, lambda: model.generate_content([final_prompt, photo_bytes])),
+                timeout=8.0
             )
-            
             supabase_manager.add_log(f"Gemini API response successfully received: {user_id_str}")
         except asyncio.TimeoutError:
             supabase_manager.add_log(f"Gemini API timeout (8s): {user_id_str}")
@@ -2604,41 +2556,15 @@ async def generate_coffee_fortune_impl(update, photo_bytes, lang):
                 raise Exception("AI API did not respond (timeout)")
         except Exception as e:
             supabase_manager.add_log(f"Gemini API error: {str(e)[:100]}")
-            # Try DeepSeek as fallback
-            try:
-                supabase_manager.add_log(f"Trying DeepSeek fallback for coffee fortune: {user_id_str}")
-                deepseek_response = await asyncio.wait_for(
-                    loop.run_in_executor(None, call_deepseek_api, final_prompt),
-                    timeout=10.0
-                )
-                response = type('Response', (), {'text': deepseek_response})()
-                supabase_manager.add_log(f"DeepSeek fallback successful for coffee fortune: {user_id_str}")
-            except Exception as deepseek_error:
-                supabase_manager.add_log(f"DeepSeek fallback failed for coffee fortune: {str(deepseek_error)[:100]}")
-                raise Exception(f"Both Gemini and DeepSeek failed: {str(e)[:100]}")
-        
+            raise Exception(f"Gemini API error: {str(e)[:100]}")
         if not response:
             raise Exception("No response received from AI API")
-        
         if not response.text:
             raise Exception("Empty response received from AI API")
-        
-        supabase_manager.add_log(f"Coffee fortune response received: {len(response.text)} characters")
-        
-        # Reduce free reading count (if not admin)
-        if update.effective_user.id != ADMIN_ID:
-            user_data = supabase_manager.get_user(update.effective_user.id)
-            current_readings = user_data.get("readings_count", 0) if user_data else 0
-            supabase_manager.update_user(update.effective_user.id, {
-                'readings_count': current_readings + 1
-            })
-            supabase_manager.add_log(f"Coffee fortune completed (free reading reduced): {user_id_str}")
-        
         return response.text
-        
     except Exception as e:
-        logger.error(f"Coffee fortune generation error: {e}")
-        return None
+        logger.error(f"generate_coffee_fortune_impl error: {e}")
+        raise
 
 # --- Missing Keyboard Functions ---
 
@@ -3073,15 +2999,7 @@ async def get_fastest_ai_response(prompt: str, lang: str) -> str:
 def call_gemini_api(prompt: str) -> str:
     """Call Gemini API with error handling."""
     try:
-        # Try Gemini 2.5 first, then fallback to 1.5-flash, then pro
-        try:
-            model = genai.GenerativeModel('gemini-2.0-flash-exp')
-        except Exception:
-            try:
-                model = genai.GenerativeModel('gemini-1.5-flash')
-            except Exception:
-                model = genai.GenerativeModel('gemini-pro')
-        
+        model = genai.GenerativeModel('gemini-1.5-flash')
         response = model.generate_content(prompt)
         return response.text if response and response.text else ""
     except Exception as e:
@@ -3205,12 +3123,12 @@ async def handle_dream_text(update: Update, context: CallbackContext):
                 supabase_manager.update_user(update.effective_user.id, {'state': 'idle'})
                 supabase_manager.add_log(f"Admin dream analysis completed: {user_id_str}")
             
-            await update.message.reply_text(response.text, reply_markup=create_main_menu_keyboard(lang))
+            await update.message.reply_text(response.text, reply_markup=get_main_menu_keyboard(update.effective_user.id))
         except Exception as e:
             logger.error(f"Dream analysis error: {e}")
             await update.message.reply_text(
                 get_text("fortune_error", lang), 
-                reply_markup=create_main_menu_keyboard(lang)
+                reply_markup=get_main_menu_keyboard(update.effective_user.id)
             )
             
     elif user and user.get('state') == 'waiting_for_birth_info':
