@@ -757,6 +757,30 @@ async def get_or_create_user_old(user_id: int, effective_user):
 
 # --- Menü ve Buton Oluşturucular ---
 
+def safe_button_text(key, lang):
+    """Safely get button text, handling both string and object types"""
+    text = get_text(key, lang)
+    if not isinstance(text, str):
+        logger.error(f"Button text is not string for key {key}: {type(text)} - {text}")
+        # Handle object types by extracting title or first string value
+        if isinstance(text, dict):
+            if 'button_text' in text:
+                text = text['button_text']
+            elif 'title' in text:
+                text = text['title']
+            elif 'buttons' in text and isinstance(text['buttons'], dict):
+                # Try to get first button text
+                first_button = next(iter(text['buttons'].values()), None)
+                if isinstance(first_button, str):
+                    text = first_button
+                else:
+                    text = key
+            else:
+                text = key
+        else:
+            text = str(text) if text is not None else key
+    return text
+
 def create_main_menu_keyboard(lang='tr'):
     """Ana menü klavyesini oluştur"""
     keyboard = [
@@ -935,11 +959,15 @@ async def admin(update: Update, context: CallbackContext):
             [InlineKeyboardButton("📄 PDF Raporları", callback_data="admin_download_pdf")],
             [InlineKeyboardButton("🏠 Ana Menü", callback_data="main_menu")]
         ]
-    await update.message.reply_text(
-            stats_message,
-            reply_markup=InlineKeyboardMarkup(keyboard),
+        try:
+            await update.message.reply_text(
+                stats_message,
+                reply_markup=InlineKeyboardMarkup(keyboard),
                 parse_mode='Markdown'
             )
+        except Exception as e:
+            logger.error(f"Admin command error: {e}")
+            await update.message.reply_text("❌ Admin paneli yüklenirken hata oluştu.")
     except Exception as e:
         logger.error(f"Admin command error: {e}")
         await update.message.reply_text("❌ Admin paneli yüklenirken hata oluştu.")
@@ -1324,29 +1352,6 @@ async def show_astrology_menu(query, lang):
     """Show astrology menu"""
     message = get_text("astrology_menu_message", lang)
     
-    def safe_button_text(key, lang):
-        text = get_text(key, lang)
-        if not isinstance(text, str):
-            logger.error(f"Button text is not string for key {key}: {type(text)} - {text}")
-            # Handle object types by extracting title or first string value
-            if isinstance(text, dict):
-                if 'button_text' in text:
-                    text = text['button_text']
-                elif 'title' in text:
-                    text = text['title']
-                elif 'buttons' in text and isinstance(text['buttons'], dict):
-                    # Try to get first button text
-                    first_button = next(iter(text['buttons'].values()), None)
-                    if isinstance(first_button, str):
-                        text = first_button
-                    else:
-                        text = key
-                else:
-                    text = key
-            else:
-            text = str(text) if text is not None else key
-        return text
-    
     # Create astrology menu buttons
     keyboard = [
         [InlineKeyboardButton(safe_button_text("daily_horoscope", lang), callback_data='astro_daily_horoscope')],
@@ -1717,14 +1722,14 @@ async def admin_show_stats(query, lang):
         ]
         
         try:
-            await update.message.reply_text(
+            await query.edit_message_text(
                 stats_message,
                 reply_markup=InlineKeyboardMarkup(keyboard),
-        parse_mode='Markdown'
-    )
+                parse_mode='Markdown'
+            )
         except Exception as e:
             logger.error(f"Admin command error: {e}")
-            await update.message.reply_text("❌ Admin paneli yüklenirken hata oluştu.")
+            await query.edit_message_text("❌ Admin paneli yüklenirken hata oluştu.")
         
     except Exception as e:
         logger.error(f"Admin stats error: {e}")
@@ -1773,14 +1778,14 @@ async def admin_show_users(query, lang):
         ]
         
         try:
-            await update.message.reply_text(
+            await query.edit_message_text(
                 user_message,
                 reply_markup=InlineKeyboardMarkup(keyboard),
-        parse_mode='Markdown'
-    )
+                parse_mode='Markdown'
+            )
         except Exception as e:
             logger.error(f"Admin users error: {e}")
-            await update.message.reply_text("❌ Kullanıcı listesi yüklenirken hata oluştu.")
+            await query.edit_message_text("❌ Kullanıcı listesi yüklenirken hata oluştu.")
         
     except Exception as e:
         logger.error(f"Admin users error: {e}")
@@ -1829,14 +1834,14 @@ async def admin_show_settings(query, lang):
         ]
         
         try:
-            await update.message.reply_text(
+            await query.edit_message_text(
                 settings_message,
                 reply_markup=InlineKeyboardMarkup(keyboard),
-        parse_mode='Markdown'
-    )
+                parse_mode='Markdown'
+            )
         except Exception as e:
             logger.error(f"Admin settings error: {e}")
-            await update.message.reply_text("❌ Ayarlar yüklenirken hata oluştu.")
+            await query.edit_message_text("❌ Ayarlar yüklenirken hata oluştu.")
         
     except Exception as e:
         logger.error(f"Admin settings error: {e}")
@@ -1849,7 +1854,7 @@ async def admin_view_logs(query, lang):
         return
     
     try:
-    logs = supabase_manager.get_logs(limit=50)
+        logs = supabase_manager.get_logs(limit=50)
         
         if not logs:
             log_message = "📋 **SİSTEM LOGLARI** 📋\n\n❌ Henüz log kaydı yok."
@@ -1877,12 +1882,12 @@ async def admin_view_logs(query, lang):
             [InlineKeyboardButton("🔙 Admin Paneli", callback_data="admin_stats")]
         ]
         
-    await safe_edit_message(
-        query,
+        await safe_edit_message(
+            query,
             log_message,
             reply_markup=InlineKeyboardMarkup(keyboard),
-        parse_mode='Markdown'
-    )
+            parse_mode='Markdown'
+        )
     except Exception as e:
         logger.error(f"Admin logs error: {e}")
         await query.edit_message_text("❌ Loglar yüklenirken hata oluştu.")
@@ -1920,14 +1925,14 @@ async def admin_download_pdf(query, lang):
         ]
         
         try:
-            await update.message.reply_text(
+            await query.edit_message_text(
                 pdf_message,
                 reply_markup=InlineKeyboardMarkup(keyboard),
-        parse_mode='Markdown'
-    )
+                parse_mode='Markdown'
+            )
         except Exception as e:
             logger.error(f"Admin PDF error: {e}")
-            await update.message.reply_text("❌ PDF seçenekleri yüklenirken hata oluştu.")
+            await query.edit_message_text("❌ PDF seçenekleri yüklenirken hata oluştu.")
         
     except Exception as e:
         logger.error(f"Admin PDF error: {e}")
@@ -1977,14 +1982,14 @@ async def admin_premium_management(query, lang):
         ]
         
         try:
-            await update.message.reply_text(
+            await query.edit_message_text(
                 premium_message,
                 reply_markup=InlineKeyboardMarkup(keyboard),
-        parse_mode='Markdown'
-    )
+                parse_mode='Markdown'
+            )
         except Exception as e:
             logger.error(f"Admin premium management error: {e}")
-            await update.message.reply_text("❌ Premium yönetimi yüklenirken hata oluştu.")
+            await query.edit_message_text("❌ Premium yönetimi yüklenirken hata oluştu.")
         
     except Exception as e:
         logger.error(f"Admin premium management error: {e}")
@@ -1997,7 +2002,7 @@ async def admin_premium_users(query, lang):
         return
     
     try:
-    premium_users = supabase_manager.get_premium_users()
+        premium_users = supabase_manager.get_premium_users()
         
         if not premium_users:
             users_message = "💎 **PREMIUM KULLANICILAR** 💎\n\n❌ Henüz premium kullanıcı yok."
@@ -2034,14 +2039,14 @@ async def admin_premium_users(query, lang):
         ]
         
         try:
-            await update.message.reply_text(
+            await query.edit_message_text(
                 users_message,
                 reply_markup=InlineKeyboardMarkup(keyboard),
-        parse_mode='Markdown'
-    )
+                parse_mode='Markdown'
+            )
         except Exception as e:
             logger.error(f"Admin premium users error: {e}")
-            await update.message.reply_text("❌ Premium kullanıcılar yüklenirken hata oluştu.")
+            await query.edit_message_text("❌ Premium kullanıcılar yüklenirken hata oluştu.")
     except Exception as e:
         logger.error(f"Admin premium users error: {e}")
         await query.edit_message_text("❌ Premium kullanıcılar yüklenirken hata oluştu.")
@@ -2090,14 +2095,14 @@ async def admin_premium_stats(query, lang):
         ]
         
         try:
-            await update.message.reply_text(
+            await query.edit_message_text(
                 stats_message,
                 reply_markup=InlineKeyboardMarkup(keyboard),
-        parse_mode='Markdown'
-    )
+                parse_mode='Markdown'
+            )
         except Exception as e:
             logger.error(f"Admin premium stats error: {e}")
-            await update.message.reply_text("❌ Premium istatistikleri yüklenirken hata oluştu.")
+            await query.edit_message_text("❌ Premium istatistikleri yüklenirken hata oluştu.")
         
     except Exception as e:
         logger.error(f"Admin premium stats error: {e}")
@@ -2144,14 +2149,14 @@ async def admin_gift_subscription(query, lang):
         ]
         
         try:
-            await update.message.reply_text(
+            await query.edit_message_text(
                 gift_message,
                 reply_markup=InlineKeyboardMarkup(keyboard),
-        parse_mode='Markdown'
-    )
+                parse_mode='Markdown'
+            )
         except Exception as e:
             logger.error(f"Admin gift subscription error: {e}")
-            await update.message.reply_text("❌ Hediye abonelik arayüzü yüklenirken hata oluştu.")
+            await query.edit_message_text("❌ Hediye abonelik arayüzü yüklenirken hata oluştu.")
         
     except Exception as e:
         logger.error(f"Admin gift subscription error: {e}")
@@ -2194,14 +2199,14 @@ async def admin_cancel_subscription(query, lang):
         ]
         
         try:
-            await update.message.reply_text(
+            await query.edit_message_text(
                 cancel_message,
                 reply_markup=InlineKeyboardMarkup(keyboard),
-        parse_mode='Markdown'
-    )
+                parse_mode='Markdown'
+            )
         except Exception as e:
             logger.error(f"Admin cancel subscription error: {e}")
-            await update.message.reply_text("❌ İptal abonelik arayüzü yüklenirken hata oluştu.")
+            await query.edit_message_text("❌ İptal abonelik arayüzü yüklenirken hata oluştu.")
         
     except Exception as e:
         logger.error(f"Admin cancel subscription error: {e}")
@@ -2246,14 +2251,14 @@ async def admin_premium_pdf(query, lang):
         ]
         
         try:
-            await update.message.reply_text(
+            await query.edit_message_text(
                 pdf_message,
                 reply_markup=InlineKeyboardMarkup(keyboard),
-        parse_mode='Markdown'
-    )
+                parse_mode='Markdown'
+            )
         except Exception as e:
             logger.error(f"Admin premium PDF error: {e}")
-            await update.message.reply_text("❌ Premium PDF seçenekleri yüklenirken hata oluştu.")
+            await query.edit_message_text("❌ Premium PDF seçenekleri yüklenirken hata oluştu.")
         
     except Exception as e:
         logger.error(f"Admin premium PDF error: {e}")
@@ -2266,14 +2271,14 @@ async def show_daily_horoscope_menu(query, lang):
     keyboard.append([InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")])
     
     try:
-        await update.message.reply_text(
-        get_text("daily_horoscope_menu", lang),
-        reply_markup=InlineKeyboardMarkup(keyboard),
-        parse_mode='Markdown'
-    )
+        await query.edit_message_text(
+            get_text("daily_horoscope_menu", lang),
+            reply_markup=InlineKeyboardMarkup(keyboard),
+            parse_mode='Markdown'
+        )
     except Exception as e:
         logger.error(f"Daily horoscope menu error: {e}")
-        await update.message.reply_text("❌ Günlük kart menüsü yüklenirken hata oluştu.")
+        await query.edit_message_text("❌ Günlük kart menüsü yüklenirken hata oluştu.")
 
 async def show_compatibility_menu(query, lang):
     """Show compatibility menu"""
@@ -2282,14 +2287,14 @@ async def show_compatibility_menu(query, lang):
     keyboard.append([InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")])
     
     try:
-        await update.message.reply_text(
-        get_text("compatibility_menu", lang),
-        reply_markup=InlineKeyboardMarkup(keyboard),
-        parse_mode='Markdown'
-    )
+        await query.edit_message_text(
+            get_text("compatibility_menu", lang),
+            reply_markup=InlineKeyboardMarkup(keyboard),
+            parse_mode='Markdown'
+        )
     except Exception as e:
         logger.error(f"Compatibility menu error: {e}")
-        await update.message.reply_text("❌ Uyumluluk menüsü yüklenirken hata oluştu.")
+        await query.edit_message_text("❌ Uyumluluk menüsü yüklenirken hata oluştu.")
 
 async def handle_birth_chart(query, lang):
     """Handle birth chart request"""
@@ -2322,14 +2327,14 @@ async def show_moon_calendar(query, lang):
     ]
     
     try:
-        await update.message.reply_text(
-        message,
-        reply_markup=InlineKeyboardMarkup(keyboard),
-        parse_mode='Markdown'
-    )
+        await query.edit_message_text(
+            message,
+            reply_markup=InlineKeyboardMarkup(keyboard),
+            parse_mode='Markdown'
+        )
     except Exception as e:
         logger.error(f"Moon calendar error: {e}")
-        await update.message.reply_text("❌ Ay takvim menüsü yüklenirken hata oluştu.")
+        await query.edit_message_text("❌ Ay takvim menüsü yüklenirken hata oluştu.")
 
 async def show_weekly_horoscope_menu(query, lang):
     """Show weekly horoscope menu"""
@@ -2344,14 +2349,14 @@ async def show_weekly_horoscope_menu(query, lang):
     message += "Choose your zodiac sign:\n"
     
     try:
-        await update.message.reply_text(
-        message,
-        reply_markup=InlineKeyboardMarkup(keyboard),
-        parse_mode='Markdown'
-    )
+        await query.edit_message_text(
+            message,
+            reply_markup=InlineKeyboardMarkup(keyboard),
+            parse_mode='Markdown'
+        )
     except Exception as e:
         logger.error(f"Weekly horoscope menu error: {e}")
-        await update.message.reply_text("❌ Haftalık burç takvim menüsü yüklenirken hata oluştu.")
+        await query.edit_message_text("❌ Haftalık burç takvim menüsü yüklenirken hata oluştu.")
 
 async def show_monthly_horoscope_menu(query, lang):
     """Show monthly horoscope menu"""
@@ -2366,14 +2371,14 @@ async def show_monthly_horoscope_menu(query, lang):
     message += "Choose your zodiac sign:\n"
     
     try:
-        await update.message.reply_text(
-        message,
-        reply_markup=InlineKeyboardMarkup(keyboard),
-        parse_mode='Markdown'
-    )
+        await query.edit_message_text(
+            message,
+            reply_markup=InlineKeyboardMarkup(keyboard),
+            parse_mode='Markdown'
+        )
     except Exception as e:
         logger.error(f"Monthly horoscope menu error: {e}")
-        await update.message.reply_text("❌ Aylık burç takvim menüsü yüklenirken hata oluştu.")
+        await query.edit_message_text("❌ Aylık burç takvim menüsü yüklenirken hata oluştu.")
 
 async def activate_astrology_chatbot(query, lang):
     """Activate astrology chatbot"""
@@ -2463,14 +2468,14 @@ async def show_premium_comparison(query, lang):
     ])
     
     try:
-        await update.message.reply_text(
-        comparison_text,
-        reply_markup=InlineKeyboardMarkup(keyboard),
-        parse_mode='Markdown'
-    )
+        await query.edit_message_text(
+            comparison_text,
+            reply_markup=InlineKeyboardMarkup(keyboard),
+            parse_mode='Markdown'
+        )
     except Exception as e:
         logger.error(f"Premium plan comparison error: {e}")
-        await update.message.reply_text("❌ Premium plan karşılaştırması yüklenirken hata oluştu.")
+        await query.edit_message_text("❌ Premium plan karşılaştırması yüklenirken hata oluştu.")
 
 async def show_subscription_management(query, lang):
     """Show subscription management"""
@@ -2568,14 +2573,14 @@ async def show_premium_plan_details(query, plan_name, lang):
     ]
     
     try:
-        await update.message.reply_text(
-        plan_text,
-        reply_markup=InlineKeyboardMarkup(keyboard),
-        parse_mode='Markdown'
-    )
+        await query.edit_message_text(
+            plan_text,
+            reply_markup=InlineKeyboardMarkup(keyboard),
+            parse_mode='Markdown'
+        )
     except Exception as e:
         logger.error(f"Premium plan details error: {e}")
-        await update.message.reply_text("❌ Premium plan detayları yüklenirken hata oluştu.")
+        await query.edit_message_text("❌ Premium plan detayları yüklenirken hata oluştu.")
 
 async def initiate_premium_purchase(query, plan_name, lang):
     """Initiate premium purchase with Telegram Stars"""
@@ -2614,14 +2619,14 @@ async def initiate_premium_purchase(query, plan_name, lang):
         )]
     ]
     try:
-        await update.message.reply_text(
-        purchase_text,
-        reply_markup=InlineKeyboardMarkup(keyboard),
-        parse_mode='Markdown'
-    )
+        await query.edit_message_text(
+            purchase_text,
+            reply_markup=InlineKeyboardMarkup(keyboard),
+            parse_mode='Markdown'
+        )
     except Exception as e:
         logger.error(f"Premium purchase error: {e}")
-        await update.message.reply_text("❌ Premium plan satın alınırken hata oluştu.")
+        await query.edit_message_text("❌ Premium plan satın alınırken hata oluştu.")
 
 async def handle_stars_payment(query, plan_name, lang):
     """Handle Telegram Stars payment for premium plans"""
@@ -2723,14 +2728,14 @@ async def process_telegram_stars_payment(query, plan_name, lang):
         ]
         
         try:
-            await update.message.reply_text(
-            message,
-            reply_markup=InlineKeyboardMarkup(keyboard),
-            parse_mode='Markdown'
-        )
+            await query.edit_message_text(
+                message,
+                reply_markup=InlineKeyboardMarkup(keyboard),
+                parse_mode='Markdown'
+            )
         except Exception as e:
             logger.error(f"Payment initiation error: {e}")
-            await update.message.reply_text("❌ Ödeme işlemi sırasında hata oluştu. Lütfen tekrar deneyin.")
+            await query.edit_message_text("❌ Ödeme işlemi sırasında hata oluştu. Lütfen tekrar deneyin.")
 
 # New referral and premium handler functions
 async def handle_copy_referral_link(query, lang):
@@ -2750,14 +2755,14 @@ async def handle_copy_referral_link(query, lang):
     ]
     
     try:
-        await update.message.reply_text(
-        message,
-        reply_markup=InlineKeyboardMarkup(keyboard),
-        parse_mode='Markdown'
-    )
+        await query.edit_message_text(
+            message,
+            reply_markup=InlineKeyboardMarkup(keyboard),
+            parse_mode='Markdown'
+        )
     except Exception as e:
         logger.error(f"Referral link error: {e}")
-        await update.message.reply_text("❌ Referans linki kopyalanırken hata oluştu.")
+        await query.edit_message_text("❌ Referans linki kopyalanırken hata oluştu.")
 
 async def handle_share_twitter(query, lang):
     """Handle share on Twitter/X action"""
@@ -2779,14 +2784,14 @@ async def handle_share_twitter(query, lang):
     ]
     
     try:
-        await update.message.reply_text(
-        message,
-        reply_markup=InlineKeyboardMarkup(keyboard),
-        parse_mode='Markdown'
-    )
+        await query.edit_message_text(
+            message,
+            reply_markup=InlineKeyboardMarkup(keyboard),
+            parse_mode='Markdown'
+        )
     except Exception as e:
         logger.error(f"Twitter share error: {e}")
-        await update.message.reply_text("❌ Twitter paylaşımı yüklenirken hata oluştu.")
+        await query.edit_message_text("❌ Twitter paylaşımı yüklenirken hata oluştu.")
 
 async def handle_share_telegram(query, lang):
     """Handle share on Telegram action"""
@@ -2807,14 +2812,14 @@ async def handle_share_telegram(query, lang):
     ]
     
     try:
-        await update.message.reply_text(
-        message,
-        reply_markup=InlineKeyboardMarkup(keyboard),
-        parse_mode='Markdown'
-    )
+        await query.edit_message_text(
+            message,
+            reply_markup=InlineKeyboardMarkup(keyboard),
+            parse_mode='Markdown'
+        )
     except Exception as e:
         logger.error(f"Telegram share error: {e}")
-        await update.message.reply_text("❌ Telegram paylaşımı yüklenirken hata oluştu.")
+        await query.edit_message_text("❌ Telegram paylaşımı yüklenirken hata oluştu.")
 
 async def show_referral_leaderboard(query, lang):
     """Show referral leaderboard"""
@@ -2838,14 +2843,14 @@ async def show_referral_leaderboard(query, lang):
         ]
         
         try:
-            await update.message.reply_text(
-            message,
-            reply_markup=InlineKeyboardMarkup(keyboard),
-            parse_mode='Markdown'
-        )
+            await query.edit_message_text(
+                message,
+                reply_markup=InlineKeyboardMarkup(keyboard),
+                parse_mode='Markdown'
+            )
         except Exception as e:
             logger.error(f"Referral leaderboard error: {e}")
-            await update.message.reply_text("❌ Referans lider tablosu yüklenirken hata oluştu.")
+            await query.edit_message_text("❌ Referans lider tablosu yüklenirken hata oluştu.")
     except Exception as e:
         logger.error(f"Error showing referral leaderboard: {e}")
         await safe_edit_message(
@@ -2880,14 +2885,14 @@ async def show_referral_progress(query, lang):
         ]
         
         try:
-            await update.message.reply_text(
-            message,
-            reply_markup=InlineKeyboardMarkup(keyboard),
-            parse_mode='Markdown'
-        )
+            await query.edit_message_text(
+                message,
+                reply_markup=InlineKeyboardMarkup(keyboard),
+                parse_mode='Markdown'
+            )
         except Exception as e:
             logger.error(f"Referral progress error: {e}")
-            await update.message.reply_text("❌ Referans ilerleme detayları yüklenirken hata oluştu.")
+            await query.edit_message_text("❌ Referans ilerleme detayları yüklenirken hata oluştu.")
     except Exception as e:
         logger.error(f"Error showing referral progress: {e}")
         await safe_edit_message(
@@ -2920,14 +2925,14 @@ async def show_referral_next_goal(query, lang):
         ]
         
         try:
-            await update.message.reply_text(
-            message,
-            reply_markup=InlineKeyboardMarkup(keyboard),
-            parse_mode='Markdown'
-        )
+            await query.edit_message_text(
+                message,
+                reply_markup=InlineKeyboardMarkup(keyboard),
+                parse_mode='Markdown'
+            )
         except Exception as e:
             logger.error(f"Referral next goal error: {e}")
-            await update.message.reply_text("❌ Sonraki referans hedef yüklenirken hata oluştu.")
+            await query.edit_message_text("❌ Sonraki referans hedef yüklenirken hata oluştu.")
     except Exception as e:
         logger.error(f"Error showing referral next goal: {e}")
         await safe_edit_message(
@@ -2966,14 +2971,14 @@ async def show_premium_details(query, lang):
         keyboard.append([InlineKeyboardButton("🔙 Premium Menu", callback_data="premium_menu")])
         
         try:
-            await update.message.reply_text(
-            message,
-            reply_markup=InlineKeyboardMarkup(keyboard),
-            parse_mode='Markdown'
-        )
+            await query.edit_message_text(
+                message,
+                reply_markup=InlineKeyboardMarkup(keyboard),
+                parse_mode='Markdown'
+            )
         except Exception as e:
             logger.error(f"Premium plan details error: {e}")
-            await update.message.reply_text("❌ Premium plan detayları yüklenirken hata oluştu.")
+            await query.edit_message_text("❌ Premium plan detayları yüklenirken hata oluştu.")
     except Exception as e:
         logger.error(f"Error showing premium details: {e}")
         await safe_edit_message(
@@ -3010,14 +3015,14 @@ async def show_payment_info(query, lang):
         ]
         
         try:
-            await update.message.reply_text(
-            message,
-            reply_markup=InlineKeyboardMarkup(keyboard),
-            parse_mode='Markdown'
-        )
+            await query.edit_message_text(
+                message,
+                reply_markup=InlineKeyboardMarkup(keyboard),
+                parse_mode='Markdown'
+            )
         except Exception as e:
             logger.error(f"Payment info error: {e}")
-            await update.message.reply_text("❌ Ödeme bilgileri yüklenirken hata oluştu.")
+            await query.edit_message_text("❌ Ödeme bilgileri yüklenirken hata oluştu.")
     except Exception as e:
         logger.error(f"Error showing payment info: {e}")
         await safe_edit_message(
@@ -3083,8 +3088,7 @@ Language instruction: Write only in {lang.upper()} language."""
         title = get_text("tarot_fortune", lang)
         text = f"{title}\n\n**{card}**\n\n{interpretation}"
         keyboard = InlineKeyboardMarkup([[InlineKeyboardButton(get_text("main_menu_button", lang), callback_data='main_menu')]])
-    try:
-        await update.message.reply_text(
+        await query.edit_message_text(
             text,
             reply_markup=keyboard,
             parse_mode='Markdown'
@@ -3093,12 +3097,12 @@ Language instruction: Write only in {lang.upper()} language."""
         logger.error(f"Tarot interpretation error: {e}")
         text = get_text("fortune_error", lang)
         keyboard = InlineKeyboardMarkup([[InlineKeyboardButton(get_text("main_menu_button", lang), callback_data='main_menu')]])
-    await safe_edit_message(
-        query,
+        await safe_edit_message(
+            query,
             text,
             reply_markup=keyboard,
-        parse_mode='Markdown'
-    )
+            parse_mode='Markdown'
+        )
 
 async def process_dream_text(query, lang):
     """Process dream text"""
@@ -3180,7 +3184,7 @@ async def generate_coffee_fortune_impl(update, photo_bytes, lang):
                 logger.error(f"DeepSeek failed: {e}")
                 try:
                     logger.info("Trying Gemini Pro model")
-                model = genai.GenerativeModel('gemini-pro')
+                    model = genai.GenerativeModel('gemini-pro')
                     model_name = 'gemini-pro'
                 except Exception as e:
                     logger.error(f"Gemini Pro failed: {e}")
@@ -3735,9 +3739,9 @@ def call_gemini_api(prompt: str) -> str:
     except Exception as e:
         try:
             # Fallback to older model
-                model = genai.GenerativeModel('gemini-1.5-flash')
-        response = model.generate_content(prompt)
-        return response.text if response and response.text else ""
+            model = genai.GenerativeModel('gemini-1.5-flash')
+            response = model.generate_content(prompt)
+            return response.text if response and response.text else ""
         except Exception as e2:
             supabase_manager.add_log(f"Gemini API error: {str(e2)[:100]}")
         return ""
@@ -4738,11 +4742,11 @@ async def show_coffee_fortune_with_sharing(update, fortune_text, lang):
     message = f"{fortune_text}\n\n{get_text('coffee_fortune_share_prompt', lang)}"
     
     try:
-    await update.message.reply_text(
-        message,
-        reply_markup=InlineKeyboardMarkup(keyboard),
-        parse_mode='Markdown'
-    )
+        await update.message.reply_text(
+            message,
+            reply_markup=InlineKeyboardMarkup(keyboard),
+            parse_mode='Markdown'
+        )
     except Exception as e:
         logger.error(f"Coffee fortune sharing error: {e}")
         await update.message.reply_text("❌ Kahve falı paylaşımı yüklenirken hata oluştu.")
@@ -4756,23 +4760,23 @@ async def handle_share_coffee_twitter(query, lang):
     
     # Create share text
     share_text = f"🔮 Just got my coffee fortune reading! ✨\n\nGet your own reading at: {referral_link}\n\n#FalGram #CoffeeFortune #AI"
-        # Create Twitter/X share URL
+    # Create Twitter/X share URL
     from urllib.parse import quote
-        twitter_url = f"https://twitter.com/intent/tweet?text={quote(share_text)}"
-        keyboard = [
-            [InlineKeyboardButton("🐦 Open X", url=twitter_url)],
-            [InlineKeyboardButton("🔙 Back", callback_data="main_menu")]
-        ]
-        try:
+    twitter_url = f"https://twitter.com/intent/tweet?text={quote(share_text)}"
+    keyboard = [
+        [InlineKeyboardButton("🐦 Open X", url=twitter_url)],
+        [InlineKeyboardButton("🔙 Back", callback_data="main_menu")]
+    ]
+    try:
         await safe_edit_message(
             query,
             get_text("coffee_fortune_share_twitter_message", lang),
             reply_markup=InlineKeyboardMarkup(keyboard),
             parse_mode='Markdown'
         )
-        except Exception as e:
+    except Exception as e:
             logger.error(f"Twitter share error: {e}")
-            await update.message.reply_text("❌ Twitter paylaşımı yüklenirken hata oluştu.")
+            await query.edit_message_text("❌ Twitter paylaşımı yüklenirken hata oluştu.")
 
 
 async def handle_copy_coffee_link(query, lang):
@@ -4780,21 +4784,21 @@ async def handle_copy_coffee_link(query, lang):
     user_id = query.from_user.id
     bot_username = query.from_user.bot.username if hasattr(query.from_user, 'bot') else "FalGramBot"
     referral_link = f"https://t.me/{bot_username}?start={user_id}"
-        
-        keyboard = [
-            [InlineKeyboardButton("🔙 Back", callback_data="main_menu")]
-        ]
-        
-        try:
-        await safe_edit_message(
-            query,
-            get_text("coffee_fortune_link_copied", lang, link=referral_link),
-            reply_markup=InlineKeyboardMarkup(keyboard),
-            parse_mode='Markdown'
-        )
-        except Exception as e:
-            logger.error(f"Coffee fortune link error: {e}")
-            await update.message.reply_text("❌ Kahve falı referans linki kopyalanırken hata oluştu.")
+    
+    keyboard = [
+        [InlineKeyboardButton("🔙 Back", callback_data="main_menu")]
+    ]
+    
+    try:
+            await safe_edit_message(
+                query,
+                get_text("coffee_fortune_link_copied", lang, link=referral_link),
+                reply_markup=InlineKeyboardMarkup(keyboard),
+                parse_mode='Markdown'
+            )
+    except Exception as e:
+        logger.error(f"Coffee fortune link error: {e}")
+        await query.edit_message_text("❌ Kahve falı referans linki kopyalanırken hata oluştu.")
 
 
 async def handle_try_payment(query, plan_name, lang):
@@ -4820,15 +4824,15 @@ async def handle_try_payment(query, plan_name, lang):
     ]
     
     try:
-    await safe_edit_message(
-        query,
-        message,
-        reply_markup=InlineKeyboardMarkup(keyboard),
-        parse_mode='Markdown'
-    )
+        await safe_edit_message(
+            query,
+            message,
+            reply_markup=InlineKeyboardMarkup(keyboard),
+            parse_mode='Markdown'
+        )
     except Exception as e:
         logger.error(f"Try payment error: {e}")
-        await update.message.reply_text("❌ Ödeme işlemi sırasında hata oluştu. Lütfen tekrar deneyin.")
+        await query.edit_message_text("❌ Ödeme işlemi sırasında hata oluştu. Lütfen tekrar deneyin.")
 
 
 async def handle_contact_support(query, lang):
@@ -4850,15 +4854,15 @@ async def handle_contact_support(query, lang):
     ]
     
     try:
-    await safe_edit_message(
-        query,
-        message,
-        reply_markup=InlineKeyboardMarkup(keyboard),
-        parse_mode='Markdown'
-    )
+        await safe_edit_message(
+            query,
+            message,
+            reply_markup=InlineKeyboardMarkup(keyboard),
+            parse_mode='Markdown'
+        )
     except Exception as e:
         logger.error(f"Contact support error: {e}")
-        await update.message.reply_text("❌ Destek ekibi ile iletişime geçilirken hata oluştu.")
+        await query.edit_message_text("❌ Destek ekibi ile iletişime geçilirken hata oluştu.")
 
 # --- Main Function ---
 
