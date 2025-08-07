@@ -66,11 +66,23 @@ def get_text(key: str, lang: str = 'en', **kwargs) -> str:
     if text is None:
         logger.warning(f"Missing translation key: {key} (lang={lang})")
         text = key  # Fallback to key itself
+    
+    # Ensure text is always a string
+    if not isinstance(text, str):
+        logger.warning(f"Non-string text for key {key}: {type(text)} - {text}")
+        text = str(text) if text is not None else key
+    
     if kwargs:
         try:
             text = text.format(**kwargs)
         except Exception as e:
             logger.warning(f"Format error for key {key}: {e}")
+    
+    # Final safety check
+    if not isinstance(text, str):
+        logger.error(f"Final text is not string for key {key}: {type(text)} - {text}")
+        text = str(text) if text is not None else key
+    
     return text
 
 def get_user_language(user_id: int) -> str:
@@ -747,15 +759,22 @@ async def get_or_create_user_old(user_id: int, effective_user):
 
 def create_main_menu_keyboard(lang='tr'):
     """Ana menü klavyesini oluştur"""
+    def safe_button_text(key, lang):
+        text = get_text(key, lang)
+        if not isinstance(text, str):
+            logger.error(f"Button text is not string for key {key}: {type(text)} - {text}")
+            text = str(text) if text is not None else key
+        return text
+    
     keyboard = [
-        [InlineKeyboardButton(get_text("coffee_fortune", lang), callback_data='select_coffee')],
-        [InlineKeyboardButton(get_text("tarot_fortune", lang), callback_data='select_tarot')],
-        [InlineKeyboardButton(get_text("dream_analysis", lang), callback_data='select_dream')],
-        [InlineKeyboardButton(get_text("astrology", lang), callback_data='select_astrology')],
-        [InlineKeyboardButton(get_text("daily_card", lang), callback_data='daily_card')],
-        [InlineKeyboardButton(get_text("referral", lang), callback_data='referral')],
-        [InlineKeyboardButton(get_text("premium_menu", lang), callback_data='premium_menu')],
-        [InlineKeyboardButton(get_text("language", lang), callback_data='change_language')]
+        [InlineKeyboardButton(safe_button_text("coffee_fortune", lang), callback_data='select_coffee')],
+        [InlineKeyboardButton(safe_button_text("tarot_fortune", lang), callback_data='select_tarot')],
+        [InlineKeyboardButton(safe_button_text("dream_analysis", lang), callback_data='select_dream')],
+        [InlineKeyboardButton(safe_button_text("astrology", lang), callback_data='select_astrology')],
+        [InlineKeyboardButton(safe_button_text("daily_card", lang), callback_data='daily_card')],
+        [InlineKeyboardButton(safe_button_text("referral", lang), callback_data='referral')],
+        [InlineKeyboardButton(safe_button_text("premium_menu", lang), callback_data='premium_menu')],
+        [InlineKeyboardButton(safe_button_text("language", lang), callback_data='change_language')]
     ]
     return InlineKeyboardMarkup(keyboard)
 
@@ -1245,16 +1264,23 @@ async def show_astrology_menu(query, lang):
     """Show astrology menu"""
     message = get_text("astrology_menu_message", lang)
     
+    def safe_button_text(key, lang):
+        text = get_text(key, lang)
+        if not isinstance(text, str):
+            logger.error(f"Button text is not string for key {key}: {type(text)} - {text}")
+            text = str(text) if text is not None else key
+        return text
+    
     # Create astrology menu buttons
     keyboard = [
-        [InlineKeyboardButton(get_text("daily_horoscope", lang), callback_data='astro_daily_horoscope')],
-        [InlineKeyboardButton(get_text("weekly_horoscope", lang), callback_data='weekly_astro_report')],
-        [InlineKeyboardButton(get_text("monthly_horoscope", lang), callback_data='monthly_horoscope_menu')],
-        [InlineKeyboardButton(get_text("compatibility", lang), callback_data='astro_compatibility')],
-        [InlineKeyboardButton(get_text("birth_chart", lang), callback_data='astro_birth_chart')],
-        [InlineKeyboardButton(get_text("moon_calendar", lang), callback_data='astro_moon_calendar')],
-        [InlineKeyboardButton(get_text("astrology_chatbot", lang), callback_data='astro_chatbot')],
-        [InlineKeyboardButton(get_text("main_menu_button", lang), callback_data='main_menu')]
+        [InlineKeyboardButton(safe_button_text("daily_horoscope", lang), callback_data='astro_daily_horoscope')],
+        [InlineKeyboardButton(safe_button_text("weekly_horoscope", lang), callback_data='weekly_astro_report')],
+        [InlineKeyboardButton(safe_button_text("monthly_horoscope", lang), callback_data='monthly_horoscope_menu')],
+        [InlineKeyboardButton(safe_button_text("compatibility", lang), callback_data='astro_compatibility')],
+        [InlineKeyboardButton(safe_button_text("birth_chart", lang), callback_data='astro_birth_chart')],
+        [InlineKeyboardButton(safe_button_text("moon_calendar", lang), callback_data='astro_moon_calendar')],
+        [InlineKeyboardButton(safe_button_text("astrology_chatbot", lang), callback_data='astro_chatbot')],
+        [InlineKeyboardButton(safe_button_text("main_menu_button", lang), callback_data='main_menu')]
     ]
     
     await safe_edit_message(
@@ -1306,20 +1332,20 @@ async def show_referral_info(query, lang):
     total_rewards = free_readings_earned + stars_earned
     progress = min(referred_count, 5)  # Progress bar for first 5 referrals
     
-    # Build elegant referral message
-    message = "🌟 **FAL GRAM REFERRAL SYSTEM** 🌟\n\n"
-    message += "🎁 **Earn rewards by inviting friends!**\n\n"
+    # Build elegant referral message using proper locale keys
+    message = get_text("referral.title", lang) + "\n\n"
+    message += get_text("referral.description", lang) + "\n\n"
     message += "━━━━━━━━━━━━━━━━━━━━━━\n\n"
     
     # Your Stats Section
-    message += "📊 **Your Statistics:**\n"
-    message += f"👥 **Total Referrals:** {referred_count}\n"
-    message += f"🎁 **Free Readings Earned:** {free_readings_earned}\n"
-    message += f"⭐ **Stars Earned:** {stars_earned}\n"
-    message += f"💰 **Total Rewards:** {total_rewards}\n\n"
+    message += get_text("referral.stats_title", lang) + "\n"
+    message += get_text("referral.total_referrals", lang).format(count=referred_count) + "\n"
+    message += get_text("referral.free_readings_earned", lang).format(readings=free_readings_earned) + "\n"
+    message += get_text("referral.stars_earned", lang).format(stars=stars_earned) + "\n"
+    message += get_text("referral.total_rewards", lang).format(rewards=total_rewards) + "\n\n"
     
     # Progress Bar
-    message += "📈 **Progress Bar:**\n"
+    message += get_text("referral.progress_title", lang) + "\n"
     progress_bar = "█" * progress + "░" * (5 - progress)
     message += f"`{progress_bar}` ({referred_count}/5)\n\n"
     
@@ -1345,16 +1371,16 @@ async def show_referral_info(query, lang):
     message += "━━━━━━━━━━━━━━━━━━━━━━\n"
     message += "✨ *Start sharing and earn amazing rewards!* ✨"
     
-    # Create elegant keyboard
+    # Create elegant keyboard using proper locale keys
     keyboard = [
-        [InlineKeyboardButton("📋 Copy Link", callback_data=f"copy_link_{referral_link}"),
-         InlineKeyboardButton("📊 My Stats", callback_data="referral_stats")],
-        [InlineKeyboardButton("🐦 Share on X", callback_data="share_twitter"),
-         InlineKeyboardButton("📤 Share on Telegram", callback_data="share_telegram")],
-        [InlineKeyboardButton("🎁 My Rewards", callback_data="my_rewards"),
-         InlineKeyboardButton("🏆 Leaderboard", callback_data="referral_leaderboard")],
-        [InlineKeyboardButton("📈 Progress Details", callback_data="referral_progress"),
-         InlineKeyboardButton("🎯 Next Goal", callback_data="referral_next_goal")],
+        [InlineKeyboardButton(get_text("referral.copy_link", lang), callback_data=f"copy_link_{referral_link}"),
+         InlineKeyboardButton(get_text("referral.buttons.my_stats", lang), callback_data="referral_stats")],
+        [InlineKeyboardButton(get_text("referral.share_twitter", lang), callback_data="share_twitter"),
+         InlineKeyboardButton(get_text("referral.share_telegram", lang), callback_data="share_telegram")],
+        [InlineKeyboardButton(get_text("referral.buttons.my_rewards", lang), callback_data="my_rewards"),
+         InlineKeyboardButton(get_text("referral.leaderboard", lang), callback_data="referral_leaderboard")],
+        [InlineKeyboardButton(get_text("referral.progress", lang), callback_data="referral_progress"),
+         InlineKeyboardButton(get_text("referral.next_goal", lang), callback_data="referral_next_goal")],
         [InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")]
     ]
     
@@ -1455,14 +1481,11 @@ async def show_language_menu(query):
     user_id = query.from_user.id
     current_lang = get_user_language(user_id)
     
-    # Create elegant language selection message
-    message = "🌐 **LANGUAGE SELECTION** 🌐\n\n"
-    message += "Please select your preferred language:\n"
-    message += "Lütfen tercih ettiğiniz dili seçin:\n"
-    message += "Por favor selecciona tu idioma preferido:\n\n"
+    # Create elegant language selection message using proper locale keys
+    message = get_text("language.selection_title", current_lang) + "\n\n"
+    message += get_text("language.selection_description", current_lang) + "\n\n"
     message += "━━━━━━━━━━━━━━━━━━━━━━\n\n"
-    message += "Current language / Mevcut dil / Idioma actual:\n"
-    message += f"**{current_lang.upper()}**\n\n"
+    message += get_text("language.current_language", current_lang).format(lang=current_lang.upper()) + "\n\n"
     message += "Choose from the options below:\n"
     
     # Create elegant language keyboard
@@ -1470,7 +1493,7 @@ async def show_language_menu(query):
         [InlineKeyboardButton("🇹🇷 Türkçe", callback_data='set_lang_tr'),
          InlineKeyboardButton("🇺🇸 English", callback_data='set_lang_en')],
         [InlineKeyboardButton("🇪🇸 Español", callback_data='set_lang_es')],
-        [InlineKeyboardButton("🏠 Main Menu", callback_data='main_menu')]
+        [InlineKeyboardButton(get_text("language.back_to_menu", current_lang), callback_data='main_menu')]
     ]
     
     await safe_edit_message(
@@ -1697,10 +1720,29 @@ async def handle_birth_chart(query, lang):
 
 async def show_moon_calendar(query, lang):
     """Show moon calendar"""
+    # Use proper locale key for moon calendar
+    message = get_text("moon_calendar.title", lang) + "\n\n"
+    message += "━━━━━━━━━━━━━━━━━━━━━━\n\n"
+    message += get_text("moon_calendar.today", lang).format(date=datetime.now().strftime("%d/%m/%Y")) + "\n"
+    message += get_text("moon_calendar.moon_phase", lang).format(phase="🌕 Dolunay") + "\n\n"
+    message += get_text("moon_calendar.energy_label", lang) + "\n"
+    message += "✨ Yaratıcılık ve ilham dönemi\n\n"
+    message += get_text("moon_calendar.suggestions_label", lang) + "\n"
+    for suggestion in get_text("moon_calendar.suggestions", lang, default=[]):
+        message += f"• {suggestion}\n"
+    message += "\n" + get_text("moon_calendar.footer", lang)
+    
+    # Create keyboard with moon calendar options
+    keyboard = [
+        [InlineKeyboardButton(get_text("moon_calendar.buttons.notifications", lang), callback_data="moon_notifications")],
+        [InlineKeyboardButton(get_text("moon_calendar.buttons.weekly", lang), callback_data="weekly_moon")],
+        [InlineKeyboardButton(get_text("moon_calendar.buttons.back", lang), callback_data="select_astrology")]
+    ]
+    
     await safe_edit_message(
         query,
-        get_text("moon_calendar_message", lang),
-        reply_markup=create_main_menu_keyboard(lang),
+        message,
+        reply_markup=InlineKeyboardMarkup(keyboard),
         parse_mode='Markdown'
     )
 
@@ -1710,9 +1752,15 @@ async def show_weekly_horoscope_menu(query, lang):
     keyboard = create_horoscope_keyboard(lang)
     keyboard.append([InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")])
     
+    # Use proper locale key for weekly horoscope
+    message = get_text("weekly_horoscope.title", lang) + "\n\n"
+    message += get_text("weekly_horoscope.description", lang) + "\n\n"
+    message += "━━━━━━━━━━━━━━━━━━━━━━\n\n"
+    message += "Choose your zodiac sign:\n"
+    
     await safe_edit_message(
         query,
-        get_text("weekly_horoscope_menu", lang),
+        message,
         reply_markup=InlineKeyboardMarkup(keyboard),
         parse_mode='Markdown'
     )
@@ -1723,9 +1771,15 @@ async def show_monthly_horoscope_menu(query, lang):
     keyboard = create_horoscope_keyboard(lang)
     keyboard.append([InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")])
     
+    # Use proper locale key for monthly horoscope
+    message = get_text("monthly_horoscope.title", lang) + "\n\n"
+    message += get_text("monthly_horoscope.description", lang) + "\n\n"
+    message += "━━━━━━━━━━━━━━━━━━━━━━\n\n"
+    message += "Choose your zodiac sign:\n"
+    
     await safe_edit_message(
         query,
-        get_text("monthly_horoscope_menu", lang),
+        message,
         reply_markup=InlineKeyboardMarkup(keyboard),
         parse_mode='Markdown'
     )
@@ -2023,22 +2077,37 @@ async def process_telegram_stars_payment(query, plan_name, lang):
     plan_name_display = plan.get('name', plan_name.title())
     
     try:
-        # Check if user has enough stars
-        # For now, we'll simulate the payment process
-        # In a real implementation, you would check the user's star balance
-        
-        # Create payment form using Telegram Stars
-        payment_form_data = {
+        # Create Telegram Stars payment invoice
+        payment_data = {
             "title": f"Fal Gram - {plan_name_display}",
             "description": f"Premium plan subscription for {plan_name_display}",
             "payload": f"premium_{plan_name}_{user_id}",
+            "provider_token": os.getenv("TELEGRAM_PAYMENT_TOKEN", "TEST_PAYMENT_TOKEN"),
             "currency": "XTR",  # Telegram Stars currency
-            "prices": [LabeledPrice(f"{plan_name_display} Plan", price_stars)]  # Stars amount
+            "prices": [LabeledPrice(f"{plan_name_display} Plan", price_stars * 100)]  # Convert to cents
         }
         
-        # For Telegram Stars, we need to use a different approach
-        # Since direct star payment might not be available, we'll show instructions
+        # Send invoice to user
+        await query.message.reply_invoice(
+            **payment_data,
+            reply_markup=InlineKeyboardMarkup([
+                [InlineKeyboardButton("💳 Pay with Stars", pay=True)],
+                [InlineKeyboardButton("❌ Cancel", callback_data="premium_menu")]
+            ])
+        )
         
+        # Update user state to waiting for payment
+        supabase_manager.update_user(user_id, {
+            'payment_state': f'waiting_{plan_name}',
+            'payment_amount': price_stars
+        })
+        
+        supabase_manager.add_log(f"Payment initiated: User {user_id} for {plan_name} ({price_stars} stars)")
+        
+    except Exception as e:
+        logger.error(f"Payment initiation error: {e}")
+        
+        # Fallback to manual payment instructions
         message = f"💎 **{plan_name_display} Plan** 💎\n\n"
         message += f"💰 **Price:** {price_stars} Telegram Stars\n\n"
         message += "📱 **To complete your purchase:**\n"
@@ -2056,28 +2125,6 @@ async def process_telegram_stars_payment(query, plan_name, lang):
         await safe_edit_message(
             query,
             message,
-            reply_markup=InlineKeyboardMarkup(keyboard),
-            parse_mode='Markdown'
-        )
-        
-        # Update user state to waiting for payment
-        supabase_manager.update_user(user_id, {
-            'payment_state': f'waiting_{plan_name}',
-            'payment_amount': price_stars
-        })
-        
-        supabase_manager.add_log(f"Payment initiated: User {user_id} for {plan_name} ({price_stars} stars)")
-        
-    except Exception as e:
-        logger.error(f"Payment initiation error: {e}")
-        error_text = get_text('premium.payment_error', lang)
-        keyboard = [
-            [InlineKeyboardButton(get_text('buttons.try_again', lang), callback_data=f"pay_stars_{plan_name}")],
-            [InlineKeyboardButton(get_text('buttons.back_to_menu', lang), callback_data="premium_menu")]
-        ]
-        await safe_edit_message(
-            query,
-            error_text,
             reply_markup=InlineKeyboardMarkup(keyboard),
             parse_mode='Markdown'
         )

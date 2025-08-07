@@ -697,6 +697,18 @@
     ],
     "back_button": "🔙 Astrología"
   },
+  "monthly_horoscope": {
+    "title": "📅 **HORÓSCOPO MENSUAL** 📅",
+    "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+    "description": "¿Para qué signo quieres una lectura mensual?",
+    "features": [
+      "📈 Análisis de horóscopo mensual",
+      "🌟 Tránsitos planetarios",
+      "💫 Períodos importantes",
+      "🎯 Recomendaciones a largo plazo"
+    ],
+    "back_button": "🔙 Astrología"
+  },
   "astrology_chatbot": "🤖 Chatbot de Astrología",
   "astrology_menu_message": "⭐ **CENTRO DE ASTROLOGÍA** ⭐\n━━━━━━━━━━━━━━━━━━━━━━\n\nDescubre tu guía cósmica:\n\n🌟 **Horóscopo Diario** - Tus insights cósmicos diarios\n📊 **Reporte Semanal** - Pronóstico detallado de 7 días\n📅 **Análisis Mensual** - Predicciones a largo plazo\n💕 **Compatibilidad** - Insights de relaciones\n🌟 **Carta Natal** - Mapa astrológico personal\n🌙 **Calendario Lunar** - Guía de fases lunares\n🤖 **Chatbot IA** - Asistente astrológico 24/7\n\n━━━━━━━━━━━━━━━━━━━━━━\n✨ *Elige tu viaje cósmico* ✨",
   "premium_feature_title": "💎 **PREMIUM FEATURE** 💎",
@@ -853,6 +865,78 @@
     "purchase_initiated": "🛒 Compra iniciada. Haz clic en el botón para proceder con el pago.",
     "payment_success": "🎉 ¡Pago exitoso! Tus funciones premium están activas.",
     "payment_error": "❌ Error de pago. Intenta de nuevo o contacta soporte."
+  },
+  "premium_plans": {
+    "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+    "plan_details": {
+      "description_label": "Descripción",
+      "price_label": "Precio",
+      "duration_label": "Duración",
+      "features_label": "Características"
+    },
+    "buttons": {
+      "buy": "💳 Comprar Ahora",
+      "back": "🔙 Volver"
+    },
+    "back_to_menu": "🔙 Volver al Menú",
+    "plans": {
+      "basic": {
+        "name": "Plan Básico",
+        "description": "Lecturas ilimitadas y características avanzadas",
+        "duration": "30 días",
+        "price": "500 ⭐",
+        "features": [
+          "♾️ Lecturas ilimitadas (Café, Tarot, Sueños)",
+          "📊 Reporte semanal de horóscopo",
+          "🔮 Análisis avanzado de astrología",
+          "💫 Interpretación de carta natal",
+          "🌙 Características de calendario lunar",
+          "💬 Chatbot avanzado",
+          "🎯 Recomendaciones personalizadas",
+          "📈 Historial detallado de lecturas",
+          "🔔 Notificaciones especiales"
+        ]
+      },
+      "premium": {
+        "name": "Plan Premium",
+        "description": "Paquete completo de astrología y características especiales",
+        "duration": "30 días",
+        "price": "1000 ⭐",
+        "features": [
+          "✨ Características del Plan Básico",
+          "📅 Horóscopo mensual",
+          "🪐 Análisis de tránsitos planetarios",
+          "💕 Compatibilidad de signos",
+          "🌙 Calendario lunar avanzado",
+          "📈 Reportes detallados de astrología",
+          "🎯 Recomendaciones personalizadas",
+          "🔮 Tipos especiales de lectura",
+          "📊 Estadísticas de astrología",
+          "🎁 Contenido exclusivo",
+          "⚡ Soporte prioritario"
+        ]
+      },
+      "vip": {
+        "name": "Plan VIP",
+        "description": "Experiencia máxima con soporte prioritario",
+        "duration": "30 días",
+        "price": "2000 ⭐",
+        "features": [
+          "👑 Características del Plan Premium",
+          "🤖 Chatbot de Astrología 24/7",
+          "👥 Características sociales de astrología",
+          "🎁 Contenido VIP exclusivo",
+          "⚡ Soporte prioritario",
+          "📊 Analíticas avanzadas",
+          "🎯 Consultor personal de astrología",
+          "🌟 Tipos especiales de lectura VIP",
+          "💎 Contenido exclusivo ilimitado",
+          "🎪 Eventos especiales",
+          "📱 Interfaz VIP especial",
+          "🔮 Guía personal con IA"
+        ]
+      }
+    }
   },
   "moon_calendar": {
     "title": "🌙 **CALENDARIO LUNAR** 🌙",

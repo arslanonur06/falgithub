@@ -729,6 +729,18 @@
             "🎯 Recommendations and advice"
         ],
         "back_button": "🔙 Astrology"
+      },
+      "monthly_horoscope": {
+        "title": "📅 **MONTHLY HOROSCOPE** 📅",
+        "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+        "description": "Which sign do you want a monthly reading for?",
+        "features": [
+            "📈 Monthly horoscope analysis",
+            "🌟 Planetary transits",
+            "💫 Important periods",
+            "🎯 Long-term recommendations"
+        ],
+        "back_button": "🔙 Astrology"
       }
     },
     "main_panel": {
@@ -874,7 +886,65 @@
       "buy": "💳 Buy Now",
       "back": "🔙 Back"
     },
-    "back_to_menu": "🔙 Back to Menu"
+    "back_to_menu": "🔙 Back to Menu",
+    "plans": {
+      "basic": {
+        "name": "Basic Plan",
+        "description": "Unlimited readings and advanced features",
+        "duration": "30 days",
+        "price": "500 ⭐",
+        "features": [
+          "♾️ Unlimited readings (Coffee, Tarot, Dream)",
+          "📊 Weekly horoscope report",
+          "🔮 Advanced astrology analysis",
+          "💫 Birth chart interpretation",
+          "🌙 Moon calendar features",
+          "💬 Advanced chatbot",
+          "🎯 Personalized recommendations",
+          "📈 Detailed reading history",
+          "🔔 Special notifications"
+        ]
+      },
+      "premium": {
+        "name": "Premium Plan",
+        "description": "Complete astrology package and special features",
+        "duration": "30 days",
+        "price": "1000 ⭐",
+        "features": [
+          "✨ Basic Plan features",
+          "📅 Monthly horoscope",
+          "🪐 Planetary transits analysis",
+          "💕 Zodiac compatibility",
+          "🌙 Advanced moon calendar",
+          "📈 Detailed astrology reports",
+          "🎯 Personalized recommendations",
+          "🔮 Special reading types",
+          "📊 Astrology statistics",
+          "🎁 Exclusive content",
+          "⚡ Priority support"
+        ]
+      },
+      "vip": {
+        "name": "VIP Plan",
+        "description": "Ultimate experience with priority support",
+        "duration": "30 days",
+        "price": "2000 ⭐",
+        "features": [
+          "👑 Premium Plan features",
+          "🤖 24/7 Astrology Chatbot",
+          "👥 Social astrology features",
+          "🎁 Exclusive VIP content",
+          "⚡ Priority support",
+          "📊 Advanced analytics",
+          "🎯 Personal astrology consultant",
+          "🌟 Special VIP reading types",
+          "💎 Unlimited exclusive content",
+          "🎪 Special events",
+          "📱 Special VIP interface",
+          "🔮 AI-powered personal guidance"
+        ]
+      }
+    }
   },
   "language_system": {
     "selection_title": "🌐 **Language Selection** 🌐",

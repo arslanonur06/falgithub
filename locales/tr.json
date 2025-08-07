@@ -722,24 +722,36 @@
             "main_menu": "🏠 Ana Menü"
         }
     },
-    "weekly_horoscope": {
-        "title": "📊 **HAFTALIK BURÇ YORUMU** 📊",
-        "separator": "━━━━━━━━━━━━━━━━━━━━━━",
-        "description": "Hangi burç için haftalık yorum istiyorsunuz?",
-        "features": [
-            "📈 Haftalık burç analizi",
-            "🌟 Gezegen etkileri",
-            "💫 Önemli tarihler",
-            "🎯 Öneriler ve tavsiyeler"
-        ],
-        "back_button": "🔙 Astroloji"
-    },
+      "weekly_horoscope": {
+    "title": "📊 **HAFTALIK BURÇ YORUMU** 📊",
+    "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+    "description": "Hangi burç için haftalık yorum istiyorsunuz?",
+    "features": [
+      "📈 Haftalık burç analizi",
+      "🌟 Gezegen etkileri",
+      "💫 Önemli tarihler",
+      "🎯 Öneriler ve tavsiyeler"
+    ],
+    "back_button": "🔙 Astroloji"
+  },
+  "monthly_horoscope": {
+    "title": "📅 **AYLIK BURÇ YORUMU** 📅",
+    "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+    "description": "Hangi burç için aylık yorum istiyorsunuz?",
+    "features": [
+      "📈 Aylık burç analizi",
+      "🌟 Gezegen geçişleri",
+      "💫 Önemli dönemler",
+      "🎯 Uzun vadeli öneriler"
+    ],
+    "back_button": "🔙 Astroloji"
+  },
   "main_menu": "🏠 Ana Menü",
   "astrology_chatbot": "🤖 Astroloji Chatbot",
   "astrology_menu_message": "⭐ **ASTROLOJİ MERKEZİ** ⭐\n━━━━━━━━━━━━━━━━━━━━━━\n\nKozmik rehberliğinizi keşfedin:\n\n🌟 **Günlük Burç** - Günlük kozmik içgörüler\n📊 **Haftalık Rapor** - 7 günlük detaylı tahmin\n📅 **Aylık Analiz** - Uzun vadeli öngörüler\n💕 **Uyumluluk** - İlişki içgörüleri\n🌟 **Doğum Haritası** - Kişisel astroloji haritanız\n🌙 **Ay Takvimi** - Ay fazı rehberliği\n🤖 **AI Chatbot** - 7/24 astroloji asistanı\n\n━━━━━━━━━━━━━━━━━━━━━━\n✨ *Kozmik yolculuğunuzu seçin* ✨",
   "premium_feature_title": "💎 **PREMİUM ÖZELLİK** 💎",
   "astrology_center_title": "⭐ **ASTROLOJİ MERKEZİ** ⭐",
-  "referral_system_title": "🌟 **FAL GRAM REFERANS SİSTEMİ** 🌟",
+  "referral_system_title": "🌟 ** REFERANS SİSTEMİ** 🌟",
   "premium_management_panel_title": "💎 **PREMIUM YÖNETİM PANELİ** 💎",
   "referral_info_message": "🌟 **REFERANS SİSTEMİ** 🌟\n━━━━━━━━━━━━━━━━━━━━━━\n\n📊 **İstatistikleriniz:**\n• Davet Edilen Arkadaşlar: {referred_count}\n• Kazanılan Fallar: {referral_earnings}\n\n🔗 **Referans Linkiniz:**\n`{referral_link}`\n\n📋 Kopyalayın ve arkadaşlarınızla paylaşın!\nKatılan her arkadaş için 1 ÜCRETSİZ fal kazanın.\n\n━━━━━━━━━━━━━━━━━━━━━━",
   "advanced_moon_calendar_button": "🌙 Gelişmiş Ay Takvimi",
@@ -808,7 +820,7 @@
   "astrology_chatbot_activated": "🤖 **Astroloji Chatbot Aktif**\n\nArtık astroloji sorularınızı sorabilirsiniz!",
   "moon_calendar_message": "🌙 **Ay Takvimi**\n\nAy fazları ve enerji rehberliği.",
   "birth_chart_prompt": "🌟 Doğum bilgilerinizi girin:\n\nFormat: GG.AA.YYYY SS:DD Şehir\nÖrnek: 15.03.1990 14:30 İstanbul",
-  "referral_system": {
+  "referral": {
     "title": "🌟 **REFERANS SİSTEMİ** 🌟",
     "description": "Arkadaşlarınızı davet edin ve ödüller kazanın!",
     "stats_title": "📊 **Referans İstatistikleriniz**",
@@ -862,10 +874,68 @@
       "buy": "💳 Şimdi Satın Al",
       "back": "🔙 Geri"
     },
-    "back_to_menu": "🔙 Menüye Geri Dön"
+    "back_to_menu": "🔙 Menüye Geri Dön",
+    "plans": {
+      "basic": {
+        "name": "Temel Plan",
+        "description": "Sınırsız fal ve gelişmiş özellikler",
+        "duration": "30 gün",
+        "price": "500 ⭐",
+        "features": [
+          "♾️ Sınırsız fal (Kahve, Tarot, Rüya)",
+          "📊 Haftalık burç raporu",
+          "🔮 Gelişmiş astroloji analizi",
+          "💫 Doğum haritası yorumu",
+          "🌙 Ay takvimi özellikleri",
+          "💬 Gelişmiş chatbot",
+          "🎯 Kişiselleştirilmiş öneriler",
+          "📈 Detaylı fal geçmişi",
+          "🔔 Özel bildirimler"
+        ]
+      },
+      "premium": {
+        "name": "Premium Plan",
+        "description": "Tam astroloji paketi ve özel özellikler",
+        "duration": "30 gün",
+        "price": "1000 ⭐",
+        "features": [
+          "✨ Temel Plan özellikleri",
+          "📅 Aylık burç yorumu",
+          "🪐 Gezegen geçişleri analizi",
+          "💕 Burç uyumluluğu",
+          "🌙 Gelişmiş ay takvimi",
+          "📈 Detaylı astroloji raporları",
+          "🎯 Kişiselleştirilmiş öneriler",
+          "🔮 Özel fal türleri",
+          "📊 Astroloji istatistikleri",
+          "🎁 Özel içerikler",
+          "⚡ Öncelikli destek"
+        ]
+      },
+      "vip": {
+        "name": "VIP Plan",
+        "description": "En üst düzey deneyim ve öncelikli destek",
+        "duration": "30 gün",
+        "price": "2000 ⭐",
+        "features": [
+          "👑 Premium Plan özellikleri",
+          "🤖 7/24 Astroloji Chatbot",
+          "👥 Sosyal astroloji özellikleri",
+          "🎁 Özel VIP içerikler",
+          "⚡ Öncelikli destek",
+          "📊 Gelişmiş analitikler",
+          "🎯 Kişisel astroloji danışmanı",
+          "🌟 Özel VIP fal türleri",
+          "💎 Sınırsız özel içerik",
+          "🎪 Özel etkinlikler",
+          "📱 Özel VIP arayüzü",
+          "🔮 AI destekli kişisel rehberlik"
+        ]
+      }
+    }
   },
-  "language_system": {
-    "selection_title": "🌐 **Dil Seçimi** 🌐",
+  "language": {
+    "selection_title": " 🌐  Dil Seçimi 🌐 ",
     "selection_description": "En iyi deneyim için tercih ettiğiniz dili seçin:",
     "current_language": "Mevcut Dil: **{lang}**",
     "language_updated_success": "✅ Dil **{lang}** olarak güncellendi!",
@@ -930,4 +1000,4 @@
     "buy_premium": "💳 Premium Satın Al",
     "back_to_plans": "🔙 Planlara Geri Dön"
   }
-}
+} 
