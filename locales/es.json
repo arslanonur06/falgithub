@@ -40,6 +40,8 @@
   },
   "language_detected": "🌐 Tu idioma detectado automáticamente como {lang}. Usa el botón de idioma para cambiar si es necesario.",
   "language_updated": "🌐 Idioma actualizado a {lang}.",
+  "referral_button": "👥 Invitar Amigos",
+  "language_button": "🌐 Cambiar Idioma",
 
   "fortune_request": "Envía una foto de tu taza de café...",
   "fortune_limit_reached": "Tu límite de lecturas gratis se ha alcanzado. Se requieren {stars_count} Estrellas de Telegram para continuar.",

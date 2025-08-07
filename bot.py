@@ -1507,7 +1507,8 @@ async def show_referral_stats(query, lang):
         [InlineKeyboardButton(
             get_text("referral.buttons.back", lang),
             callback_data="referral"
-        )]
+        )],
+        [InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")]
     ]
     
     await safe_edit_message(
@@ -1547,7 +1548,8 @@ async def show_my_rewards(query, lang):
         [InlineKeyboardButton(
             get_text("referral.buttons.back", lang),
             callback_data="referral"
-        )]
+        )],
+        [InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")]
     ]
     
     await safe_edit_message(
@@ -1591,13 +1593,12 @@ async def handle_language_change(query, new_lang):
     # Update user language
     supabase_manager.update_user(user_id, {'language': new_lang})
     
-    # Send confirmation in new language
-    lang_name = LOCALES[new_lang].get('language_name', new_lang)
-    message = get_text("language_updated", new_lang).format(lang=lang_name)
+    # Show start message in new language
+    start_message = get_text("start_message", new_lang)
     
     await safe_edit_message(
         query,
-        message,
+        start_message,
         reply_markup=create_main_menu_keyboard(new_lang),
         parse_mode='Markdown'
     )
@@ -2266,9 +2267,12 @@ async def admin_premium_pdf(query, lang):
 
 async def show_daily_horoscope_menu(query, lang):
     """Show daily horoscope menu"""
-    # Create keyboard with main menu button
+    # Create keyboard with back and main menu buttons
     keyboard = create_horoscope_keyboard(lang)
-    keyboard.append([InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")])
+    keyboard.append([
+        InlineKeyboardButton("🔙 Back to Astrology", callback_data="select_astrology"),
+        InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")
+    ])
     
     try:
         await query.edit_message_text(
@@ -2282,9 +2286,12 @@ async def show_daily_horoscope_menu(query, lang):
 
 async def show_compatibility_menu(query, lang):
     """Show compatibility menu"""
-    # Create keyboard with main menu button
+    # Create keyboard with back and main menu buttons
     keyboard = create_compatibility_keyboard(lang)
-    keyboard.append([InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")])
+    keyboard.append([
+        InlineKeyboardButton("🔙 Back to Astrology", callback_data="select_astrology"),
+        InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")
+    ])
     
     try:
         await query.edit_message_text(
@@ -2338,9 +2345,12 @@ async def show_moon_calendar(query, lang):
 
 async def show_weekly_horoscope_menu(query, lang):
     """Show weekly horoscope menu"""
-    # Create keyboard with main menu button
+    # Create keyboard with back and main menu buttons
     keyboard = create_horoscope_keyboard(lang)
-    keyboard.append([InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")])
+    keyboard.append([
+        InlineKeyboardButton("🔙 Back to Astrology", callback_data="select_astrology"),
+        InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")
+    ])
     
     # Use proper locale key for weekly horoscope
     message = get_text("weekly_horoscope.title", lang) + "\n\n"
@@ -2360,9 +2370,12 @@ async def show_weekly_horoscope_menu(query, lang):
 
 async def show_monthly_horoscope_menu(query, lang):
     """Show monthly horoscope menu"""
-    # Create keyboard with main menu button
+    # Create keyboard with back and main menu buttons
     keyboard = create_horoscope_keyboard(lang)
-    keyboard.append([InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")])
+    keyboard.append([
+        InlineKeyboardButton("🔙 Back to Astrology", callback_data="select_astrology"),
+        InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")
+    ])
     
     # Use proper locale key for monthly horoscope
     message = get_text("monthly_horoscope.title", lang) + "\n\n"

@@ -87,6 +87,8 @@
     }
   },
   "language_detected": "🌐 Your language automatically detected as {lang}. Use language button to change if needed.",
+  "referral_button": "👥 Invite Friends",
+  "language_button": "🌐 Change Language",
   "language_updated": "🌐 Language updated to {lang}.",
   "language": {
     "current_language": "🌐 Current Language: {lang}",
