@@ -47,41 +47,91 @@ class DatabaseService:
     
     # User operations
     async def create_user(self, user_data: Dict[str, Any]) -> bool:
-        """Create a new user."""
+        """Create a new user. Be tolerant to schema differences."""
         try:
             if not self.is_connected():
                 return False
-            
+
+            # First attempt: direct insert
             response = self.supabase.table('users').insert(user_data).execute()
             return len(response.data) > 0
         except Exception as e:
             logger.error(f"Error creating user: {e}")
-            return False
+            # Retry without optional columns that might not exist
+            try:
+                sanitized = dict(user_data)
+                for optional_key in (
+                    'last_activity', 'total_readings', 'daily_readings_used',
+                    'premium_expires_at', 'premium_plan', 'referral_code',
+                    'premium_purchased_at', 'updated_at'
+                ):
+                    sanitized.pop(optional_key, None)
+                response = self.supabase.table('users').insert(sanitized).execute()
+                return len(response.data) > 0
+            except Exception as e2:
+                logger.error(f"Fallback insert failed: {e2}")
+                return False
     
     async def get_user(self, user_id: int) -> Optional[Dict[str, Any]]:
-        """Get user by ID."""
-        try:
-            if not self.is_connected():
-                return None
-            
-            response = self.supabase.table('users').select('*').eq('user_id', user_id).execute()
-            return response.data[0] if response.data else None
-        except Exception as e:
-            logger.error(f"Error getting user {user_id}: {e}")
+        """Get user by ID. Try common key names to match existing schema."""
+        if not self.is_connected():
             return None
+        errors = []
+        for key in ('user_id', 'id', 'telegram_id'):
+            try:
+                response = (
+                    self.supabase.table('users').select('*').eq(key, user_id).limit(1).execute()
+                )
+                if response.data:
+                    # If record found but target key missing, ensure we mirror it to user_id for consistency
+                    record = response.data[0]
+                    if 'user_id' not in record and key != 'user_id':
+                        try:
+                            self.supabase.table('users').update({'user_id': user_id}).eq(key, user_id).execute()
+                        except Exception:
+                            pass
+                    return record
+            except Exception as e:
+                errors.append(f"{key}={e}")
+                continue
+        logger.error(f"Error getting user {user_id}: tried keys user_id/id/telegram_id → {' | '.join(errors)}")
+        return None
     
     async def update_user(self, user_id: int, updates: Dict[str, Any]) -> bool:
-        """Update user data."""
-        try:
-            if not self.is_connected():
-                return False
-            
-            updates['updated_at'] = datetime.now().isoformat()
-            response = self.supabase.table('users').update(updates).eq('user_id', user_id).execute()
-            return len(response.data) > 0
-        except Exception as e:
-            logger.error(f"Error updating user {user_id}: {e}")
+        """Update user data. Try multiple key names; drop unknown columns on failure."""
+        if not self.is_connected():
             return False
+        # Always stamp updated_at locally; may be dropped if schema lacks it
+        enriched_updates = dict(updates)
+        enriched_updates['updated_at'] = datetime.now().isoformat()
+
+        for key in ('user_id', 'id', 'telegram_id'):
+            try:
+                response = self.supabase.table('users').update(enriched_updates).eq(key, user_id).execute()
+                if len(response.data) > 0:
+                    return True
+            except Exception as e:
+                last_err = e
+                continue
+        # Retry with sanitized fields to avoid unknown column errors
+        try:
+            sanitized = dict(enriched_updates)
+            for optional_key in (
+                'last_activity', 'total_readings', 'daily_readings_used', 'updated_at',
+                'premium_expires_at', 'premium_plan', 'referral_code', 'premium_purchased_at'
+            ):
+                sanitized.pop(optional_key, None)
+            for key in ('user_id', 'id', 'telegram_id'):
+                try:
+                    response = self.supabase.table('users').update(sanitized).eq(key, user_id).execute()
+                    if len(response.data) > 0:
+                        return True
+                except Exception:
+                    continue
+        except Exception:
+            pass
+        logger.error(f"Error updating user {user_id}: {str(last_err) if 'last_err' in locals() else 'unknown'}")
+        return False
     
     async def get_all_users(self) -> List[Dict[str, Any]]:
         """Get all users."""

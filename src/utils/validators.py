@@ -5,6 +5,7 @@ Contains functions to validate various types of input data.
 
 import re
 from typing import Dict, Any, Optional
+from types import SimpleNamespace
 from datetime import datetime
 
 
@@ -233,3 +234,19 @@ def validate_referral_code(code: str) -> bool:
     # Check if it's alphanumeric and 8 characters long
     pattern = r'^[A-Z0-9]{8}$'
     return re.match(pattern, code) is not None 
+
+
+# Backwards-compatible aggregator used in some modules as `validator`
+validator = SimpleNamespace(
+    validate_user_input=validate_user_input,
+    validate_birth_date_format=validate_birth_date_format,
+    validate_zodiac_sign=validate_zodiac_sign,
+    validate_phone_number=validate_phone_number,
+    validate_email=validate_email,
+    validate_user_id=validate_user_id,
+    validate_premium_plan=validate_premium_plan,
+    validate_language_code=validate_language_code,
+    sanitize_text=sanitize_text,
+    validate_payment_amount=validate_payment_amount,
+    validate_referral_code=validate_referral_code,
+)

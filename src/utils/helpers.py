@@ -4,8 +4,8 @@ Contains various utility functions used throughout the application.
 """
 
 import re
-from datetime import datetime, timedelta
-from typing import Dict, Any, Optional
+from datetime import datetime, timedelta, date as date_cls
+from typing import Dict, Any, Optional, Union
 
 
 def format_currency(amount: float, currency: str = "TRY") -> str:
@@ -189,3 +189,61 @@ def format_time_duration(seconds: int) -> str:
     else:
         days = seconds // 86400
         return f"{days} days" 
+
+
+# === Added for astrology helpers ===
+def _parse_birth_date(value: Union[str, datetime, date_cls]) -> Optional[datetime]:
+    """Parse various birth date formats to a datetime.
+    Accepts ISO strings (YYYY-MM-DD or YYYY-MM-DDTHH:MM[:SS]),
+    'DD.MM.YYYY' with optional ' HH:MM', or datetime/date objects.
+    """
+    if isinstance(value, datetime):
+        return value
+    if isinstance(value, date_cls):
+        return datetime.combine(value, datetime.min.time())
+    if not isinstance(value, str):
+        return None
+
+    text = value.strip()
+    # Try ISO format first
+    try:
+        return datetime.fromisoformat(text)
+    except Exception:
+        pass
+
+    # Try DD.MM.YYYY HH:MM
+    for fmt in ("%d.%m.%Y %H:%M", "%d.%m.%Y"):
+        try:
+            return datetime.strptime(text, fmt)
+        except Exception:
+            continue
+    return None
+
+
+def is_valid_birth_date(value: Union[str, datetime, date_cls]) -> bool:
+    """Validate birth date is a real date, not in the future, and age in [0, 120]."""
+    dt = _parse_birth_date(value)
+    if dt is None:
+        return False
+    now = datetime.now()
+    if dt > now:
+        return False
+    years = calculate_age(dt)
+    return 0 <= years <= 120
+
+
+def calculate_age(birth_date: Union[str, datetime, date_cls]) -> int:
+    """Calculate age in whole years from a birth date.
+
+    Args:
+        birth_date: Birth date as str, datetime, or date.
+    Returns:
+        Age in years (int). Returns 0 if parsing fails.
+    """
+    dt = _parse_birth_date(birth_date)
+    if dt is None:
+        return 0
+    today = datetime.today().date()
+    bdate = dt.date()
+    years = today.year - bdate.year - ((today.month, today.day) < (bdate.month, bdate.day))
+    return max(0, years)

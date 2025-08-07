@@ -1,3 +1,4 @@
+{
   "admin": {
     "stats": "📊 İstatistikler",
     "users": "👥 Kullanıcılar",
@@ -5,7 +6,6 @@
     "logs": "📋 Loglar",
     "settings": "⚙️ Ayarlar"
   },
-{
   "fortune": {
     "tarot_reading": "🎴 Tarot Falı",
     "coffee_reading": "☕ Kahve Falı",

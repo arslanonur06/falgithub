@@ -1,3 +1,4 @@
+{
   "admin": {
     "stats": "📊 Estadísticas",
     "users": "👥 Usuarios",
@@ -5,7 +6,6 @@
     "logs": "📋 Logs",
     "settings": "⚙️ Configuración"
   },
-{
   "fortune": {
     "tarot_reading": "🎴 Lectura de Tarot",
     "coffee_reading": "☕ Lectura de Café",

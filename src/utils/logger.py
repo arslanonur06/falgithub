@@ -44,3 +44,8 @@ def setup_logger(name: str = None) -> logging.Logger:
 
 # Global logger instance
 logger = setup_logger() 
+
+# Backward-compatible alias used by some modules
+def get_logger(name: str = None) -> logging.Logger:
+    """Alias for setup_logger to preserve older imports."""
+    return setup_logger(name)
