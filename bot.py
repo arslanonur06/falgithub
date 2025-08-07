@@ -2345,16 +2345,35 @@ async def show_moon_calendar(query, lang):
 
 async def show_weekly_horoscope_menu(query, lang):
     """Show weekly horoscope menu"""
-    # Create keyboard with back and main menu buttons
-    keyboard = create_horoscope_keyboard(lang)
-    keyboard.append([
-        InlineKeyboardButton("🔙 Back to Astrology", callback_data="select_astrology"),
-        InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")
-    ])
+    # Create keyboard with zodiac signs
+    keyboard = [
+        [InlineKeyboardButton(get_text("aries", lang), callback_data='weekly_horoscope_0')],
+        [InlineKeyboardButton(get_text("taurus", lang), callback_data='weekly_horoscope_1')],
+        [InlineKeyboardButton(get_text("gemini", lang), callback_data='weekly_horoscope_2')],
+        [InlineKeyboardButton(get_text("cancer", lang), callback_data='weekly_horoscope_3')],
+        [InlineKeyboardButton(get_text("leo", lang), callback_data='weekly_horoscope_4')],
+        [InlineKeyboardButton(get_text("virgo", lang), callback_data='weekly_horoscope_5')],
+        [InlineKeyboardButton(get_text("libra", lang), callback_data='weekly_horoscope_6')],
+        [InlineKeyboardButton(get_text("scorpio", lang), callback_data='weekly_horoscope_7')],
+        [InlineKeyboardButton(get_text("sagittarius", lang), callback_data='weekly_horoscope_8')],
+        [InlineKeyboardButton(get_text("capricorn", lang), callback_data='weekly_horoscope_9')],
+        [InlineKeyboardButton(get_text("aquarius", lang), callback_data='weekly_horoscope_10')],
+        [InlineKeyboardButton(get_text("pisces", lang), callback_data='weekly_horoscope_11')],
+        [InlineKeyboardButton("🔙 Back to Astrology", callback_data="select_astrology")],
+        [InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")]
+    ]
     
-    # Use proper locale key for weekly horoscope
-    message = get_text("weekly_horoscope.title", lang) + "\n\n"
-    message += get_text("weekly_horoscope.description", lang) + "\n\n"
+    # Get weekly horoscope text from locale
+    weekly_horoscope_obj = get_text("weekly_horoscope", lang)
+    if isinstance(weekly_horoscope_obj, dict):
+        title = weekly_horoscope_obj.get("title", "📊 **HAFTALIK BURÇ YORUMU** 📊")
+        description = weekly_horoscope_obj.get("description", "Hangi burç için haftalık yorum istiyorsunuz?")
+    else:
+        title = "📊 **HAFTALIK BURÇ YORUMU** 📊"
+        description = "Hangi burç için haftalık yorum istiyorsunuz?"
+    
+    message = title + "\n\n"
+    message += description + "\n\n"
     message += "━━━━━━━━━━━━━━━━━━━━━━\n\n"
     message += "Choose your zodiac sign:\n"
     
@@ -2370,16 +2389,35 @@ async def show_weekly_horoscope_menu(query, lang):
 
 async def show_monthly_horoscope_menu(query, lang):
     """Show monthly horoscope menu"""
-    # Create keyboard with back and main menu buttons
-    keyboard = create_horoscope_keyboard(lang)
-    keyboard.append([
-        InlineKeyboardButton("🔙 Back to Astrology", callback_data="select_astrology"),
-        InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")
-    ])
+    # Create keyboard with zodiac signs
+    keyboard = [
+        [InlineKeyboardButton(get_text("aries", lang), callback_data='monthly_horoscope_0')],
+        [InlineKeyboardButton(get_text("taurus", lang), callback_data='monthly_horoscope_1')],
+        [InlineKeyboardButton(get_text("gemini", lang), callback_data='monthly_horoscope_2')],
+        [InlineKeyboardButton(get_text("cancer", lang), callback_data='monthly_horoscope_3')],
+        [InlineKeyboardButton(get_text("leo", lang), callback_data='monthly_horoscope_4')],
+        [InlineKeyboardButton(get_text("virgo", lang), callback_data='monthly_horoscope_5')],
+        [InlineKeyboardButton(get_text("libra", lang), callback_data='monthly_horoscope_6')],
+        [InlineKeyboardButton(get_text("scorpio", lang), callback_data='monthly_horoscope_7')],
+        [InlineKeyboardButton(get_text("sagittarius", lang), callback_data='monthly_horoscope_8')],
+        [InlineKeyboardButton(get_text("capricorn", lang), callback_data='monthly_horoscope_9')],
+        [InlineKeyboardButton(get_text("aquarius", lang), callback_data='monthly_horoscope_10')],
+        [InlineKeyboardButton(get_text("pisces", lang), callback_data='monthly_horoscope_11')],
+        [InlineKeyboardButton("🔙 Back to Astrology", callback_data="select_astrology")],
+        [InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")]
+    ]
     
-    # Use proper locale key for monthly horoscope
-    message = get_text("monthly_horoscope.title", lang) + "\n\n"
-    message += get_text("monthly_horoscope.description", lang) + "\n\n"
+    # Get monthly horoscope text from locale
+    monthly_horoscope_obj = get_text("monthly_horoscope", lang)
+    if isinstance(monthly_horoscope_obj, dict):
+        title = monthly_horoscope_obj.get("title", "📅 **AYLIK BURÇ YORUMU** 📅")
+        description = monthly_horoscope_obj.get("description", "Hangi burç için aylık yorum istiyorsunuz?")
+    else:
+        title = "📅 **AYLIK BURÇ YORUMU** 📅"
+        description = "Hangi burç için aylık yorum istiyorsunuz?"
+    
+    message = title + "\n\n"
+    message += description + "\n\n"
     message += "━━━━━━━━━━━━━━━━━━━━━━\n\n"
     message += "Choose your zodiac sign:\n"
     
@@ -2513,35 +2551,239 @@ async def generate_monthly_horoscope(query, sign_index, lang):
 
 async def generate_daily_horoscope_impl(query, sign_index, lang):
     """Implementation of daily horoscope generation"""
+    zodiac_signs = ['aries', 'taurus', 'gemini', 'cancer', 'leo', 'virgo', 
+                   'libra', 'scorpio', 'sagittarius', 'capricorn', 'aquarius', 'pisces']
+    
+    if sign_index < 0 or sign_index >= len(zodiac_signs):
+        await safe_edit_message(
+            query,
+            "❌ Invalid zodiac sign selected.",
+            reply_markup=create_main_menu_keyboard(lang),
+            parse_mode='Markdown'
+        )
+        return
+    
+    sign = zodiac_signs[sign_index]
+    sign_name = get_text(sign, lang)
+    
+    # Show generating message
     await safe_edit_message(
         query,
         get_text("daily_horoscope_generating", lang),
         parse_mode='Markdown'
     )
+    
+    try:
+        # Get prompt from database
+        prompt = supabase_manager.get_prompt('daily_horoscope', lang)
+        if not prompt:
+            prompt = f"You are an experienced astrologer. Create a detailed daily horoscope for {sign_name} sign. Include love, career, health, and general guidance. Write in {lang} language, 120-150 words."
+        
+        # Generate horoscope using AI
+        horoscope_text = await get_fastest_ai_response(prompt, lang)
+        
+        # Format the response
+        message = f"📅 **{get_text('daily_horoscope', lang)}** 📅\n\n"
+        message += f"♈ **{sign_name}**\n\n"
+        message += f"{horoscope_text}\n\n"
+        message += "━━━━━━━━━━━━━━━━━━━━━━\n\n"
+        message += f"✨ *{get_text('astrology_menu.footer', lang)}* ✨"
+        
+        # Create keyboard with back buttons
+        keyboard = [
+            [InlineKeyboardButton("🔄 Another Reading", callback_data="daily_horoscope")],
+            [InlineKeyboardButton("🔙 Back to Astrology", callback_data="select_astrology")],
+            [InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")]
+        ]
+        
+        await safe_edit_message(
+            query,
+            message,
+            reply_markup=InlineKeyboardMarkup(keyboard),
+            parse_mode='Markdown'
+        )
+        
+    except Exception as e:
+        logger.error(f"Daily horoscope generation error: {e}")
+        await safe_edit_message(
+            query,
+            "❌ Günlük burç yorumu oluşturulurken hata oluştu. Lütfen tekrar deneyin.",
+            reply_markup=create_main_menu_keyboard(lang),
+            parse_mode='Markdown'
+        )
 
 async def generate_weekly_horoscope_impl(query, sign_index, lang):
     """Implementation of weekly horoscope generation"""
+    zodiac_signs = ['aries', 'taurus', 'gemini', 'cancer', 'leo', 'virgo', 
+                   'libra', 'scorpio', 'sagittarius', 'capricorn', 'aquarius', 'pisces']
+    
+    if sign_index < 0 or sign_index >= len(zodiac_signs):
+        await safe_edit_message(
+            query,
+            "❌ Invalid zodiac sign selected.",
+            reply_markup=create_main_menu_keyboard(lang),
+            parse_mode='Markdown'
+        )
+        return
+    
+    sign = zodiac_signs[sign_index]
+    sign_name = get_text(sign, lang)
+    
+    # Show generating message
     await safe_edit_message(
         query,
         get_text("weekly_horoscope_generating", lang),
         parse_mode='Markdown'
     )
+    
+    try:
+        # Get prompt from database
+        prompt = supabase_manager.get_prompt('weekly_horoscope', lang)
+        if not prompt:
+            prompt = f"You are an experienced astrologer. Create a detailed weekly horoscope for {sign_name} sign. Include love, career, health, and general guidance. Write in {lang} language, 150-200 words."
+        
+        # Generate horoscope using AI
+        horoscope_text = await get_fastest_ai_response(prompt, lang)
+        
+        # Format the response
+        message = f"📊 **{get_text('weekly_horoscope.title', lang)}** 📊\n\n"
+        message += f"♈ **{sign_name}**\n\n"
+        message += f"{horoscope_text}\n\n"
+        message += "━━━━━━━━━━━━━━━━━━━━━━\n\n"
+        message += f"✨ *{get_text('astrology_menu.footer', lang)}* ✨"
+        
+        # Create keyboard with back buttons
+        keyboard = [
+            [InlineKeyboardButton("🔄 Another Reading", callback_data="weekly_horoscope")],
+            [InlineKeyboardButton("🔙 Back to Astrology", callback_data="select_astrology")],
+            [InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")]
+        ]
+        
+        await safe_edit_message(
+            query,
+            message,
+            reply_markup=InlineKeyboardMarkup(keyboard),
+            parse_mode='Markdown'
+        )
+        
+    except Exception as e:
+        logger.error(f"Weekly horoscope generation error: {e}")
+        await safe_edit_message(
+            query,
+            "❌ Haftalık burç yorumu oluşturulurken hata oluştu. Lütfen tekrar deneyin.",
+            reply_markup=create_main_menu_keyboard(lang),
+            parse_mode='Markdown'
+        )
 
 async def generate_monthly_horoscope_impl(query, sign_index, lang):
     """Implementation of monthly horoscope generation"""
+    zodiac_signs = ['aries', 'taurus', 'gemini', 'cancer', 'leo', 'virgo', 
+                   'libra', 'scorpio', 'sagittarius', 'capricorn', 'aquarius', 'pisces']
+    
+    if sign_index < 0 or sign_index >= len(zodiac_signs):
+        await safe_edit_message(
+            query,
+            "❌ Invalid zodiac sign selected.",
+            reply_markup=create_main_menu_keyboard(lang),
+            parse_mode='Markdown'
+        )
+        return
+    
+    sign = zodiac_signs[sign_index]
+    sign_name = get_text(sign, lang)
+    
+    # Show generating message
     await safe_edit_message(
         query,
         get_text("monthly_horoscope_generating", lang),
         parse_mode='Markdown'
     )
+    
+    try:
+        # Get prompt from database
+        prompt = supabase_manager.get_prompt('monthly_horoscope', lang)
+        if not prompt:
+            prompt = f"You are an experienced astrologer. Create a detailed monthly horoscope for {sign_name} sign. Include love, career, health, and general guidance. Write in {lang} language, 200-250 words."
+        
+        # Generate horoscope using AI
+        horoscope_text = await get_fastest_ai_response(prompt, lang)
+        
+        # Format the response
+        message = f"📅 **{get_text('monthly_horoscope.title', lang)}** 📅\n\n"
+        message += f"♈ **{sign_name}**\n\n"
+        message += f"{horoscope_text}\n\n"
+        message += "━━━━━━━━━━━━━━━━━━━━━━\n\n"
+        message += f"✨ *{get_text('astrology_menu.footer', lang)}* ✨"
+        
+        # Create keyboard with back buttons
+        keyboard = [
+            [InlineKeyboardButton("🔄 Another Reading", callback_data="monthly_horoscope")],
+            [InlineKeyboardButton("🔙 Back to Astrology", callback_data="select_astrology")],
+            [InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")]
+        ]
+        
+        await safe_edit_message(
+            query,
+            message,
+            reply_markup=InlineKeyboardMarkup(keyboard),
+            parse_mode='Markdown'
+        )
+        
+    except Exception as e:
+        logger.error(f"Monthly horoscope generation error: {e}")
+        await safe_edit_message(
+            query,
+            "❌ Aylık burç yorumu oluşturulurken hata oluştu. Lütfen tekrar deneyin.",
+            reply_markup=create_main_menu_keyboard(lang),
+            parse_mode='Markdown'
+        )
 
 async def handle_compatibility_selection(query, lang):
     """Handle compatibility selection"""
+    # Show processing message
     await safe_edit_message(
         query,
         get_text("compatibility_processing", lang),
         parse_mode='Markdown'
     )
+    
+    try:
+        # Get prompt from database
+        prompt = supabase_manager.get_prompt('compatibility', lang)
+        if not prompt:
+            prompt = f"You are an experienced astrologer. Create a detailed compatibility analysis between two zodiac signs. Include love, communication, strengths, and challenges. Write in {lang} language, 150-200 words."
+        
+        # Generate compatibility analysis using AI
+        compatibility_text = await get_fastest_ai_response(prompt, lang)
+        
+        # Format the response
+        message = f"💕 **{get_text('compatibility', lang)}** 💕\n\n"
+        message += f"{compatibility_text}\n\n"
+        message += "━━━━━━━━━━━━━━━━━━━━━━\n\n"
+        message += f"✨ *{get_text('astrology_menu.footer', lang)}* ✨"
+        
+        # Create keyboard with back buttons
+        keyboard = [
+            [InlineKeyboardButton("🔄 Another Analysis", callback_data="compatibility")],
+            [InlineKeyboardButton("🔙 Back to Astrology", callback_data="select_astrology")],
+            [InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")]
+        ]
+        
+        await safe_edit_message(
+            query,
+            message,
+            reply_markup=InlineKeyboardMarkup(keyboard),
+            parse_mode='Markdown'
+        )
+        
+    except Exception as e:
+        logger.error(f"Compatibility analysis error: {e}")
+        await safe_edit_message(
+            query,
+            "❌ Uyumluluk analizi oluşturulurken hata oluştu. Lütfen tekrar deneyin.",
+            reply_markup=create_main_menu_keyboard(lang),
+            parse_mode='Markdown'
+        )
 
 async def show_premium_plan_details(query, plan_name, lang):
     """Show premium plan details"""

@@ -901,5 +901,25 @@
     "back_to_plans": "🔙 Planlara Geri Dön"
   },
   "invite_friends": "👥 Arkadaş Davet Et",
-  "language_button": "🌐 Dil Seçimi"
+  "language_button": "🌐 Dil Seçimi",
+  "astrology_menu": {
+    "title": "⭐ **ASTROLOJİ MERKEZİ** ⭐",
+    "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+    "features": [
+      "🌟 **Doğum Haritası** - Kişisel astrolojik analiziniz",
+      "📅 **Günlük Burç** - Burcunuz için günlük rehberlik",
+      "💕 **Uyumluluk** - İki burç arasındaki enerji analizi",
+      "🌙 **Gelişmiş Ay Takvimi** - Gerçek ay fazları ve etkileri"
+    ],
+    "premium_active": "📊 **Premium Özellikler Aktif!**",
+    "vip_active": "🤖 **VIP Özellikler Aktif!**",
+    "footer": "✨ *Yıldızların size söylediklerini keşfedin* ✨",
+    "buttons": {
+      "advanced_moon": "🌙 Gelişmiş Ay Takvimi",
+      "weekly_report": "📊 Haftalık Rapor",
+      "planetary_transits": "🌟 Gezegen Geçişleri",
+      "chatbot": "🤖 7/24 Astroloji Chatbot",
+      "social_features": "👥 Sosyal Özellikler"
+    }
+  }
 }
