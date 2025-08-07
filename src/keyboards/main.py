@@ -12,36 +12,42 @@ class MainKeyboards:
     
     @staticmethod
     def get_main_menu_keyboard(language: str = "en") -> InlineKeyboardMarkup:
-        """Get main menu keyboard."""
+        """Get main menu keyboard using existing locale keys."""
         keyboard = [
             [
                 InlineKeyboardButton(
-                    i18n.get_text("menu.astrology", language),
-                    callback_data="astrology"
+                    i18n.get_text("coffee_fortune", language),
+                    callback_data="coffee_fortune"
                 ),
                 InlineKeyboardButton(
-                    i18n.get_text("menu.fortune", language),
-                    callback_data="fortune"
+                    i18n.get_text("tarot_fortune", language),
+                    callback_data="tarot_fortune"
                 )
             ],
             [
                 InlineKeyboardButton(
-                    i18n.get_text("menu.profile", language),
-                    callback_data="profile"
+                    i18n.get_text("dream_analysis", language),
+                    callback_data="dream_analysis"
                 ),
                 InlineKeyboardButton(
-                    i18n.get_text("menu.premium", language),
+                    i18n.get_text("astrology", language),
+                    callback_data="astrology"
+                )
+            ],
+            [
+                InlineKeyboardButton(
+                    i18n.get_text("referral_button", language),
+                    callback_data="referral"
+                ),
+                InlineKeyboardButton(
+                    i18n.get_text("premium_menu", language),
                     callback_data="premium"
                 )
             ],
             [
                 InlineKeyboardButton(
-                    i18n.get_text("menu.referral", language),
-                    callback_data="referral"
-                ),
-                InlineKeyboardButton(
-                    i18n.get_text("menu.help", language),
-                    callback_data="help"
+                    i18n.get_text("language_button", language),
+                    callback_data="change_language"
                 )
             ]
         ]
@@ -59,7 +65,7 @@ class MainKeyboards:
                 InlineKeyboardButton("🇪🇸 Español", callback_data="set_lang_es")
             ],
             [
-                InlineKeyboardButton(i18n.get_text("common.back", "en"), callback_data="main_menu")
+                InlineKeyboardButton(i18n.get_text("language_system.back_to_menu", "en"), callback_data="main_menu")
             ]
         ]
         return InlineKeyboardMarkup(keyboard)
@@ -70,7 +76,7 @@ class MainKeyboards:
         keyboard = [
             [
                 InlineKeyboardButton(
-                    i18n.get_text("common.back", language),
+                    i18n.get_text("navigation.back", language),
                     callback_data="main_menu"
                 )
             ]
@@ -125,7 +131,7 @@ class MainKeyboards:
             ],
             [
                 InlineKeyboardButton(
-                    i18n.get_text("common.back", language),
+                    i18n.get_text("navigation.back", language),
                     callback_data="main_menu"
                 )
             ]
@@ -138,7 +144,7 @@ class MainKeyboards:
         keyboard = [
             [
                 InlineKeyboardButton(
-                    i18n.get_text("common.back", language),
+                    i18n.get_text("navigation.back", language),
                     callback_data="main_menu"
                 )
             ]
@@ -151,29 +157,29 @@ class MainKeyboards:
         keyboard = [
             [
                 InlineKeyboardButton(
-                    i18n.get_text("referral.copy_link", language),
+                    i18n.get_text("referral_system.copy_link", language),
                     callback_data="copy_referral_link"
                 )
             ],
             [
                 InlineKeyboardButton(
-                    i18n.get_text("referral.share_telegram", language),
+                    i18n.get_text("referral_system.share_telegram", language),
                     callback_data="share_telegram"
                 ),
                 InlineKeyboardButton(
-                    i18n.get_text("referral.share_whatsapp", language),
+                    i18n.get_text("referral_system.share_whatsapp", language),
                     callback_data="share_whatsapp"
                 )
             ],
             [
                 InlineKeyboardButton(
-                    i18n.get_text("referral.my_info", language),
-                    callback_data="referral_info"
+                    i18n.get_text("referral_system.back_to_referral", language),
+                    callback_data="referral"
                 )
             ],
             [
                 InlineKeyboardButton(
-                    i18n.get_text("common.back", language),
+                    i18n.get_text("navigation.back", language),
                     callback_data="main_menu"
                 )
             ]
@@ -184,18 +190,18 @@ class MainKeyboards:
     def get_zodiac_signs_keyboard(callback_prefix: str, language: str = "en") -> InlineKeyboardMarkup:
         """Get zodiac signs keyboard."""
         signs = [
-            ("♈ Aries", "aries"),
-            ("♉ Taurus", "taurus"),
-            ("♊ Gemini", "gemini"),
-            ("♋ Cancer", "cancer"),
-            ("♌ Leo", "leo"),
-            ("♍ Virgo", "virgo"),
-            ("♎ Libra", "libra"),
-            ("♏ Scorpio", "scorpio"),
-            ("♐ Sagittarius", "sagittarius"),
-            ("♑ Capricorn", "capricorn"),
-            ("♒ Aquarius", "aquarius"),
-            ("♓ Pisces", "pisces")
+            (i18n.get_text("aries", language), "aries"),
+            (i18n.get_text("taurus", language), "taurus"),
+            (i18n.get_text("gemini", language), "gemini"),
+            (i18n.get_text("cancer", language), "cancer"),
+            (i18n.get_text("leo", language), "leo"),
+            (i18n.get_text("virgo", language), "virgo"),
+            (i18n.get_text("libra", language), "libra"),
+            (i18n.get_text("scorpio", language), "scorpio"),
+            (i18n.get_text("sagittarius", language), "sagittarius"),
+            (i18n.get_text("capricorn", language), "capricorn"),
+            (i18n.get_text("aquarius", language), "aquarius"),
+            (i18n.get_text("pisces", language), "pisces")
         ]
         
         keyboard = []
@@ -208,7 +214,7 @@ class MainKeyboards:
         
         keyboard.append([
             InlineKeyboardButton(
-                i18n.get_text("common.back", language),
+                i18n.get_text("navigation.back", language),
                 callback_data="astrology"
             )
         ])
@@ -217,29 +223,29 @@ class MainKeyboards:
     
     @staticmethod
     def get_fortune_types_keyboard(language: str = "en") -> InlineKeyboardMarkup:
-        """Get fortune types keyboard."""
+        """Get fortune types keyboard using existing keys."""
         keyboard = [
             [
                 InlineKeyboardButton(
-                    i18n.get_text("fortune.coffee_reading", language),
+                    i18n.get_text("coffee_fortune", language),
                     callback_data="coffee_fortune"
                 )
             ],
             [
                 InlineKeyboardButton(
-                    i18n.get_text("fortune.tarot_reading", language),
+                    i18n.get_text("tarot_fortune", language),
                     callback_data="tarot_fortune"
                 )
             ],
             [
                 InlineKeyboardButton(
-                    i18n.get_text("fortune.dream_interpretation", language),
-                    callback_data="dream_fortune"
+                    i18n.get_text("dream_analysis", language),
+                    callback_data="dream_analysis"
                 )
             ],
             [
                 InlineKeyboardButton(
-                    i18n.get_text("common.back", language),
+                    i18n.get_text("navigation.back", language),
                     callback_data="main_menu"
                 )
             ]
@@ -252,29 +258,29 @@ class MainKeyboards:
         keyboard = [
             [
                 InlineKeyboardButton(
-                    i18n.get_text("astrology.daily_horoscope", language),
+                    i18n.get_text("daily_horoscope", language),
                     callback_data="daily_horoscope"
                 )
             ],
             [
                 InlineKeyboardButton(
-                    i18n.get_text("astrology.birth_chart", language),
+                    i18n.get_text("birth_chart", language),
                     callback_data="birth_chart"
                 ),
                 InlineKeyboardButton(
-                    i18n.get_text("astrology.compatibility", language),
+                    i18n.get_text("compatibility", language),
                     callback_data="compatibility"
                 )
             ],
             [
                 InlineKeyboardButton(
-                    i18n.get_text("astrology.moon_calendar", language),
+                    i18n.get_text("moon_calendar.title", language),
                     callback_data="moon_calendar"
                 )
             ],
             [
                 InlineKeyboardButton(
-                    i18n.get_text("common.back", language),
+                    i18n.get_text("navigation.back", language),
                     callback_data="main_menu"
                 )
             ]
