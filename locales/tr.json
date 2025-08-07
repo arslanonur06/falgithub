@@ -1,6 +1,56 @@
+  "admin": {
+    "stats": "📊 İstatistikler",
+    "users": "👥 Kullanıcılar",
+    "premium": "💎 Premium",
+    "logs": "📋 Loglar",
+    "settings": "⚙️ Ayarlar"
+  },
 {
+  "fortune": {
+    "tarot_reading": "🎴 Tarot Falı",
+    "coffee_reading": "☕ Kahve Falı",
+    "dream_interpretation": "💭 Rüya Tabiri",
+    "palm_reading": "🖐️ El Falı"
+  },
   "start_message": "✨🔮 **FAL GRAM'A HOŞ GELDİNİZ** 🔮✨\n━━━━━━━━━━━━━━━━━━━━━━\n\n🌟 *Mistik dünyanın kapıları açılıyor...*\n\n☕ **Kahve Falı** - Fincanınızda geleceği keşfedin\n🃏 **Tarot Falı** - Kartların size söyleyecekleri var\n💭 **Rüya Analizi** - Bilinçaltı mesajlarınızı çözün\n⭐ **Astroloji** - Yıldızlardan rehberlik\n🌅 **Günlük Kart** - Her sabah kişisel rehberlik\n👥 **Arkadaş Davet Et** - Paylaşıldıkça bereket çoğalır\n\n━━━━━━━━━━━━━━━━━━━━━━\n✨ *Kaderinizi keşfetmeye hazır mısınız?* ✨",
   "main_menu_button": "🏠 Ana Menü",
+  "menu": {
+    "main_title": "🌟 Ana Menü",
+    "astrology": "⭐ Astroloji",
+    "fortune": "🔮 Fallar",
+    "profile": "👤 Profil",
+    "premium": "💎 Premium",
+    "referral": "👥 Davet",
+    "help": "❓ Yardım"
+  },
+  "common": {
+    "back": "🔙 Geri",
+    "yes": "✅ Evet",
+    "no": "❌ Hayır",
+    "cancel": "❌ İptal"
+  },
+  "profile": {
+    "title": "👤 Profil",
+    "name": "İsim",
+    "username": "Kullanıcı Adı",
+    "language": "Dil",
+    "premium_status": "Premium Durumu",
+    "premium_active": "✅ Aktif",
+    "premium_inactive": "❌ Pasif",
+    "premium_expires": "Bitiş",
+    "usage_stats": "Kullanım İstatistikleri",
+    "edit_info": "✏️ Bilgileri Düzenle"
+  },
+  "language": {
+    "select": "🌐 Dil Seçimi",
+    "changed": "✅ Dil güncellendi!",
+    "current_language": "🌐 Mevcut Dil: {lang}",
+    "selection_title": "🌐 **Dil Seçimi**",
+    "selection_description": "Lütfen tercih ettiğiniz dili seçin:",
+    "back_to_menu": "⬅️ Menüye Geri Dön"
+  },
+  "help": { "message": "Gezinmek için menüyü kullanın." },
+  "message": { "default_response": "Lütfen gezinmek için menü butonlarını kullanın. 👇" },
   "referral_prompt": "Fal Gram'ı arkadaşlarınızla paylaşarak ücretsiz fal kazanın! Aşağıdaki linki kopyalayıp onlara gönderin. Linkinizi kullanarak katılan her arkadaş için 1 ÜCRETSİZ fal kazanacaksınız.\n\nÖzel linkiniz: {referral_link}",
   "referral_success": "Harika! Bir arkadaşınız davet linkinizi kullanarak katıldı. Hediye olarak 1 ÜCRETSİZ fal kazandınız!",
   "coffee_fortune": "☕ Kahve Falı",
@@ -17,7 +67,15 @@
   "dream_analysis": "💭 Rüya Analizi",
   "dream_analysis_prompt": "Rüyaların gizemli dünyasına hoş geldiniz. Lütfen rüyanızı detaylı bir şekilde yazın ve bana gönderin.",
   "dream_analyzing": "💭 Rüyanız analiz ediliyor...",
-  "astrology": "⭐ Astroloji",
+  "astrology": {
+    "title": "⭐ Astroloji",
+    "birth_chart": "🌟 Doğum Haritası",
+    "daily_horoscope": "📅 Günlük Burç",
+    "weekly_horoscope": "📊 Haftalık Burç",
+    "monthly_horoscope": "📅 Aylık Burç",
+    "compatibility": "💕 Uyumluluk",
+    "moon_calendar": "🌙 Ay Takvimi"
+  },
   "astrology_calculating": "⭐ Astrolojik hesaplamalar yapılıyor...",
   "birth_chart": "🌟 Doğum Haritası",
   "daily_horoscope": "📅 Günlük Burç",
@@ -79,6 +137,10 @@
   "fortune_limit_reached": "Ücretsiz fal limitiniz doldu. Devam etmek için {stars_count} Telegram Yıldızı gerekiyor.",
   "fortune_in_progress": "🔮 Falınız hazırlanıyor...",
   "fortune_error": "❌ Falınız oluşturulurken bir hata oluştu.",
+  "error": {
+    "general": "❌ Bir hata oluştu. Lütfen tekrar deneyin.",
+    "user_not_found": "❌ Kullanıcı bulunamadı!"
+  },
   "admin_panel_message": "🔧 Admin Paneli",
   "admin_panel_title": "🔧 *Admin Paneli*",
   "no_logs_message": "Henüz log yok.",
@@ -809,6 +871,12 @@
       "back": "🔙 Geri"
     }
   },
+  "referral": {
+    "my_info": "👤 Bilgilerim",
+    "stats": "📊 İstatistiklerim",
+    "rewards": "🎁 Ödüller",
+    "share": "📤 Paylaş"
+  },
   "premium": {
     "comparison_title": "📊 **PREMIUM PLAN KARŞILAŞTIRMASI** 📊",
     "comparison_description": "Tüm premium planlarımızı karşılaştırın ve size en uygun olanı seçin!",
@@ -876,7 +944,23 @@
     "buy_premium": "💳 Premium Satın Al",
     "try_again": "🔄 Tekrar Dene"
   },
+  "referral": {
+    "my_info": "👤 Bilgilerim",
+    "stats": "📊 İstatistiklerim",
+    "leaderboard": "🏆 Lider Tablosu",
+    "rewards": "🎁 Ödüller",
+    "share": "📤 Paylaş",
+    "copy_link": "📋 Linki Kopyala",
+    "share_telegram": "📤 Telegram'da Paylaş",
+    "share_whatsapp": "📱 WhatsApp'ta Paylaş",
+    "share_text": "🔮 Fal Gram'da ücretsiz falını al!",
+    "link_copied": "✅ Referans linki kopyalandı: {link}"
+  },
   "payment": {
+    "premium_plans": "💎 Premium Planlar",
+    "plan_details": "📋 Plan Detayları",
+    "buy_plan": "💳 Plan Satın Al",
+    "subscription_management": "💎 Abonelik Yönetimi",
     "title": "💳 **ÖDEME SİSTEMİ** 💳",
     "description": "💰 **Yıldızlarla premium özellikler elde edin!**\n\nYıldızlar bizim ödeme aracımızdır. Burada yıldızları nasıl kazanacağınızı ve kullanacağınızı görebilirsiniz.",
     "secure_features": [

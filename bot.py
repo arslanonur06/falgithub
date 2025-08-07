@@ -70,6 +70,24 @@ def get_text(key: str, lang: str = 'en', **kwargs) -> str:
     # Ensure text is always a string
     if not isinstance(text, str):
         logger.warning(f"Non-string text for key {key}: {type(text)} - {text}")
+        # Handle object types by extracting title or first string value
+        if isinstance(text, dict):
+            if 'title' in text:
+                text = text['title']
+            elif 'button_text' in text:
+                text = text['button_text']
+            elif 'description' in text:
+                text = text['description']
+            elif text:
+                # Get first string value from dict
+                first_value = next((v for v in text.values() if isinstance(v, str)), None)
+                if first_value:
+                    text = first_value
+                else:
+                    text = key
+            else:
+                text = key
+        else:
         text = str(text) if text is not None else key
     
     if kwargs:
@@ -763,7 +781,7 @@ def safe_button_text(key, lang):
     if not isinstance(text, str):
         logger.error(f"Button text is not string for key {key}: {type(text)} - {text}")
         # Handle object types by extracting title or first string value
-        if isinstance(text, dict):
+    if isinstance(text, dict):
             if 'button_text' in text:
                 text = text['button_text']
             elif 'title' in text:
@@ -773,12 +791,12 @@ def safe_button_text(key, lang):
                 first_button = next(iter(text['buttons'].values()), None)
                 if isinstance(first_button, str):
                     text = first_button
-                else:
-                    text = key
+        else:
+            text = key
             else:
                 text = key
         else:
-            text = str(text) if text is not None else key
+        text = str(text) if text is not None else key
     return text
 
 def create_main_menu_keyboard(lang='tr'):
@@ -960,7 +978,7 @@ async def admin(update: Update, context: CallbackContext):
             [InlineKeyboardButton("🏠 Ana Menü", callback_data="main_menu")]
         ]
         try:
-            await update.message.reply_text(
+    await update.message.reply_text(
                 stats_message,
                 reply_markup=InlineKeyboardMarkup(keyboard),
                 parse_mode='Markdown'
@@ -1726,8 +1744,8 @@ async def admin_show_stats(query, lang):
             await query.edit_message_text(
                 stats_message,
                 reply_markup=InlineKeyboardMarkup(keyboard),
-                parse_mode='Markdown'
-            )
+        parse_mode='Markdown'
+    )
         except Exception as e:
             logger.error(f"Admin command error: {e}")
             await query.edit_message_text("❌ Admin paneli yüklenirken hata oluştu.")
@@ -1782,8 +1800,8 @@ async def admin_show_users(query, lang):
             await query.edit_message_text(
                 user_message,
                 reply_markup=InlineKeyboardMarkup(keyboard),
-                parse_mode='Markdown'
-            )
+        parse_mode='Markdown'
+    )
         except Exception as e:
             logger.error(f"Admin users error: {e}")
             await query.edit_message_text("❌ Kullanıcı listesi yüklenirken hata oluştu.")
@@ -1838,8 +1856,8 @@ async def admin_show_settings(query, lang):
             await query.edit_message_text(
                 settings_message,
                 reply_markup=InlineKeyboardMarkup(keyboard),
-                parse_mode='Markdown'
-            )
+        parse_mode='Markdown'
+    )
         except Exception as e:
             logger.error(f"Admin settings error: {e}")
             await query.edit_message_text("❌ Ayarlar yüklenirken hata oluştu.")
@@ -1855,7 +1873,7 @@ async def admin_view_logs(query, lang):
         return
     
     try:
-        logs = supabase_manager.get_logs(limit=50)
+    logs = supabase_manager.get_logs(limit=50)
         
         if not logs:
             log_message = "📋 **SİSTEM LOGLARI** 📋\n\n❌ Henüz log kaydı yok."
@@ -1883,12 +1901,12 @@ async def admin_view_logs(query, lang):
             [InlineKeyboardButton("🔙 Admin Paneli", callback_data="admin_stats")]
         ]
         
-        await safe_edit_message(
-            query,
+    await safe_edit_message(
+        query,
             log_message,
             reply_markup=InlineKeyboardMarkup(keyboard),
-            parse_mode='Markdown'
-        )
+        parse_mode='Markdown'
+    )
     except Exception as e:
         logger.error(f"Admin logs error: {e}")
         await query.edit_message_text("❌ Loglar yüklenirken hata oluştu.")
@@ -1929,8 +1947,8 @@ async def admin_download_pdf(query, lang):
             await query.edit_message_text(
                 pdf_message,
                 reply_markup=InlineKeyboardMarkup(keyboard),
-                parse_mode='Markdown'
-            )
+        parse_mode='Markdown'
+    )
         except Exception as e:
             logger.error(f"Admin PDF error: {e}")
             await query.edit_message_text("❌ PDF seçenekleri yüklenirken hata oluştu.")
@@ -1986,8 +2004,8 @@ async def admin_premium_management(query, lang):
             await query.edit_message_text(
                 premium_message,
                 reply_markup=InlineKeyboardMarkup(keyboard),
-                parse_mode='Markdown'
-            )
+        parse_mode='Markdown'
+    )
         except Exception as e:
             logger.error(f"Admin premium management error: {e}")
             await query.edit_message_text("❌ Premium yönetimi yüklenirken hata oluştu.")
@@ -2003,7 +2021,7 @@ async def admin_premium_users(query, lang):
         return
     
     try:
-        premium_users = supabase_manager.get_premium_users()
+    premium_users = supabase_manager.get_premium_users()
         
         if not premium_users:
             users_message = "💎 **PREMIUM KULLANICILAR** 💎\n\n❌ Henüz premium kullanıcı yok."
@@ -2043,8 +2061,8 @@ async def admin_premium_users(query, lang):
             await query.edit_message_text(
                 users_message,
                 reply_markup=InlineKeyboardMarkup(keyboard),
-                parse_mode='Markdown'
-            )
+        parse_mode='Markdown'
+    )
         except Exception as e:
             logger.error(f"Admin premium users error: {e}")
             await query.edit_message_text("❌ Premium kullanıcılar yüklenirken hata oluştu.")
@@ -2099,8 +2117,8 @@ async def admin_premium_stats(query, lang):
             await query.edit_message_text(
                 stats_message,
                 reply_markup=InlineKeyboardMarkup(keyboard),
-                parse_mode='Markdown'
-            )
+        parse_mode='Markdown'
+    )
         except Exception as e:
             logger.error(f"Admin premium stats error: {e}")
             await query.edit_message_text("❌ Premium istatistikleri yüklenirken hata oluştu.")
@@ -2153,8 +2171,8 @@ async def admin_gift_subscription(query, lang):
             await query.edit_message_text(
                 gift_message,
                 reply_markup=InlineKeyboardMarkup(keyboard),
-                parse_mode='Markdown'
-            )
+        parse_mode='Markdown'
+    )
         except Exception as e:
             logger.error(f"Admin gift subscription error: {e}")
             await query.edit_message_text("❌ Hediye abonelik arayüzü yüklenirken hata oluştu.")
@@ -2203,8 +2221,8 @@ async def admin_cancel_subscription(query, lang):
             await query.edit_message_text(
                 cancel_message,
                 reply_markup=InlineKeyboardMarkup(keyboard),
-                parse_mode='Markdown'
-            )
+        parse_mode='Markdown'
+    )
         except Exception as e:
             logger.error(f"Admin cancel subscription error: {e}")
             await query.edit_message_text("❌ İptal abonelik arayüzü yüklenirken hata oluştu.")
@@ -2255,8 +2273,8 @@ async def admin_premium_pdf(query, lang):
             await query.edit_message_text(
                 pdf_message,
                 reply_markup=InlineKeyboardMarkup(keyboard),
-                parse_mode='Markdown'
-            )
+        parse_mode='Markdown'
+    )
         except Exception as e:
             logger.error(f"Admin premium PDF error: {e}")
             await query.edit_message_text("❌ Premium PDF seçenekleri yüklenirken hata oluştu.")
@@ -2267,38 +2285,42 @@ async def admin_premium_pdf(query, lang):
 
 async def show_daily_horoscope_menu(query, lang):
     """Show daily horoscope menu"""
-    # Create keyboard with back and main menu buttons
-    keyboard = create_horoscope_keyboard(lang)
-    keyboard.append([
+    # Create keyboard with zodiac signs using new grid format (without main menu)
+    keyboard = create_horoscope_keyboard(lang, 'daily_horoscope', include_main_menu=False)
+    
+    # Add back buttons to the keyboard
+    keyboard.inline_keyboard.append([
         InlineKeyboardButton("🔙 Back to Astrology", callback_data="select_astrology"),
         InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")
     ])
     
     try:
         await query.edit_message_text(
-            get_text("daily_horoscope_menu", lang),
-            reply_markup=InlineKeyboardMarkup(keyboard),
-            parse_mode='Markdown'
-        )
+        get_text("daily_horoscope_menu", lang),
+            reply_markup=keyboard,
+        parse_mode='Markdown'
+    )
     except Exception as e:
         logger.error(f"Daily horoscope menu error: {e}")
         await query.edit_message_text("❌ Günlük kart menüsü yüklenirken hata oluştu.")
 
 async def show_compatibility_menu(query, lang):
     """Show compatibility menu"""
-    # Create keyboard with back and main menu buttons
-    keyboard = create_compatibility_keyboard(lang)
-    keyboard.append([
+    # Create keyboard with zodiac signs using new grid format (without main menu)
+    keyboard = create_compatibility_keyboard(lang, include_main_menu=False)
+    
+    # Add back buttons
+    keyboard.inline_keyboard.append([
         InlineKeyboardButton("🔙 Back to Astrology", callback_data="select_astrology"),
         InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")
     ])
     
     try:
         await query.edit_message_text(
-            get_text("compatibility_menu", lang),
-            reply_markup=InlineKeyboardMarkup(keyboard),
-            parse_mode='Markdown'
-        )
+        get_text("compatibility_menu", lang),
+            reply_markup=keyboard,
+        parse_mode='Markdown'
+    )
     except Exception as e:
         logger.error(f"Compatibility menu error: {e}")
         await query.edit_message_text("❌ Uyumluluk menüsü yüklenirken hata oluştu.")
@@ -2314,54 +2336,77 @@ async def handle_birth_chart(query, lang):
 
 async def show_moon_calendar(query, lang):
     """Show moon calendar"""
-    # Use proper locale key for moon calendar
-    message = get_text("moon_calendar.title", lang) + "\n\n"
+    # Get moon calendar object from locale
+    moon_calendar_obj = get_text("moon_calendar", lang)
+    
+    if isinstance(moon_calendar_obj, dict):
+        title = moon_calendar_obj.get("title", "🌙 **AY TAKVİMİ** 🌙")
+        today = moon_calendar_obj.get("today", "📅 **Bugün:** {date}")
+        moon_phase = moon_calendar_obj.get("moon_phase", "🌙 **Ay Fazı:** {phase}")
+        energy_label = moon_calendar_obj.get("energy_label", "✨ **Günün Ay Enerjisi:**")
+        suggestions_label = moon_calendar_obj.get("suggestions_label", "🔮 **Öneriler:**")
+        footer = moon_calendar_obj.get("footer", "🌟 *Ay döngüleriyle uyum halinde yaşayın* 🌟")
+        suggestions = moon_calendar_obj.get("suggestions", [
+            "• Meditasyon ve iç görü çalışmaları",
+            "• Duygusal temizlik ve arınma", 
+            "• Yaratıcı projelerle ilgilen",
+            "• Doğa ile bağlantı kur"
+        ])
+        buttons = moon_calendar_obj.get("buttons", {})
+    else:
+        title = "🌙 **AY TAKVİMİ** 🌙"
+        today = "📅 **Bugün:** {date}"
+        moon_phase = "🌙 **Ay Fazı:** {phase}"
+        energy_label = "✨ **Günün Ay Enerjisi:**"
+        suggestions_label = "🔮 **Öneriler:**"
+        footer = "🌟 *Ay döngüleriyle uyum halinde yaşayın* 🌟"
+        suggestions = [
+            "• Meditasyon ve iç görü çalışmaları",
+            "• Duygusal temizlik ve arınma",
+            "• Yaratıcı projelerle ilgilen", 
+            "• Doğa ile bağlantı kur"
+        ]
+        buttons = {}
+    
+    # Build message
+    message = title + "\n\n"
     message += "━━━━━━━━━━━━━━━━━━━━━━\n\n"
-    message += get_text("moon_calendar.today", lang).format(date=datetime.now().strftime("%d/%m/%Y")) + "\n"
-    message += get_text("moon_calendar.moon_phase", lang).format(phase="🌕 Dolunay") + "\n\n"
-    message += get_text("moon_calendar.energy_label", lang) + "\n"
+    message += today.format(date=datetime.now().strftime("%d/%m/%Y")) + "\n"
+    message += moon_phase.format(phase="🌕 Dolunay") + "\n\n"
+    message += energy_label + "\n"
     message += "✨ Yaratıcılık ve ilham dönemi\n\n"
-    message += get_text("moon_calendar.suggestions_label", lang) + "\n"
-    for suggestion in get_text("moon_calendar.suggestions", lang, default=[]):
-        message += f"• {suggestion}\n"
-    message += "\n" + get_text("moon_calendar.footer", lang)
+    message += suggestions_label + "\n"
+    for suggestion in suggestions:
+        message += f"{suggestion}\n"
+    message += "\n" + footer
     
     # Create keyboard with moon calendar options
     keyboard = [
-        [InlineKeyboardButton(get_text("moon_calendar.buttons.notifications", lang), callback_data="moon_notifications")],
-        [InlineKeyboardButton(get_text("moon_calendar.buttons.weekly", lang), callback_data="weekly_moon")],
-        [InlineKeyboardButton(get_text("moon_calendar.buttons.back", lang), callback_data="select_astrology")]
+        [InlineKeyboardButton(buttons.get("notifications", "🔔 Ay Bildirimleri"), callback_data="moon_notifications")],
+        [InlineKeyboardButton(buttons.get("weekly", "📅 Haftalık Takvim"), callback_data="weekly_moon")],
+        [InlineKeyboardButton(buttons.get("back", "🔙 Astroloji"), callback_data="select_astrology")]
     ]
     
     try:
         await query.edit_message_text(
-            message,
-            reply_markup=InlineKeyboardMarkup(keyboard),
-            parse_mode='Markdown'
-        )
+        message,
+        reply_markup=InlineKeyboardMarkup(keyboard),
+        parse_mode='Markdown'
+    )
     except Exception as e:
         logger.error(f"Moon calendar error: {e}")
         await query.edit_message_text("❌ Ay takvim menüsü yüklenirken hata oluştu.")
 
 async def show_weekly_horoscope_menu(query, lang):
     """Show weekly horoscope menu"""
-    # Create keyboard with zodiac signs
-    keyboard = [
-        [InlineKeyboardButton(get_text("aries", lang), callback_data='weekly_horoscope_0')],
-        [InlineKeyboardButton(get_text("taurus", lang), callback_data='weekly_horoscope_1')],
-        [InlineKeyboardButton(get_text("gemini", lang), callback_data='weekly_horoscope_2')],
-        [InlineKeyboardButton(get_text("cancer", lang), callback_data='weekly_horoscope_3')],
-        [InlineKeyboardButton(get_text("leo", lang), callback_data='weekly_horoscope_4')],
-        [InlineKeyboardButton(get_text("virgo", lang), callback_data='weekly_horoscope_5')],
-        [InlineKeyboardButton(get_text("libra", lang), callback_data='weekly_horoscope_6')],
-        [InlineKeyboardButton(get_text("scorpio", lang), callback_data='weekly_horoscope_7')],
-        [InlineKeyboardButton(get_text("sagittarius", lang), callback_data='weekly_horoscope_8')],
-        [InlineKeyboardButton(get_text("capricorn", lang), callback_data='weekly_horoscope_9')],
-        [InlineKeyboardButton(get_text("aquarius", lang), callback_data='weekly_horoscope_10')],
-        [InlineKeyboardButton(get_text("pisces", lang), callback_data='weekly_horoscope_11')],
-        [InlineKeyboardButton("🔙 Back to Astrology", callback_data="select_astrology")],
-        [InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")]
-    ]
+    # Create keyboard with zodiac signs using new grid format (without main menu)
+    keyboard = create_horoscope_keyboard(lang, 'weekly_horoscope', include_main_menu=False)
+    
+    # Add back buttons
+    keyboard.inline_keyboard.append([
+        InlineKeyboardButton("🔙 Back to Astrology", callback_data="select_astrology"),
+        InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")
+    ])
     
     # Get weekly horoscope text from locale
     weekly_horoscope_obj = get_text("weekly_horoscope", lang)
@@ -2379,33 +2424,24 @@ async def show_weekly_horoscope_menu(query, lang):
     
     try:
         await query.edit_message_text(
-            message,
-            reply_markup=InlineKeyboardMarkup(keyboard),
-            parse_mode='Markdown'
-        )
+        message,
+            reply_markup=keyboard,
+        parse_mode='Markdown'
+    )
     except Exception as e:
         logger.error(f"Weekly horoscope menu error: {e}")
         await query.edit_message_text("❌ Haftalık burç takvim menüsü yüklenirken hata oluştu.")
 
 async def show_monthly_horoscope_menu(query, lang):
     """Show monthly horoscope menu"""
-    # Create keyboard with zodiac signs
-    keyboard = [
-        [InlineKeyboardButton(get_text("aries", lang), callback_data='monthly_horoscope_0')],
-        [InlineKeyboardButton(get_text("taurus", lang), callback_data='monthly_horoscope_1')],
-        [InlineKeyboardButton(get_text("gemini", lang), callback_data='monthly_horoscope_2')],
-        [InlineKeyboardButton(get_text("cancer", lang), callback_data='monthly_horoscope_3')],
-        [InlineKeyboardButton(get_text("leo", lang), callback_data='monthly_horoscope_4')],
-        [InlineKeyboardButton(get_text("virgo", lang), callback_data='monthly_horoscope_5')],
-        [InlineKeyboardButton(get_text("libra", lang), callback_data='monthly_horoscope_6')],
-        [InlineKeyboardButton(get_text("scorpio", lang), callback_data='monthly_horoscope_7')],
-        [InlineKeyboardButton(get_text("sagittarius", lang), callback_data='monthly_horoscope_8')],
-        [InlineKeyboardButton(get_text("capricorn", lang), callback_data='monthly_horoscope_9')],
-        [InlineKeyboardButton(get_text("aquarius", lang), callback_data='monthly_horoscope_10')],
-        [InlineKeyboardButton(get_text("pisces", lang), callback_data='monthly_horoscope_11')],
-        [InlineKeyboardButton("🔙 Back to Astrology", callback_data="select_astrology")],
-        [InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")]
-    ]
+    # Create keyboard with zodiac signs using new grid format (without main menu)
+    keyboard = create_horoscope_keyboard(lang, 'monthly_horoscope', include_main_menu=False)
+    
+    # Add back buttons
+    keyboard.inline_keyboard.append([
+        InlineKeyboardButton("🔙 Back to Astrology", callback_data="select_astrology"),
+        InlineKeyboardButton("🏠 Main Menu", callback_data="main_menu")
+    ])
     
     # Get monthly horoscope text from locale
     monthly_horoscope_obj = get_text("monthly_horoscope", lang)
@@ -2423,10 +2459,10 @@ async def show_monthly_horoscope_menu(query, lang):
     
     try:
         await query.edit_message_text(
-            message,
-            reply_markup=InlineKeyboardMarkup(keyboard),
-            parse_mode='Markdown'
-        )
+        message,
+            reply_markup=keyboard,
+        parse_mode='Markdown'
+    )
     except Exception as e:
         logger.error(f"Monthly horoscope menu error: {e}")
         await query.edit_message_text("❌ Aylık burç takvim menüsü yüklenirken hata oluştu.")
@@ -2520,10 +2556,10 @@ async def show_premium_comparison(query, lang):
     
     try:
         await query.edit_message_text(
-            comparison_text,
-            reply_markup=InlineKeyboardMarkup(keyboard),
-            parse_mode='Markdown'
-        )
+        comparison_text,
+        reply_markup=InlineKeyboardMarkup(keyboard),
+        parse_mode='Markdown'
+    )
     except Exception as e:
         logger.error(f"Premium plan comparison error: {e}")
         await query.edit_message_text("❌ Premium plan karşılaştırması yüklenirken hata oluştu.")
@@ -2576,8 +2612,11 @@ async def generate_daily_horoscope_impl(query, sign_index, lang):
     try:
         # Get prompt from database
         prompt = supabase_manager.get_prompt('daily_horoscope', lang)
-        if not prompt:
+    if not prompt:
             prompt = f"You are an experienced astrologer. Create a detailed daily horoscope for {sign_name} sign. Include love, career, health, and general guidance. Write in {lang} language, 120-150 words."
+        else:
+            # Replace {sign} placeholder with actual sign name
+            prompt = prompt.replace('{sign}', sign_name)
         
         # Generate horoscope using AI
         horoscope_text = await get_fastest_ai_response(prompt, lang)
@@ -2639,8 +2678,11 @@ async def generate_weekly_horoscope_impl(query, sign_index, lang):
     try:
         # Get prompt from database
         prompt = supabase_manager.get_prompt('weekly_horoscope', lang)
-        if not prompt:
+    if not prompt:
             prompt = f"You are an experienced astrologer. Create a detailed weekly horoscope for {sign_name} sign. Include love, career, health, and general guidance. Write in {lang} language, 150-200 words."
+        else:
+            # Replace {sign} placeholder with actual sign name
+            prompt = prompt.replace('{sign}', sign_name)
         
         # Generate horoscope using AI
         horoscope_text = await get_fastest_ai_response(prompt, lang)
@@ -2702,8 +2744,11 @@ async def generate_monthly_horoscope_impl(query, sign_index, lang):
     try:
         # Get prompt from database
         prompt = supabase_manager.get_prompt('monthly_horoscope', lang)
-        if not prompt:
+    if not prompt:
             prompt = f"You are an experienced astrologer. Create a detailed monthly horoscope for {sign_name} sign. Include love, career, health, and general guidance. Write in {lang} language, 200-250 words."
+        else:
+            # Replace {sign} placeholder with actual sign name
+            prompt = prompt.replace('{sign}', sign_name)
         
         # Generate horoscope using AI
         horoscope_text = await get_fastest_ai_response(prompt, lang)
@@ -2750,7 +2795,7 @@ async def handle_compatibility_selection(query, lang):
     try:
         # Get prompt from database
         prompt = supabase_manager.get_prompt('compatibility', lang)
-        if not prompt:
+    if not prompt:
             prompt = f"You are an experienced astrologer. Create a detailed compatibility analysis between two zodiac signs. Include love, communication, strengths, and challenges. Write in {lang} language, 150-200 words."
         
         # Generate compatibility analysis using AI
@@ -2829,10 +2874,10 @@ async def show_premium_plan_details(query, plan_name, lang):
     
     try:
         await query.edit_message_text(
-            plan_text,
-            reply_markup=InlineKeyboardMarkup(keyboard),
-            parse_mode='Markdown'
-        )
+        plan_text,
+        reply_markup=InlineKeyboardMarkup(keyboard),
+        parse_mode='Markdown'
+    )
     except Exception as e:
         logger.error(f"Premium plan details error: {e}")
         await query.edit_message_text("❌ Premium plan detayları yüklenirken hata oluştu.")
@@ -2875,10 +2920,10 @@ async def initiate_premium_purchase(query, plan_name, lang):
     ]
     try:
         await query.edit_message_text(
-            purchase_text,
-            reply_markup=InlineKeyboardMarkup(keyboard),
-            parse_mode='Markdown'
-        )
+        purchase_text,
+        reply_markup=InlineKeyboardMarkup(keyboard),
+        parse_mode='Markdown'
+    )
     except Exception as e:
         logger.error(f"Premium purchase error: {e}")
         await query.edit_message_text("❌ Premium plan satın alınırken hata oluştu.")
@@ -2984,10 +3029,10 @@ async def process_telegram_stars_payment(query, plan_name, lang):
         
         try:
             await query.edit_message_text(
-                message,
-                reply_markup=InlineKeyboardMarkup(keyboard),
-                parse_mode='Markdown'
-            )
+            message,
+            reply_markup=InlineKeyboardMarkup(keyboard),
+            parse_mode='Markdown'
+        )
         except Exception as e:
             logger.error(f"Payment initiation error: {e}")
             await query.edit_message_text("❌ Ödeme işlemi sırasında hata oluştu. Lütfen tekrar deneyin.")
@@ -3011,10 +3056,10 @@ async def handle_copy_referral_link(query, lang):
     
     try:
         await query.edit_message_text(
-            message,
-            reply_markup=InlineKeyboardMarkup(keyboard),
-            parse_mode='Markdown'
-        )
+        message,
+        reply_markup=InlineKeyboardMarkup(keyboard),
+        parse_mode='Markdown'
+    )
     except Exception as e:
         logger.error(f"Referral link error: {e}")
         await query.edit_message_text("❌ Referans linki kopyalanırken hata oluştu.")
@@ -3040,10 +3085,10 @@ async def handle_share_twitter(query, lang):
     
     try:
         await query.edit_message_text(
-            message,
-            reply_markup=InlineKeyboardMarkup(keyboard),
-            parse_mode='Markdown'
-        )
+        message,
+        reply_markup=InlineKeyboardMarkup(keyboard),
+        parse_mode='Markdown'
+    )
     except Exception as e:
         logger.error(f"Twitter share error: {e}")
         await query.edit_message_text("❌ Twitter paylaşımı yüklenirken hata oluştu.")
@@ -3068,10 +3113,10 @@ async def handle_share_telegram(query, lang):
     
     try:
         await query.edit_message_text(
-            message,
-            reply_markup=InlineKeyboardMarkup(keyboard),
-            parse_mode='Markdown'
-        )
+        message,
+        reply_markup=InlineKeyboardMarkup(keyboard),
+        parse_mode='Markdown'
+    )
     except Exception as e:
         logger.error(f"Telegram share error: {e}")
         await query.edit_message_text("❌ Telegram paylaşımı yüklenirken hata oluştu.")
@@ -3099,10 +3144,10 @@ async def show_referral_leaderboard(query, lang):
         
         try:
             await query.edit_message_text(
-                message,
-                reply_markup=InlineKeyboardMarkup(keyboard),
-                parse_mode='Markdown'
-            )
+            message,
+            reply_markup=InlineKeyboardMarkup(keyboard),
+            parse_mode='Markdown'
+        )
         except Exception as e:
             logger.error(f"Referral leaderboard error: {e}")
             await query.edit_message_text("❌ Referans lider tablosu yüklenirken hata oluştu.")
@@ -3141,10 +3186,10 @@ async def show_referral_progress(query, lang):
         
         try:
             await query.edit_message_text(
-                message,
-                reply_markup=InlineKeyboardMarkup(keyboard),
-                parse_mode='Markdown'
-            )
+            message,
+            reply_markup=InlineKeyboardMarkup(keyboard),
+            parse_mode='Markdown'
+        )
         except Exception as e:
             logger.error(f"Referral progress error: {e}")
             await query.edit_message_text("❌ Referans ilerleme detayları yüklenirken hata oluştu.")
@@ -3181,10 +3226,10 @@ async def show_referral_next_goal(query, lang):
         
         try:
             await query.edit_message_text(
-                message,
-                reply_markup=InlineKeyboardMarkup(keyboard),
-                parse_mode='Markdown'
-            )
+            message,
+            reply_markup=InlineKeyboardMarkup(keyboard),
+            parse_mode='Markdown'
+        )
         except Exception as e:
             logger.error(f"Referral next goal error: {e}")
             await query.edit_message_text("❌ Sonraki referans hedef yüklenirken hata oluştu.")
@@ -3227,10 +3272,10 @@ async def show_premium_details(query, lang):
         
         try:
             await query.edit_message_text(
-                message,
-                reply_markup=InlineKeyboardMarkup(keyboard),
-                parse_mode='Markdown'
-            )
+            message,
+            reply_markup=InlineKeyboardMarkup(keyboard),
+            parse_mode='Markdown'
+        )
         except Exception as e:
             logger.error(f"Premium plan details error: {e}")
             await query.edit_message_text("❌ Premium plan detayları yüklenirken hata oluştu.")
@@ -3271,10 +3316,10 @@ async def show_payment_info(query, lang):
         
         try:
             await query.edit_message_text(
-                message,
-                reply_markup=InlineKeyboardMarkup(keyboard),
-                parse_mode='Markdown'
-            )
+            message,
+            reply_markup=InlineKeyboardMarkup(keyboard),
+            parse_mode='Markdown'
+        )
         except Exception as e:
             logger.error(f"Payment info error: {e}")
             await query.edit_message_text("❌ Ödeme bilgileri yüklenirken hata oluştu.")
@@ -3352,12 +3397,12 @@ Language instruction: Write only in {lang.upper()} language."""
         logger.error(f"Tarot interpretation error: {e}")
         text = get_text("fortune_error", lang)
         keyboard = InlineKeyboardMarkup([[InlineKeyboardButton(get_text("main_menu_button", lang), callback_data='main_menu')]])
-        await safe_edit_message(
-            query,
+    await safe_edit_message(
+        query,
             text,
             reply_markup=keyboard,
-            parse_mode='Markdown'
-        )
+        parse_mode='Markdown'
+    )
 
 async def process_dream_text(query, lang):
     """Process dream text"""
@@ -3439,7 +3484,7 @@ async def generate_coffee_fortune_impl(update, photo_bytes, lang):
                 logger.error(f"DeepSeek failed: {e}")
                 try:
                     logger.info("Trying Gemini Pro model")
-                    model = genai.GenerativeModel('gemini-pro')
+                model = genai.GenerativeModel('gemini-pro')
                     model_name = 'gemini-pro'
                 except Exception as e:
                     logger.error(f"Gemini Pro failed: {e}")
@@ -3548,41 +3593,75 @@ def create_premium_menu_keyboard(lang='tr'):
         [InlineKeyboardButton(get_text("main_menu_button", lang), callback_data='main_menu')]
     ])
 
-def create_horoscope_keyboard(lang='tr'):
-    """Create horoscope keyboard"""
-    return InlineKeyboardMarkup([
-        [InlineKeyboardButton(get_text("aries", lang), callback_data='daily_horoscope_0')],
-        [InlineKeyboardButton(get_text("taurus", lang), callback_data='daily_horoscope_1')],
-        [InlineKeyboardButton(get_text("gemini", lang), callback_data='daily_horoscope_2')],
-        [InlineKeyboardButton(get_text("cancer", lang), callback_data='daily_horoscope_3')],
-        [InlineKeyboardButton(get_text("leo", lang), callback_data='daily_horoscope_4')],
-        [InlineKeyboardButton(get_text("virgo", lang), callback_data='daily_horoscope_5')],
-        [InlineKeyboardButton(get_text("libra", lang), callback_data='daily_horoscope_6')],
-        [InlineKeyboardButton(get_text("scorpio", lang), callback_data='daily_horoscope_7')],
-        [InlineKeyboardButton(get_text("sagittarius", lang), callback_data='daily_horoscope_8')],
-        [InlineKeyboardButton(get_text("capricorn", lang), callback_data='daily_horoscope_9')],
-        [InlineKeyboardButton(get_text("aquarius", lang), callback_data='daily_horoscope_10')],
-        [InlineKeyboardButton(get_text("pisces", lang), callback_data='daily_horoscope_11')],
-        [InlineKeyboardButton(get_text("main_menu_button", lang), callback_data='main_menu')]
-    ])
+def create_horoscope_keyboard(lang='tr', callback_prefix='daily_horoscope', include_main_menu=True):
+    """Create horoscope keyboard in 3x4 grid format"""
+    zodiac_signs = [
+        ("aries", "♈"),
+        ("taurus", "♉"), 
+        ("gemini", "♊"),
+        ("cancer", "♋"),
+        ("leo", "♌"),
+        ("virgo", "♍"),
+        ("libra", "♎"),
+        ("scorpio", "♏"),
+        ("sagittarius", "♐"),
+        ("capricorn", "♑"),
+        ("aquarius", "♒"),
+        ("pisces", "♓")
+    ]
+    
+    # Create 3x4 grid layout
+    keyboard = []
+    for i in range(0, 12, 3):
+        row = []
+        for j in range(3):
+            if i + j < 12:
+                sign_name, sign_symbol = zodiac_signs[i + j]
+                button_text = f"{sign_symbol} {get_text(sign_name, lang)}"
+                callback_data = f'{callback_prefix}_{i + j}'
+                row.append(InlineKeyboardButton(button_text, callback_data=callback_data))
+        keyboard.append(row)
+    
+    # Add main menu button only if requested
+    if include_main_menu:
+        keyboard.append([InlineKeyboardButton(get_text("main_menu_button", lang), callback_data='main_menu')])
+    
+    return InlineKeyboardMarkup(keyboard)
 
-def create_compatibility_keyboard(lang='tr'):
-    """Create compatibility keyboard"""
-    return InlineKeyboardMarkup([
-        [InlineKeyboardButton(get_text("aries", lang), callback_data='compat_aries')],
-        [InlineKeyboardButton(get_text("taurus", lang), callback_data='compat_taurus')],
-        [InlineKeyboardButton(get_text("gemini", lang), callback_data='compat_gemini')],
-        [InlineKeyboardButton(get_text("cancer", lang), callback_data='compat_cancer')],
-        [InlineKeyboardButton(get_text("leo", lang), callback_data='compat_leo')],
-        [InlineKeyboardButton(get_text("virgo", lang), callback_data='compat_virgo')],
-        [InlineKeyboardButton(get_text("libra", lang), callback_data='compat_libra')],
-        [InlineKeyboardButton(get_text("scorpio", lang), callback_data='compat_scorpio')],
-        [InlineKeyboardButton(get_text("sagittarius", lang), callback_data='compat_sagittarius')],
-        [InlineKeyboardButton(get_text("capricorn", lang), callback_data='compat_capricorn')],
-        [InlineKeyboardButton(get_text("aquarius", lang), callback_data='compat_aquarius')],
-        [InlineKeyboardButton(get_text("pisces", lang), callback_data='compat_pisces')],
-        [InlineKeyboardButton(get_text("main_menu_button", lang), callback_data='main_menu')]
-    ])
+def create_compatibility_keyboard(lang='tr', include_main_menu=True):
+    """Create compatibility keyboard in 3x4 grid format"""
+    zodiac_signs = [
+        ("aries", "♈"),
+        ("taurus", "♉"), 
+        ("gemini", "♊"),
+        ("cancer", "♋"),
+        ("leo", "♌"),
+        ("virgo", "♍"),
+        ("libra", "♎"),
+        ("scorpio", "♏"),
+        ("sagittarius", "♐"),
+        ("capricorn", "♑"),
+        ("aquarius", "♒"),
+        ("pisces", "♓")
+    ]
+    
+    # Create 3x4 grid layout
+    keyboard = []
+    for i in range(0, 12, 3):
+        row = []
+        for j in range(3):
+            if i + j < 12:
+                sign_name, sign_symbol = zodiac_signs[i + j]
+                button_text = f"{sign_symbol} {get_text(sign_name, lang)}"
+                callback_data = f'compat_{sign_name}'
+                row.append(InlineKeyboardButton(button_text, callback_data=callback_data))
+        keyboard.append(row)
+    
+    # Add main menu button only if requested
+    if include_main_menu:
+        keyboard.append([InlineKeyboardButton(get_text("main_menu_button", lang), callback_data='main_menu')])
+    
+    return InlineKeyboardMarkup(keyboard)
 
 
 # --- Message Handlers ---
@@ -3994,9 +4073,9 @@ def call_gemini_api(prompt: str) -> str:
     except Exception as e:
         try:
             # Fallback to older model
-            model = genai.GenerativeModel('gemini-1.5-flash')
-            response = model.generate_content(prompt)
-            return response.text if response and response.text else ""
+                model = genai.GenerativeModel('gemini-1.5-flash')
+        response = model.generate_content(prompt)
+        return response.text if response and response.text else ""
         except Exception as e2:
             supabase_manager.add_log(f"Gemini API error: {str(e2)[:100]}")
         return ""
@@ -4997,11 +5076,11 @@ async def show_coffee_fortune_with_sharing(update, fortune_text, lang):
     message = f"{fortune_text}\n\n{get_text('coffee_fortune_share_prompt', lang)}"
     
     try:
-        await update.message.reply_text(
-            message,
-            reply_markup=InlineKeyboardMarkup(keyboard),
-            parse_mode='Markdown'
-        )
+    await update.message.reply_text(
+        message,
+        reply_markup=InlineKeyboardMarkup(keyboard),
+        parse_mode='Markdown'
+    )
     except Exception as e:
         logger.error(f"Coffee fortune sharing error: {e}")
         await update.message.reply_text("❌ Kahve falı paylaşımı yüklenirken hata oluştu.")
@@ -5015,13 +5094,13 @@ async def handle_share_coffee_twitter(query, lang):
     
     # Create share text
     share_text = f"🔮 Just got my coffee fortune reading! ✨\n\nGet your own reading at: {referral_link}\n\n#FalGram #CoffeeFortune #AI"
-    # Create Twitter/X share URL
+        # Create Twitter/X share URL
     from urllib.parse import quote
-    twitter_url = f"https://twitter.com/intent/tweet?text={quote(share_text)}"
-    keyboard = [
-        [InlineKeyboardButton("🐦 Open X", url=twitter_url)],
-        [InlineKeyboardButton("🔙 Back", callback_data="main_menu")]
-    ]
+        twitter_url = f"https://twitter.com/intent/tweet?text={quote(share_text)}"
+        keyboard = [
+            [InlineKeyboardButton("🐦 Open X", url=twitter_url)],
+            [InlineKeyboardButton("🔙 Back", callback_data="main_menu")]
+        ]
     try:
         await safe_edit_message(
             query,
@@ -5039,18 +5118,18 @@ async def handle_copy_coffee_link(query, lang):
     user_id = query.from_user.id
     bot_username = query.from_user.bot.username if hasattr(query.from_user, 'bot') else "FalGramBot"
     referral_link = f"https://t.me/{bot_username}?start={user_id}"
-    
-    keyboard = [
-        [InlineKeyboardButton("🔙 Back", callback_data="main_menu")]
-    ]
-    
+        
+        keyboard = [
+            [InlineKeyboardButton("🔙 Back", callback_data="main_menu")]
+        ]
+        
     try:
-            await safe_edit_message(
-                query,
-                get_text("coffee_fortune_link_copied", lang, link=referral_link),
-                reply_markup=InlineKeyboardMarkup(keyboard),
-                parse_mode='Markdown'
-            )
+        await safe_edit_message(
+            query,
+            get_text("coffee_fortune_link_copied", lang, link=referral_link),
+            reply_markup=InlineKeyboardMarkup(keyboard),
+            parse_mode='Markdown'
+        )
     except Exception as e:
         logger.error(f"Coffee fortune link error: {e}")
         await query.edit_message_text("❌ Kahve falı referans linki kopyalanırken hata oluştu.")
@@ -5079,12 +5158,12 @@ async def handle_try_payment(query, plan_name, lang):
     ]
     
     try:
-        await safe_edit_message(
-            query,
-            message,
-            reply_markup=InlineKeyboardMarkup(keyboard),
-            parse_mode='Markdown'
-        )
+    await safe_edit_message(
+        query,
+        message,
+        reply_markup=InlineKeyboardMarkup(keyboard),
+        parse_mode='Markdown'
+    )
     except Exception as e:
         logger.error(f"Try payment error: {e}")
         await query.edit_message_text("❌ Ödeme işlemi sırasında hata oluştu. Lütfen tekrar deneyin.")
@@ -5109,12 +5188,12 @@ async def handle_contact_support(query, lang):
     ]
     
     try:
-        await safe_edit_message(
-            query,
-            message,
-            reply_markup=InlineKeyboardMarkup(keyboard),
-            parse_mode='Markdown'
-        )
+    await safe_edit_message(
+        query,
+        message,
+        reply_markup=InlineKeyboardMarkup(keyboard),
+        parse_mode='Markdown'
+    )
     except Exception as e:
         logger.error(f"Contact support error: {e}")
         await query.edit_message_text("❌ Destek ekibi ile iletişime geçilirken hata oluştu.")

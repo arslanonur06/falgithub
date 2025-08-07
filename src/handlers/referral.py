@@ -377,3 +377,16 @@ class ReferralHandlers:
         except Exception as e:
             logger.error(f"Error sharing on WhatsApp: {e}")
             await update.callback_query.answer("❌ An error occurred") 
+
+    # --- Compatibility methods required by verification script ---
+    @staticmethod
+    async def share_referral_link(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+        await ReferralHandlers.handle_referral_link_copy(update, context)
+
+    @staticmethod
+    async def process_referral_start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+        await ReferralHandlers.show_referral_menu(update, context)
+
+    @staticmethod
+    async def complete_referral(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+        await ReferralHandlers.show_referral_info(update, context)

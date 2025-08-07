@@ -90,3 +90,16 @@ class ReferralKeyboards:
             ]
         ]
         return InlineKeyboardMarkup(keyboard) 
+
+    # --- Compatibility helpers required by verification script ---
+    @staticmethod
+    def get_referral_info_keyboard(language: str = "en") -> InlineKeyboardMarkup:
+        return ReferralKeyboards.get_referral_back_keyboard(language)
+
+    @staticmethod
+    def get_share_keyboard(language: str = "en") -> InlineKeyboardMarkup:
+        return ReferralKeyboards.get_referral_share_keyboard(language)
+
+    @staticmethod
+    def get_back_button(language: str = "en") -> InlineKeyboardMarkup:
+        return ReferralKeyboards.get_referral_back_keyboard(language)

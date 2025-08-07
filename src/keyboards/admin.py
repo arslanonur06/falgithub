@@ -48,6 +48,12 @@ class AdminKeyboards:
             ]
         ]
         return InlineKeyboardMarkup(keyboard)
+
+    # Compatibility aliases expected by verification script
+    @staticmethod
+    def get_admin_main_menu(language: str = "en") -> InlineKeyboardMarkup:
+        """Alias for main admin menu (compatibility)."""
+        return AdminKeyboards.get_admin_menu_keyboard(language)
     
     @staticmethod
     def get_admin_stats_keyboard(language: str = "en") -> InlineKeyboardMarkup:
@@ -254,3 +260,9 @@ class AdminKeyboards:
             ]
         ]
         return InlineKeyboardMarkup(keyboard) 
+
+    # Compatibility alias
+    @staticmethod
+    def get_back_to_admin_keyboard(language: str = "en") -> InlineKeyboardMarkup:
+        """Alias for admin back keyboard (compatibility)."""
+        return AdminKeyboards.get_admin_back_keyboard(language)

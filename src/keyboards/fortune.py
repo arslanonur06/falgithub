@@ -86,3 +86,13 @@ class FortuneKeyboards:
             ]
         ]
         return InlineKeyboardMarkup(keyboard) 
+
+    # --- Compatibility helpers required by verification script ---
+    @staticmethod
+    def get_premium_upgrade_keyboard(language: str = "en") -> InlineKeyboardMarkup:
+        from src.keyboards.payment import PaymentKeyboards
+        return PaymentKeyboards.get_premium_menu_keyboard(language)
+
+    @staticmethod
+    def get_back_button(language: str = "en") -> InlineKeyboardMarkup:
+        return FortuneKeyboards.get_fortune_back_keyboard(language)

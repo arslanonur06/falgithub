@@ -1,6 +1,39 @@
 {
   "start_message": "✨🔮 **WELCOME TO FAL GRAM** 🔮✨\n━━━━━━━━━━━━━━━━━━━━━━\n\n🌟 *The doors of the mystical world are opening...*\n\n☕ **Coffee Fortune** - Discover the future in your cup\n🃏 **Tarot Reading** - The cards have something to tell you\n💭 **Dream Analysis** - Decode your subconscious messages\n⭐ **Astrology** - Guidance from the stars\n🌅 **Daily Card** - Personal guidance every morning\n👥 **Invite Friends** - Blessings multiply when shared\n\n━━━━━━━━━━━━━━━━━━━━━━\n✨ *Are you ready to discover your destiny?* ✨",
   "main_menu_button": "🏠 Main Menu",
+  "menu": {
+    "main_title": "🌟 Main Menu",
+    "astrology": "⭐ Astrology",
+    "fortune": "🔮 Fortunes",
+    "profile": "👤 Profile",
+    "premium": "💎 Premium",
+    "referral": "👥 Referral",
+    "help": "❓ Help"
+  },
+  "common": {
+    "back": "🔙 Back",
+    "yes": "✅ Yes",
+    "no": "❌ No",
+    "cancel": "❌ Cancel"
+  },
+  "profile": {
+    "title": "👤 Profile",
+    "name": "Name",
+    "username": "Username",
+    "language": "Language",
+    "premium_status": "Premium Status",
+    "premium_active": "✅ Active",
+    "premium_inactive": "❌ Inactive",
+    "premium_expires": "Expires",
+    "usage_stats": "Usage Stats",
+    "edit_info": "✏️ Edit Info"
+  },
+  "language": {
+    "select": "🌐 Select Language",
+    "changed": "✅ Language updated!"
+  },
+  "help": { "message": "Use the menu to navigate and explore features." },
+  "message": { "default_response": "Please use the menu buttons to navigate. 👇" },
   "referral_prompt": "Earn free readings by sharing Fal Gram with your friends! Copy the link below and send it to them. You'll get 1 FREE reading for each friend who joins using your link.\n\nYour special link: {referral_link}",
   "referral_success": "Awesome! A friend has joined using your referral link. You've earned 1 FREE reading as a gift!",
   "coffee_fortune": "☕ Coffee Fortune",
@@ -17,7 +50,15 @@
   "dream_analysis": "💭 Dream Analysis",
   "dream_analysis_prompt": "Welcome to the mysterious world of dreams. Please write down your dream in detail and send it to me.",
   "dream_analyzing": "💭 Analyzing your dream...",
-  "astrology": "⭐ Astrology",
+  "astrology": {
+    "title": "⭐ Astrology",
+    "birth_chart": "🌟 Birth Chart",
+    "daily_horoscope": "📅 Daily Horoscope",
+    "weekly_horoscope": "📊 Weekly Horoscope",
+    "monthly_horoscope": "📅 Monthly Horoscope",
+    "compatibility": "💕 Compatibility",
+    "moon_calendar": "🌙 Moon Calendar"
+  },
   "astrology_calculating": "⭐ Performing astrological calculations...",
   "birth_chart": "🌟 Birth Chart",
   "daily_horoscope": "📅 Daily Horoscope",
@@ -90,6 +131,8 @@
   "language_button": "🌐 Change Language",
   "language_updated": "🌐 Language updated to {lang}.",
   "language": {
+    "select": "🌐 Select Language",
+    "changed": "✅ Language updated!",
     "current_language": "🌐 Current Language: {lang}",
     "selection_title": "🌐 **Language Selection**",
     "selection_description": "Please select your preferred language:",
@@ -183,6 +226,8 @@
     }
   },
   "error": {
+    "general": "❌ An error occurred. Please try again.",
+    "user_not_found": "❌ User not found!",
     "plan_not_found": "❌ Plan not found. Please try again."
   },
   "plan_comparison": {
@@ -760,8 +805,38 @@
     "upgrade_basic": "💎 Upgrade to Basic",
     "buy_premium": "💳 Buy Premium"
   },
+  "admin": {
+    "stats": "📊 Statistics",
+    "users": "👥 Users",
+    "premium": "💎 Premium",
+    "logs": "📋 Logs",
+    "settings": "⚙️ Settings"
+  },
+  "referral": {
+    "share_text": "🔮 Get your free reading on Fal Gram!",
+    "my_info": "👤 My Info",
+    "stats": "📊 Stats",
+    "leaderboard": "🏆 Leaderboard",
+    "rewards": "🎁 Rewards",
+    "share": "📤 Share",
+    "copy_link": "📋 Copy Link",
+    "share_telegram": "📤 Share on Telegram",
+    "share_whatsapp": "📱 Share on WhatsApp",
+    "link_copied": "✅ Referral link copied: {link}"
+  },
+  "fortune": {
+    "tarot_reading": "🎴 Tarot Reading",
+    "coffee_reading": "☕ Coffee Reading",
+    "dream_interpretation": "💭 Dream Interpretation",
+    "palm_reading": "🖐️ Palm Reading"
+  },
+  
   "payment": {
     "title": "💳 **Payment Information** 💳",
+    "premium_plans": "💎 Premium Plans",
+    "plan_details": "📋 Plan Details",
+    "buy_plan": "💳 Buy Plan",
+    "subscription_management": "💎 Subscription Management",
     "description": "We accept Telegram Stars for all premium plans.",
     "secure_payment": "🔒 **Secure Payment:**",
     "secure_features": [

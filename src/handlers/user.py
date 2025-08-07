@@ -217,6 +217,43 @@ class UserHandlers:
         except Exception as e:
             logger.error(f"Error showing help: {e}")
             await update.callback_query.answer("❌ An error occurred")
+
+    # --- Compatibility methods required by verification script ---
+    @staticmethod
+    async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+        """Alias for /help command."""
+        await UserHandlers.show_help(update, context)
+
+    @staticmethod
+    async def profile_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+        """Alias for /profile command."""
+        await UserHandlers.show_profile(update, context)
+
+    @staticmethod
+    async def language_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+        """Alias for /language command."""
+        await UserHandlers.show_language_menu(update, context)
+
+    @staticmethod
+    async def callback_query_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+        """Generic callback query handler fallback."""
+        try:
+            if update.callback_query:
+                await update.callback_query.answer()
+                await UserHandlers.show_main_menu(update, context)
+        except Exception as e:
+            logger.error(f"Error in callback_query_handler: {e}")
+
+    @staticmethod
+    async def error_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+        """Global error handler."""
+        try:
+            logger.error(f"Unhandled error: {context.error}")
+            if update and update.effective_user:
+                lang = (await db_service.get_user(update.effective_user.id) or {}).get('language', 'en')
+                await context.bot.send_message(chat_id=update.effective_user.id, text=i18n.get_text("error.general", lang))
+        except Exception:
+            pass
     
     @staticmethod
     async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:

@@ -1,6 +1,56 @@
+  "admin": {
+    "stats": "📊 Estadísticas",
+    "users": "👥 Usuarios",
+    "premium": "💎 Premium",
+    "logs": "📋 Logs",
+    "settings": "⚙️ Configuración"
+  },
 {
+  "fortune": {
+    "tarot_reading": "🎴 Lectura de Tarot",
+    "coffee_reading": "☕ Lectura de Café",
+    "dream_interpretation": "💭 Interpretación de Sueños",
+    "palm_reading": "🖐️ Lectura de Mano"
+  },
   "start_message": "✨🔮 **BIENVENIDO A FAL GRAM** 🔮✨\n━━━━━━━━━━━━━━━━━━━━━━\n\n🌟 *Las puertas del mundo místico se están abriendo...*\n\n☕ **Lectura de Café** - Descubre el futuro en tu taza\n🃏 **Lectura de Tarot** - Las cartas tienen algo que decirte\n💭 **Análisis de Sueños** - Decodifica tus mensajes subconscientes\n⭐ **Astrología** - Guía de las estrellas\n🌅 **Carta Diaria** - Guía personal cada mañana\n👥 **Invitar Amigos** - Las bendiciones se multiplican cuando se comparten\n\n━━━━━━━━━━━━━━━━━━━━━━\n✨ *¿Estás listo para descubrir tu destino?* ✨",
   "main_menu_button": "🏠 Menú Principal",
+  "menu": {
+    "main_title": "🌟 Menú Principal",
+    "astrology": "⭐ Astrología",
+    "fortune": "🔮 Lecturas",
+    "profile": "👤 Perfil",
+    "premium": "💎 Premium",
+    "referral": "👥 Referidos",
+    "help": "❓ Ayuda"
+  },
+  "common": {
+    "back": "🔙 Volver",
+    "yes": "✅ Sí",
+    "no": "❌ No",
+    "cancel": "❌ Cancelar"
+  },
+  "profile": {
+    "title": "👤 Perfil",
+    "name": "Nombre",
+    "username": "Usuario",
+    "language": "Idioma",
+    "premium_status": "Estado Premium",
+    "premium_active": "✅ Activo",
+    "premium_inactive": "❌ Inactivo",
+    "premium_expires": "Expira",
+    "usage_stats": "Estadísticas de Uso",
+    "edit_info": "✏️ Editar Información"
+  },
+  "language": {
+    "select": "🌐 Selección de Idioma",
+    "changed": "✅ ¡Idioma actualizado!",
+    "current_language": "🌐 Idioma Actual: {lang}",
+    "selection_title": "🌐 **Selección de Idioma**",
+    "selection_description": "Por favor selecciona tu idioma preferido:",
+    "back_to_menu": "⬅️ Volver al Menú"
+  },
+  "help": { "message": "Usa el menú para navegar y explorar funciones." },
+  "message": { "default_response": "Por favor use los botones del menú para navegar. 👇" },
   "referral_prompt": "¡Gana lecturas gratis compartiendo Fal Gram con tus amigos! Copia el enlace de abajo y envíalo. Obtendrás 1 LECTURA GRATIS por cada amigo que se una usando tu enlace.\n\nTu enlace especial: {referral_link}",
   "referral_success": "¡Genial! Un amigo se ha unido usando tu enlace de referencia. ¡Has ganado 1 LECTURA GRATIS como regalo!",
   "coffee_fortune": "☕ Lectura de Café",
@@ -17,7 +67,15 @@
   "dream_analysis": "💭 Análisis de Sueños",
   "dream_analysis_prompt": "Bienvenido al misterioso mundo de los sueños. Por favor escribe tu sueño en detalle y envíamelo.",
   "dream_analyzing": "💭 Analizando tu sueño...",
-  "astrology": "⭐ Astrología",
+  "astrology": {
+    "title": "⭐ Astrología",
+    "birth_chart": "🌟 Carta Natal",
+    "daily_horoscope": "📅 Horóscopo Diario",
+    "weekly_horoscope": "📊 Horóscopo Semanal",
+    "monthly_horoscope": "📅 Horóscopo Mensual",
+    "compatibility": "💕 Compatibilidad",
+    "moon_calendar": "🌙 Calendario Lunar"
+  },
   "astrology_calculating": "⭐ Realizando cálculos astrológicos...",
   "birth_chart": "🌟 Carta Natal",
   "daily_horoscope": "📅 Horóscopo Diario",
@@ -47,6 +105,10 @@
   "fortune_limit_reached": "Tu límite de lecturas gratis se ha alcanzado. Se requieren {stars_count} Estrellas de Telegram para continuar.",
   "fortune_in_progress": "🔮 Tu lectura se está preparando...",
   "fortune_error": "❌ Ocurrió un error al crear tu lectura.",
+  "error": {
+    "general": "❌ Ocurrió un error. Por favor, inténtalo de nuevo.",
+    "user_not_found": "❌ ¡Usuario no encontrado!"
+  },
   "admin_panel_message": "🔧 Panel de Administración",
   "admin_panel_title": "🔧 *Panel de Administración*",
   "no_logs_message": "Aún no hay registros.",
@@ -805,6 +867,10 @@
     "next_goal_title": "🎯 **Tu Próximo Objetivo**"
   },
   "payment": {
+    "premium_plans": "💎 Planes Premium",
+    "plan_details": "📋 Detalles del Plan",
+    "buy_plan": "💳 Comprar Plan",
+    "subscription_management": "💎 Gestión de Suscripción",
     "title": "💳 **SISTEMA DE PAGO** 💳",
     "separator": "━━━━━━━━━━━━━━━━━━━━━━",
     "description": "💰 **¡Obtén funciones premium con estrellas!**\n\nLas estrellas son nuestro medio de pago. Aquí puedes ver cómo ganar y usar estrellas.",
@@ -840,6 +906,18 @@
     "upgrade_basic": "💎 Actualizar a Básico",
     "buy_premium": "💳 Comprar Premium",
     "try_again": "🔄 Intentar de Nuevo"
+  },
+  "referral": {
+    "my_info": "👤 Mi Información",
+    "stats": "📊 Mis Estadísticas",
+    "leaderboard": "🏆 Ranking",
+    "rewards": "🎁 Recompensas",
+    "share": "📤 Compartir",
+    "copy_link": "📋 Copiar Enlace",
+    "share_telegram": "📤 Compartir en Telegram",
+    "share_whatsapp": "📱 Compartir en WhatsApp",
+    "share_text": "🔮 ¡Obtén tu lectura gratis en Fal Gram!",
+    "link_copied": "✅ Enlace copiado: {link}"
   },
   "admin": {
     "stats_title": "📊 **ESTADÍSTICAS DEL BOT**",

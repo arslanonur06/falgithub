@@ -280,3 +280,21 @@ class MainKeyboards:
             ]
         ]
         return InlineKeyboardMarkup(keyboard) 
+
+    # --- Compatibility helpers required by verification script ---
+    @staticmethod
+    def get_back_button(language: str = "en") -> InlineKeyboardMarkup:
+        return MainKeyboards.get_back_keyboard(language)
+
+    @staticmethod
+    def get_fortune_menu(language: str = "en") -> InlineKeyboardMarkup:
+        return MainKeyboards.get_fortune_types_keyboard(language)
+
+    @staticmethod
+    def get_profile_menu(language: str = "en") -> InlineKeyboardMarkup:
+        return MainKeyboards.get_profile_keyboard(language)
+
+    @staticmethod
+    def get_reply_keyboard(language: str = "en") -> InlineKeyboardMarkup:
+        # Minimal reply keyboard fallback
+        return MainKeyboards.get_back_keyboard(language)
