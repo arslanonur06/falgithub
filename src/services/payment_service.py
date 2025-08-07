@@ -15,7 +15,7 @@ class PaymentService:
     
     def __init__(self):
         self.provider_token = getattr(settings, 'PAYMENT_PROVIDER_TOKEN', None)
-        self.currency = "TRY"
+        self.currency = "STARS"
     
     def get_provider_token(self) -> str:
         """Get payment provider token."""

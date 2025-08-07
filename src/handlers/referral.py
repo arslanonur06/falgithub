@@ -24,11 +24,11 @@ class ReferralHandlers:
                 return
             
             user_data = await db_service.get_user(user.id)
-            language = user_data.get('language', 'en') if user_data else 'en'
+            language = user_data.get('language', 'tr') if user_data else 'tr'
             
-            text = "👥 **Referral Program**\n\n"
-            text += "Invite friends and earn rewards!\n"
-            text += "Share your referral link and get bonuses for each friend who joins."
+            title = i18n.get_text("referral_system.main_panel.title", language)
+            desc = i18n.get_text("referral_system.main_panel.separator", language)
+            text = f"{title}\n{desc}"
             
             keyboard = ReferralKeyboards.get_referral_menu_keyboard(language)
             
@@ -40,7 +40,7 @@ class ReferralHandlers:
             
         except Exception as e:
             logger.error(f"Error showing referral menu: {e}")
-            await update.callback_query.answer("❌ An error occurred")
+            await update.callback_query.answer(i18n.get_text("error_occurred", 'tr'))
     
     @staticmethod
     async def show_referral_info(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -52,10 +52,10 @@ class ReferralHandlers:
             
             user_data = await db_service.get_user(user.id)
             if not user_data:
-                await update.callback_query.answer("❌ User not found")
+                await update.callback_query.answer(i18n.get_text("error_occurred", 'tr'))
                 return
             
-            language = user_data.get('language', 'en')
+            language = user_data.get('language', 'tr')
             
             # Get referral stats
             referral_count = user_data.get('referral_count', 0)
@@ -68,15 +68,16 @@ class ReferralHandlers:
                 referral_code = generate_referral_code(user.id)
                 await db_service.update_user(user.id, {'referral_code': referral_code})
             
-            text = "📊 **My Referral Info**\n\n"
-            text += f"**Referral Code:** `{referral_code}`\n"
-            text += f"**Total Referrals:** {referral_count}\n"
-            text += f"**Total Earnings:** {referral_earnings} TRY\n\n"
-            
-            # Referral link
             bot_username = context.bot.username
             referral_link = f"https://t.me/{bot_username}?start={referral_code}"
-            text += f"**Your Referral Link:**\n`{referral_link}`"
+            
+            text = i18n.format_text(
+                "referral_info_message",
+                language,
+                referred_count=referral_count,
+                referral_earnings=referral_earnings,
+                referral_link=referral_link
+            )
             
             keyboard = ReferralKeyboards.get_referral_back_keyboard(language)
             
@@ -88,7 +89,7 @@ class ReferralHandlers:
             
         except Exception as e:
             logger.error(f"Error showing referral info: {e}")
-            await update.callback_query.answer("❌ An error occurred")
+            await update.callback_query.answer(i18n.get_text("error_occurred", 'tr'))
     
     @staticmethod
     async def show_referral_stats(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -100,43 +101,19 @@ class ReferralHandlers:
             
             user_data = await db_service.get_user(user.id)
             if not user_data:
-                await update.callback_query.answer("❌ User not found")
+                await update.callback_query.answer(i18n.get_text("error_occurred", 'tr'))
                 return
             
-            language = user_data.get('language', 'en')
+            language = user_data.get('language', 'tr')
             
-            # Get referral stats
             referral_count = user_data.get('referral_count', 0)
             referral_earnings = user_data.get('referral_earnings', 0)
             
-            text = "📈 **Referral Statistics**\n\n"
-            text += f"**Total Referrals:** {referral_count}\n"
-            text += f"**Total Earnings:** {referral_earnings} TRY\n\n"
+            title = i18n.get_text("referral_system.stats_panel.title", language)
+            total_label = i18n.get_text("referral_system.stats_panel.total_invites", language).format(count=referral_count)
+            earnings_label = i18n.get_text("referral_system.stats_panel.total_readings", language).format(count=referral_earnings)
             
-            # Calculate potential earnings
-            potential_earnings = referral_count * 100  # 100 TRY per referral
-            text += f"**Potential Earnings:** {potential_earnings} TRY\n\n"
-            
-            # Referral level
-            if referral_count >= 50:
-                level = "Premium"
-                next_level = "Maximum level reached"
-            elif referral_count >= 25:
-                level = "Elite"
-                next_level = f"Need {50 - referral_count} more referrals for Premium"
-            elif referral_count >= 10:
-                level = "VIP"
-                next_level = f"Need {25 - referral_count} more referrals for Elite"
-            elif referral_count >= 5:
-                level = "Active"
-                next_level = f"Need {10 - referral_count} more referrals for VIP"
-            else:
-                level = "New"
-                next_level = f"Need {5 - referral_count} more referrals for Active"
-            
-            text += f"**Current Level:** {level}\n"
-            text += f"**Next Level:** {next_level}"
-            
+            text = f"{title}\n\n{total_label}\n{earnings_label}"
             keyboard = ReferralKeyboards.get_referral_back_keyboard(language)
             
             await update.callback_query.edit_message_text(
@@ -147,7 +124,7 @@ class ReferralHandlers:
             
         except Exception as e:
             logger.error(f"Error showing referral stats: {e}")
-            await update.callback_query.answer("❌ An error occurred")
+            await update.callback_query.answer(i18n.get_text("error_occurred", 'tr'))
     
     @staticmethod
     async def show_referral_leaderboard(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -158,17 +135,10 @@ class ReferralHandlers:
                 return
             
             user_data = await db_service.get_user(user.id)
-            language = user_data.get('language', 'en') if user_data else 'en'
+            language = user_data.get('language', 'tr') if user_data else 'tr'
             
-            # Get top referrers (simplified - in real implementation, this would query the database)
-            text = "🏆 **Referral Leaderboard**\n\n"
-            text += "**Top Referrers:**\n"
-            text += "🥇 **User1** - 45 referrals\n"
-            text += "🥈 **User2** - 32 referrals\n"
-            text += "🥉 **User3** - 28 referrals\n"
-            text += "4️⃣ **User4** - 15 referrals\n"
-            text += "5️⃣ **User5** - 12 referrals\n\n"
-            text += "Keep inviting friends to climb the leaderboard! 🚀"
+            title = i18n.get_text("referral_system.main_panel.title", language)
+            text = f"{title}\n\n{i18n.get_text('referral_system.rewards_panel.badges_label', language)}"
             
             keyboard = ReferralKeyboards.get_referral_back_keyboard(language)
             
@@ -180,7 +150,7 @@ class ReferralHandlers:
             
         except Exception as e:
             logger.error(f"Error showing referral leaderboard: {e}")
-            await update.callback_query.answer("❌ An error occurred")
+            await update.callback_query.answer(i18n.get_text("error_occurred", 'tr'))
     
     @staticmethod
     async def show_referral_rewards(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -191,26 +161,11 @@ class ReferralHandlers:
                 return
             
             user_data = await db_service.get_user(user.id)
-            language = user_data.get('language', 'en') if user_data else 'en'
+            language = user_data.get('language', 'tr') if user_data else 'tr'
             
-            text = "🎁 **Referral Rewards**\n\n"
-            text += "**Earn rewards for each friend you invite:**\n\n"
-            text += "**🎯 1-4 Referrals:**\n"
-            text += "• 50 TRY bonus per referral\n"
-            text += "• Weekly bonus readings\n\n"
-            text += "**🎯 5-9 Referrals:**\n"
-            text += "• 75 TRY bonus per referral\n"
-            text += "• Special profile color\n"
-            text += "• VIP tarot deck access\n\n"
-            text += "**🎯 10-24 Referrals:**\n"
-            text += "• 100 TRY bonus per referral\n"
-            text += "• Priority AI responses\n"
-            text += "• Personal reading consultant\n\n"
-            text += "**🎯 25+ Referrals:**\n"
-            text += "• 150 TRY bonus per referral\n"
-            text += "• 24/7 priority support\n"
-            text += "• Exclusive VIP features\n"
-            text += "• Special events access"
+            title = i18n.get_text("referral_system.rewards_panel.title", language)
+            balance_label = i18n.get_text("referral_system.rewards_panel.balance_label", language)
+            text = f"{title}\n\n{balance_label}"
             
             keyboard = ReferralKeyboards.get_referral_back_keyboard(language)
             
@@ -222,7 +177,7 @@ class ReferralHandlers:
             
         except Exception as e:
             logger.error(f"Error showing referral rewards: {e}")
-            await update.callback_query.answer("❌ An error occurred")
+            await update.callback_query.answer(i18n.get_text("error_occurred", 'tr'))
     
     @staticmethod
     async def show_referral_share(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -233,11 +188,9 @@ class ReferralHandlers:
                 return
             
             user_data = await db_service.get_user(user.id)
-            language = user_data.get('language', 'en') if user_data else 'en'
+            language = user_data.get('language', 'tr') if user_data else 'tr'
             
-            text = "📤 **Share Your Referral Link**\n\n"
-            text += "Choose how you want to share your referral link:"
-            
+            text = i18n.get_text("main_panel.share_label", language)
             keyboard = ReferralKeyboards.get_referral_share_keyboard(language)
             
             await update.callback_query.edit_message_text(
@@ -248,7 +201,7 @@ class ReferralHandlers:
             
         except Exception as e:
             logger.error(f"Error showing referral share: {e}")
-            await update.callback_query.answer("❌ An error occurred")
+            await update.callback_query.answer(i18n.get_text("error_occurred", 'tr'))
     
     @staticmethod
     async def handle_referral_link_copy(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -260,34 +213,29 @@ class ReferralHandlers:
             
             user_data = await db_service.get_user(user.id)
             if not user_data:
-                await update.callback_query.answer("❌ User not found")
+                await update.callback_query.answer(i18n.get_text("error_occurred", 'tr'))
                 return
             
-            language = user_data.get('language', 'en')
+            language = user_data.get('language', 'tr')
             referral_code = user_data.get('referral_code')
             
             if not referral_code:
-                # Generate referral code
                 from src.utils.helpers import generate_referral_code
                 referral_code = generate_referral_code(user.id)
                 await db_service.update_user(user.id, {'referral_code': referral_code})
             
-            # Create referral link
             bot_username = context.bot.username
             referral_link = f"https://t.me/{bot_username}?start={referral_code}"
             
-            # Copy to clipboard (this is a simplified version)
             await update.callback_query.answer(
-                i18n.get_text("referral.link_copied", language),
+                i18n.format_text("referral.link_copied", language, link=referral_link),
                 show_alert=True
             )
-            
-            # Store referral link in context for potential use
             context.user_data['referral_link'] = referral_link
             
         except Exception as e:
             logger.error(f"Error copying referral link: {e}")
-            await update.callback_query.answer("❌ An error occurred")
+            await update.callback_query.answer(i18n.get_text("error_occurred", 'tr'))
     
     @staticmethod
     async def handle_share_telegram(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -299,38 +247,25 @@ class ReferralHandlers:
             
             user_data = await db_service.get_user(user.id)
             if not user_data:
-                await update.callback_query.answer("❌ User not found")
+                await update.callback_query.answer(i18n.get_text("error_occurred", 'tr'))
                 return
             
             referral_code = user_data.get('referral_code')
-            
             if not referral_code:
-                # Generate referral code
                 from src.utils.helpers import generate_referral_code
                 referral_code = generate_referral_code(user.id)
                 await db_service.update_user(user.id, {'referral_code': referral_code})
             
-            # Create referral link
             bot_username = context.bot.username
             referral_link = f"https://t.me/{bot_username}?start={referral_code}"
             
-            # Share text
-            share_text = f"🔮 Check out this amazing mystical bot!\n\n"
-            share_text += f"Get your daily horoscope, coffee fortune, and more!\n\n"
-            share_text += f"Join here: {referral_link}"
-            
-            await update.callback_query.answer("Share this message with your friends!")
-            
-            # Send the share text
-            await context.bot.send_message(
-                chat_id=user.id,
-                text=share_text,
-                parse_mode='Markdown'
-            )
+            share_text = i18n.get_text("main_panel.share_text", 'tr') + f"\n\n{referral_link}"
+            await update.callback_query.answer(i18n.get_text("operation_successful", 'tr'))
+            await context.bot.send_message(chat_id=user.id, text=share_text, parse_mode='Markdown')
             
         except Exception as e:
             logger.error(f"Error sharing on Telegram: {e}")
-            await update.callback_query.answer("❌ An error occurred")
+            await update.callback_query.answer(i18n.get_text("error_occurred", 'tr'))
     
     @staticmethod
     async def handle_share_whatsapp(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -342,38 +277,28 @@ class ReferralHandlers:
             
             user_data = await db_service.get_user(user.id)
             if not user_data:
-                await update.callback_query.answer("❌ User not found")
+                await update.callback_query.answer(i18n.get_text("error_occurred", 'tr'))
                 return
             
             referral_code = user_data.get('referral_code')
-            
             if not referral_code:
-                # Generate referral code
                 from src.utils.helpers import generate_referral_code
                 referral_code = generate_referral_code(user.id)
                 await db_service.update_user(user.id, {'referral_code': referral_code})
             
-            # Create referral link
             bot_username = context.bot.username
             referral_link = f"https://t.me/{bot_username}?start={referral_code}"
             
-            # WhatsApp share text
-            share_text = f"🔮 Check out this amazing mystical bot!\n\n"
-            share_text += f"Get your daily horoscope, coffee fortune, and more!\n\n"
-            share_text += f"Join here: {referral_link}"
-            
-            # Create WhatsApp share URL
+            share_text = i18n.get_text("main_panel.share_text", 'tr') + f"\n\n{referral_link}"
             whatsapp_url = f"https://wa.me/?text={share_text.replace(' ', '%20')}"
             
-            await update.callback_query.answer("Opening WhatsApp...")
-            
-            # Send the WhatsApp URL
+            await update.callback_query.answer(i18n.get_text("operation_successful", 'tr'))
             await context.bot.send_message(
                 chat_id=user.id,
-                text=f"📱 [Share on WhatsApp]({whatsapp_url})",
+                text=f"📱 [WhatsApp]({whatsapp_url})",
                 parse_mode='Markdown'
             )
             
         except Exception as e:
             logger.error(f"Error sharing on WhatsApp: {e}")
-            await update.callback_query.answer("❌ An error occurred") 
+            await update.callback_query.answer(i18n.get_text("error_occurred", 'tr')) 

@@ -104,17 +104,23 @@ async def route_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         "referral_leaderboard": ReferralHandlers.show_referral_leaderboard,
         "referral_rewards": ReferralHandlers.show_referral_rewards,
         "referral_share": ReferralHandlers.show_referral_share,
-        "copy_referral_link": UserHandlers.handle_copy_referral_link,
+        "copy_referral_link": ReferralHandlers.handle_referral_link_copy,
         "share_telegram": ReferralHandlers.handle_share_telegram,
         "share_whatsapp": ReferralHandlers.handle_share_whatsapp,
         # Premium
         "premium_plans": PaymentHandlers.show_premium_plans,
+        "premium_compare": PaymentHandlers.show_plan_comparison,
         "subscription_management": PaymentHandlers.show_subscription_management,
+        "subscription_status": PaymentHandlers.show_subscription_management,
+        "usage_statistics": PaymentHandlers.show_subscription_management,
         "cancel_subscription": PaymentHandlers.handle_cancel_subscription,
         # Fortune
         "tarot_fortune": __import__("src.handlers.fortune", fromlist=["FortuneHandlers"]).FortuneHandlers.handle_tarot_reading,
         "coffee_fortune": __import__("src.handlers.fortune", fromlist=["FortuneHandlers"]).FortuneHandlers.handle_coffee_reading,
         "dream_fortune": __import__("src.handlers.fortune", fromlist=["FortuneHandlers"]).FortuneHandlers.handle_dream_interpretation,
+        "dream_analysis": __import__("src.handlers.fortune", fromlist=["FortuneHandlers"]).FortuneHandlers.handle_dream_interpretation,
+        # Language & navigation
+        "change_language": UserHandlers.show_language_menu,
         # Astrology
         "daily_horoscope": AstrologyHandlers.handle_daily_horoscope,
         "weekly_horoscope": AstrologyHandlers.handle_weekly_horoscope,

@@ -16,33 +16,39 @@ class ReferralKeyboards:
         keyboard = [
             [
                 InlineKeyboardButton(
-                    i18n.get_text("referral.my_info", language),
-                    callback_data="referral_info"
-                ),
-                InlineKeyboardButton(
-                    i18n.get_text("referral.stats", language),
+                    i18n.get_text("referral_system.main_panel.buttons.stats", language),
                     callback_data="referral_stats"
-                )
-            ],
-            [
-                InlineKeyboardButton(
-                    i18n.get_text("referral.leaderboard", language),
-                    callback_data="referral_leaderboard"
                 ),
                 InlineKeyboardButton(
-                    i18n.get_text("referral.rewards", language),
+                    i18n.get_text("referral_system.main_panel.buttons.rewards", language),
                     callback_data="referral_rewards"
                 )
             ],
             [
                 InlineKeyboardButton(
-                    i18n.get_text("referral.share", language),
-                    callback_data="referral_share"
+                    i18n.get_text("referral_system.main_panel.buttons.copy", language),
+                    callback_data="copy_referral_link"
                 )
             ],
             [
                 InlineKeyboardButton(
-                    i18n.get_text("common.back", language),
+                    i18n.get_text("referral_system.main_panel.buttons.telegram", language),
+                    callback_data="share_telegram"
+                ),
+                InlineKeyboardButton(
+                    i18n.get_text("referral_system.main_panel.buttons.whatsapp", language),
+                    callback_data="share_whatsapp"
+                )
+            ],
+            [
+                InlineKeyboardButton(
+                    i18n.get_text("buttons.compare_plans", language),
+                    callback_data="premium_compare"
+                )
+            ],
+            [
+                InlineKeyboardButton(
+                    i18n.get_text("buttons.back_to_menu", language),
                     callback_data="main_menu"
                 )
             ]
@@ -55,23 +61,23 @@ class ReferralKeyboards:
         keyboard = [
             [
                 InlineKeyboardButton(
-                    i18n.get_text("referral.copy_link", language),
+                    i18n.get_text("referral_system.main_panel.buttons.copy", language),
                     callback_data="copy_referral_link"
                 )
             ],
             [
                 InlineKeyboardButton(
-                    i18n.get_text("referral.share_telegram", language),
+                    i18n.get_text("referral_system.main_panel.buttons.telegram", language),
                     callback_data="share_telegram"
                 ),
                 InlineKeyboardButton(
-                    i18n.get_text("referral.share_whatsapp", language),
+                    i18n.get_text("referral_system.main_panel.buttons.whatsapp", language),
                     callback_data="share_whatsapp"
                 )
             ],
             [
                 InlineKeyboardButton(
-                    i18n.get_text("common.back", language),
+                    i18n.get_text("referral_system.stats_panel.back_button", language),
                     callback_data="referral"
                 )
             ]
@@ -84,7 +90,7 @@ class ReferralKeyboards:
         keyboard = [
             [
                 InlineKeyboardButton(
-                    i18n.get_text("common.back", language),
+                    i18n.get_text("referral_system.stats_panel.back_button", language),
                     callback_data="referral"
                 )
             ]

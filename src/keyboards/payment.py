@@ -16,19 +16,25 @@ class PaymentKeyboards:
         keyboard = [
             [
                 InlineKeyboardButton(
-                    i18n.get_text("payment.premium_plans", language),
+                    i18n.get_text("premium_compare", language),
+                    callback_data="premium_compare"
+                )
+            ],
+            [
+                InlineKeyboardButton(
+                    i18n.get_text("premium_menu", language),
                     callback_data="premium_plans"
                 )
             ],
             [
                 InlineKeyboardButton(
-                    i18n.get_text("payment.subscription_management", language),
+                    i18n.get_text("subscription_management", language),
                     callback_data="subscription_management"
                 )
             ],
             [
                 InlineKeyboardButton(
-                    i18n.get_text("common.back", language),
+                    i18n.get_text("buttons.back", language),
                     callback_data="main_menu"
                 )
             ]
@@ -38,28 +44,37 @@ class PaymentKeyboards:
     @staticmethod
     def get_premium_plans_keyboard(language: str = "en") -> InlineKeyboardMarkup:
         """Get premium plans keyboard."""
+        basic_label = f"{i18n.get_text('premium_plans.plans.basic.name', language)} - {i18n.get_text('premium_plans.plans.basic.price', language)}"
+        premium_label = f"{i18n.get_text('premium_plans.plans.premium.name', language)} - {i18n.get_text('premium_plans.plans.premium.price', language)}"
+        vip_label = f"{i18n.get_text('premium_plans.plans.vip.name', language)} - {i18n.get_text('premium_plans.plans.vip.price', language)}"
         keyboard = [
             [
                 InlineKeyboardButton(
-                    "💎 Basic Plan - 500 TRY",
+                    basic_label,
                     callback_data="plan_basic"
                 )
             ],
             [
                 InlineKeyboardButton(
-                    "💎 Premium Plan - 1000 TRY",
+                    premium_label,
                     callback_data="plan_premium"
                 )
             ],
             [
                 InlineKeyboardButton(
-                    "💎 VIP Plan - 2000 TRY",
+                    vip_label,
                     callback_data="plan_vip"
                 )
             ],
             [
                 InlineKeyboardButton(
-                    i18n.get_text("common.back", language),
+                    i18n.get_text("buttons.compare_plans", language),
+                    callback_data="premium_compare"
+                )
+            ],
+            [
+                InlineKeyboardButton(
+                    i18n.get_text("buttons.back_to_menu", language),
                     callback_data="premium"
                 )
             ]
@@ -72,25 +87,25 @@ class PaymentKeyboards:
         keyboard = [
             [
                 InlineKeyboardButton(
-                    "📊 Subscription Status",
+                    i18n.get_text("subscription_management", language),
                     callback_data="subscription_status"
                 )
             ],
             [
                 InlineKeyboardButton(
-                    "❌ Cancel Subscription",
+                    i18n.get_text("cancel_subscription", language),
                     callback_data="cancel_subscription"
                 )
             ],
             [
                 InlineKeyboardButton(
-                    "📈 Usage Statistics",
+                    i18n.get_text("statistics", language),
                     callback_data="usage_statistics"
                 )
             ],
             [
                 InlineKeyboardButton(
-                    i18n.get_text("common.back", language),
+                    i18n.get_text("buttons.back_to_premium", language),
                     callback_data="premium"
                 )
             ]
@@ -103,13 +118,13 @@ class PaymentKeyboards:
         keyboard = [
             [
                 InlineKeyboardButton(
-                    "💳 Pay with Telegram Stars",
+                    i18n.get_text("premium.telegram_stars_payment", language),
                     callback_data=f"pay_{plan_name}"
                 )
             ],
             [
                 InlineKeyboardButton(
-                    i18n.get_text("common.cancel", language),
+                    i18n.get_text("buttons.back_to_plans", language),
                     callback_data="premium_plans"
                 )
             ]
@@ -122,7 +137,7 @@ class PaymentKeyboards:
         keyboard = [
             [
                 InlineKeyboardButton(
-                    i18n.get_text("common.back", language),
+                    i18n.get_text("buttons.back_to_premium", language),
                     callback_data="premium"
                 )
             ]
