@@ -161,8 +161,8 @@ async def pre_checkout(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 
 
 async def successful_payment(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    # For now, simply confirm payment and show premium menu
-    await PaymentHandlers.show_subscription_management(update, context)
+    # For Stars payments, activate subscription on success
+    await PaymentHandlers.handle_successful_payment(update, context)
 
 
 def main() -> None:

@@ -10,6 +10,7 @@ from src.utils.i18n import i18n
 from src.utils.logger import logger
 from src.services.database import db_service
 from src.keyboards.main import MainKeyboards
+from datetime import datetime
 
 
 class UserHandlers:
@@ -32,29 +33,38 @@ class UserHandlers:
                     'first_name': user.first_name,
                     'last_name': user.last_name,
                     'username': user.username,
-                    'language': 'en',  # Default language
+                    'language': 'tr',
                     'created_at': datetime.now().isoformat(),
                     'last_activity': datetime.now().isoformat()
                 }
                 await db_service.create_user(new_user_data)
                 logger.info(f"New user created: {user.id}")
+                user_data = new_user_data
             
             # Get user language
-            language = user_data.get('language', 'en') if user_data else 'en'
+            language = user_data.get('language', 'tr')
             
             # Send welcome message
             welcome_text = i18n.get_text("start_message", language)
             keyboard = MainKeyboards.get_main_menu_keyboard(language)
             
-            await update.message.reply_text(
-                welcome_text,
-                reply_markup=keyboard,
-                parse_mode='Markdown'
-            )
+            if update.message:
+                await update.message.reply_text(
+                    welcome_text,
+                    reply_markup=keyboard,
+                    parse_mode='Markdown'
+                )
+            else:
+                await context.bot.send_message(
+                    chat_id=user.id,
+                    text=welcome_text,
+                    reply_markup=keyboard,
+                    parse_mode='Markdown'
+                )
             
         except Exception as e:
             logger.error(f"Error in start command: {e}")
-            await update.message.reply_text("❌ An error occurred. Please try again.")
+            await update.message.reply_text(i18n.get_text("error_occurred", 'tr'))
     
     @staticmethod
     async def show_main_menu(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -65,9 +75,9 @@ class UserHandlers:
                 return
             
             user_data = await db_service.get_user(user.id)
-            language = user_data.get('language', 'en') if user_data else 'en'
+            language = user_data.get('language', 'tr') if user_data else 'tr'
             
-            text = i18n.get_text("menu.main_title", language)
+            text = i18n.get_text("main_panel.title", language)
             keyboard = MainKeyboards.get_main_menu_keyboard(language)
             
             if update.callback_query:
@@ -85,7 +95,7 @@ class UserHandlers:
                 
         except Exception as e:
             logger.error(f"Error showing main menu: {e}")
-            await update.message.reply_text("❌ An error occurred. Please try again.")
+            await update.message.reply_text(i18n.get_text("error_occurred", 'tr'))
     
     @staticmethod
     async def show_profile(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -97,16 +107,16 @@ class UserHandlers:
             
             user_data = await db_service.get_user(user.id)
             if not user_data:
-                await update.callback_query.answer("User not found")
+                await update.callback_query.answer(i18n.get_text("error_occurred", 'tr'))
                 return
             
-            language = user_data.get('language', 'en')
+            language = user_data.get('language', 'tr')
             
             # Build profile text
             profile_text = i18n.get_text("profile.title", language) + "\n\n"
             profile_text += f"**{i18n.get_text('profile.name', language)}:** {user_data.get('first_name', 'N/A')}\n"
             profile_text += f"**{i18n.get_text('profile.username', language)}:** @{user_data.get('username', 'N/A')}\n"
-            profile_text += f"**{i18n.get_text('profile.language', language)}:** {user_data.get('language', 'en').upper()}\n\n"
+            profile_text += f"**{i18n.get_text('profile.language', language)}:** {user_data.get('language', 'tr').upper()}\n\n"
             
             # Premium status
             is_premium = user_data.get('is_premium', False)
@@ -138,7 +148,7 @@ class UserHandlers:
             
         except Exception as e:
             logger.error(f"Error showing profile: {e}")
-            await update.callback_query.answer("❌ An error occurred")
+            await update.callback_query.answer(i18n.get_text("error_occurred", 'tr'))
     
     @staticmethod
     async def show_language_menu(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -149,9 +159,9 @@ class UserHandlers:
                 return
             
             user_data = await db_service.get_user(user.id)
-            language = user_data.get('language', 'en') if user_data else 'en'
+            language = user_data.get('language', 'tr') if user_data else 'tr'
             
-            text = i18n.get_text("language.select", language)
+            text = i18n.get_text("language_selection.title", language)
             keyboard = MainKeyboards.get_language_selection_keyboard()
             
             await update.callback_query.edit_message_text(
@@ -162,7 +172,7 @@ class UserHandlers:
             
         except Exception as e:
             logger.error(f"Error showing language menu: {e}")
-            await update.callback_query.answer("❌ An error occurred")
+            await update.callback_query.answer(i18n.get_text("error_occurred", 'tr'))
     
     @staticmethod
     async def handle_language_change(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -176,7 +186,7 @@ class UserHandlers:
             new_language = callback_data.replace("set_lang_", "")
             
             if new_language not in settings.SUPPORTED_LANGUAGES:
-                await update.callback_query.answer("❌ Unsupported language")
+                await update.callback_query.answer(i18n.get_text("error_occurred", 'tr'))
                 return
             
             # Update user language
@@ -185,14 +195,15 @@ class UserHandlers:
             })
             
             if success:
-                await update.callback_query.answer(i18n.get_text("language.changed", new_language))
+                lang_name = i18n.get_text("language_name", new_language)
+                await update.callback_query.answer(i18n.format_text("language_change.success_default", new_language, lang_name=lang_name))
                 await UserHandlers.show_main_menu(update, context)
             else:
-                await update.callback_query.answer("❌ Failed to update language")
+                await update.callback_query.answer(i18n.get_text("error_occurred", 'tr'))
                 
         except Exception as e:
             logger.error(f"Error changing language: {e}")
-            await update.callback_query.answer("❌ An error occurred")
+            await update.callback_query.answer(i18n.get_text("error_occurred", 'tr'))
     
     @staticmethod
     async def show_help(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -203,9 +214,9 @@ class UserHandlers:
                 return
             
             user_data = await db_service.get_user(user.id)
-            language = user_data.get('language', 'en') if user_data else 'en'
+            language = user_data.get('language', 'tr') if user_data else 'tr'
             
-            help_text = i18n.get_text("help.message", language)
+            help_text = i18n.get_text("default_message_response", language)
             keyboard = MainKeyboards.get_help_keyboard(language)
             
             await update.callback_query.edit_message_text(
@@ -216,7 +227,7 @@ class UserHandlers:
             
         except Exception as e:
             logger.error(f"Error showing help: {e}")
-            await update.callback_query.answer("❌ An error occurred")
+            await update.callback_query.answer(i18n.get_text("error_occurred", 'tr'))
     
     @staticmethod
     async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -227,10 +238,10 @@ class UserHandlers:
                 return
             
             user_data = await db_service.get_user(user.id)
-            language = user_data.get('language', 'en') if user_data else 'en'
+            language = user_data.get('language', 'tr') if user_data else 'tr'
             
             # Default response for text messages
-            response_text = i18n.get_text("message.default_response", language)
+            response_text = i18n.get_text("default_message_response", language)
             keyboard = MainKeyboards.get_main_menu_keyboard(language)
             
             await update.message.reply_text(
@@ -240,7 +251,7 @@ class UserHandlers:
             
         except Exception as e:
             logger.error(f"Error handling message: {e}")
-            await update.message.reply_text("❌ An error occurred. Please try again.")
+            await update.message.reply_text(i18n.get_text("error_occurred", 'tr'))
     
     @staticmethod
     async def handle_copy_referral_link(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -252,14 +263,13 @@ class UserHandlers:
             
             user_data = await db_service.get_user(user.id)
             if not user_data:
-                await update.callback_query.answer("❌ User not found")
+                await update.callback_query.answer(i18n.get_text("error_occurred", 'tr'))
                 return
             
-            language = user_data.get('language', 'en')
+            language = user_data.get('language', 'tr')
             referral_code = user_data.get('referral_code')
             
             if not referral_code:
-                # Generate referral code
                 from src.utils.helpers import generate_referral_code
                 referral_code = generate_referral_code(user.id)
                 await db_service.update_user(user.id, {'referral_code': referral_code})
@@ -268,18 +278,15 @@ class UserHandlers:
             bot_username = context.bot.username
             referral_link = f"https://t.me/{bot_username}?start={referral_code}"
             
-            # Copy to clipboard (this is a simplified version)
             await update.callback_query.answer(
-                i18n.get_text("referral.link_copied", language),
+                i18n.format_text("referral.link_copied", language, link=referral_link),
                 show_alert=True
             )
-            
-            # Store referral link in context for potential use
             context.user_data['referral_link'] = referral_link
             
         except Exception as e:
             logger.error(f"Error copying referral link: {e}")
-            await update.callback_query.answer("❌ An error occurred")
+            await update.callback_query.answer(i18n.get_text("error_occurred", 'tr'))
     
     @staticmethod
     async def handle_back_button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -300,8 +307,4 @@ class UserHandlers:
                 
         except Exception as e:
             logger.error(f"Error handling back button: {e}")
-            await update.callback_query.answer("❌ An error occurred")
-
-
-# Import datetime at the top
-from datetime import datetime 
+            await update.callback_query.answer("❌ An error occurred") 

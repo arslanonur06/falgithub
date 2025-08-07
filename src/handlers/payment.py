@@ -3,7 +3,7 @@ Payment handlers for the Fal Gram Bot.
 Handles payment and subscription processes.
 """
 
-from telegram import Update
+from telegram import Update, LabeledPrice
 from telegram.ext import ContextTypes
 from config.settings import settings
 from src.utils.i18n import i18n
@@ -72,7 +72,7 @@ class PaymentHandlers:
     
     @staticmethod
     async def show_plan_comparison(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-        """Show comparison of plans using Turkish i18n."""
+        """Show comparison of plans using Turkish i18n with features."""
         try:
             user = update.effective_user
             if not user:
@@ -81,14 +81,28 @@ class PaymentHandlers:
             user_data = await db_service.get_user(user.id)
             language = user_data.get('language', 'tr') if user_data else 'tr'
             
+            def get_nested_list(path: str) -> list:
+                keys = path.split('.')
+                node = i18n.translations.get(language, {})
+                for k in keys:
+                    if isinstance(node, dict):
+                        node = node.get(k)
+                    else:
+                        node = None
+                        break
+                return node if isinstance(node, list) else []
+            
             title = i18n.get_text('plan_comparison.title', language)
             sep = i18n.get_text('plan_comparison.separator', language)
-            free = i18n.get_text('plan_comparison.plans.free.title', language)
-            basic = i18n.get_text('plan_comparison.plans.basic.title', language)
-            premium = i18n.get_text('plan_comparison.plans.premium.title', language)
-            vip = i18n.get_text('plan_comparison.plans.vip.title', language)
             
-            text = f"{title}\n{sep}\n\n{free}\n{basic}\n{premium}\n{vip}"
+            sections = []
+            for plan_key in ['free', 'basic', 'premium', 'vip']:
+                plan_title = i18n.get_text(f'plan_comparison.plans.{plan_key}.title', language)
+                features = get_nested_list(f'plan_comparison.plans.{plan_key}.features')
+                feat_text = "\n".join(f"• {f}" for f in features) if features else ""
+                sections.append(f"{plan_title}\n{feat_text}")
+            
+            text = f"{title}\n{sep}\n\n" + "\n\n".join(sections)
             keyboard = PaymentKeyboards.get_payment_back_keyboard(language)
             
             await update.callback_query.edit_message_text(
@@ -144,7 +158,7 @@ class PaymentHandlers:
     
     @staticmethod
     async def handle_payment(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-        """Handle payment processing with Telegram Stars (simulated flow)."""
+        """Handle payment processing with Telegram Stars by sending invoice."""
         try:
             user = update.effective_user
             if not user:
@@ -162,19 +176,43 @@ class PaymentHandlers:
                 await update.callback_query.answer(i18n.get_text("error_occurred", language))
                 return
             
-            # Create invoice (placeholder for Telegram Stars)
-            invoice_result = await payment_service.create_invoice(
-                user.id, 
-                plan_name, 
-                plan_info['price']
+            plan_title = i18n.get_text(f"premium_plans.plans.{plan_name}.name", language)
+            title = i18n.get_text("premium_menu_title", language)
+            description = i18n.get_text("premium.telegram_stars_payment", language)
+            prices = [LabeledPrice(label=plan_title, amount=int(plan_info['price']))]
+            
+            await update.callback_query.answer(i18n.get_text("premium.purchase_initiated", language))
+            
+            await context.bot.send_invoice(
+                chat_id=user.id,
+                title=title,
+                description=description,
+                payload=f"stars_{plan_name}",
+                provider_token=None,
+                currency="XTR",
+                prices=prices,
             )
             
-            if not invoice_result['success']:
-                await update.callback_query.answer(i18n.get_text("premium.payment_error", language))
+        except Exception as e:
+            logger.error(f"Error processing payment: {e}")
+            await update.callback_query.answer(i18n.get_text("error_occurred", 'tr'))
+    
+    @staticmethod
+    async def handle_successful_payment(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+        """Handle successful Stars payment and activate subscription."""
+        try:
+            user = update.effective_user
+            if not user or not update.message or not update.message.successful_payment:
                 return
             
-            # Simulate payment success and activate subscription
-            await update.callback_query.answer(i18n.get_text("premium.purchase_initiated", language))
+            payload = update.message.successful_payment.invoice_payload or ""
+            if not payload.startswith("stars_"):
+                return
+            plan_name = payload.replace("stars_", "")
+            
+            plan_info = payment_service._get_plan_info(plan_name)
+            if not plan_info:
+                return
             
             subscription_result = await payment_service.create_subscription(
                 user.id,
@@ -182,87 +220,17 @@ class PaymentHandlers:
                 plan_info['duration_days']
             )
             
+            language = 'tr'
+            user_data = await db_service.get_user(user.id)
+            if user_data:
+                language = user_data.get('language', 'tr')
+            
             if subscription_result['success']:
                 success_text = i18n.get_text("premium.payment_success", language)
                 keyboard = PaymentKeyboards.get_payment_back_keyboard(language)
-                await update.callback_query.edit_message_text(
-                    success_text,
-                    reply_markup=keyboard,
-                    parse_mode='Markdown'
-                )
+                await update.message.reply_text(success_text, reply_markup=keyboard, parse_mode='Markdown')
             else:
-                await update.callback_query.answer(i18n.get_text("premium.payment_error", language))
-            
+                await update.message.reply_text(i18n.get_text("premium.payment_error", language))
         except Exception as e:
-            logger.error(f"Error processing payment: {e}")
-            await update.callback_query.answer(i18n.get_text("error_occurred", 'tr'))
-    
-    @staticmethod
-    async def show_subscription_management(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-        """Show subscription management."""
-        try:
-            user = update.effective_user
-            if not user:
-                return
-            
-            user_data = await db_service.get_user(user.id)
-            language = user_data.get('language', 'tr') if user_data else 'tr'
-            
-            # Check subscription status
-            subscription_status = await payment_service.check_subscription_status(user.id)
-            
-            header = i18n.get_text("subscription_management", language)
-            text = f"{header}\n\n"
-            
-            if subscription_status['active']:
-                text += i18n.get_text("daily_card_already_subscribed", language)
-            else:
-                text += i18n.get_text("premium_required", language)
-            
-            keyboard = PaymentKeyboards.get_subscription_management_keyboard(language)
-            
-            await update.callback_query.edit_message_text(
-                text,
-                reply_markup=keyboard,
-                parse_mode='Markdown'
-            )
-            
-        except Exception as e:
-            logger.error(f"Error showing subscription management: {e}")
-            await update.callback_query.answer(i18n.get_text("error_occurred", 'tr'))
-    
-    @staticmethod
-    async def handle_cancel_subscription(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-        """Handle subscription cancellation."""
-        try:
-            user = update.effective_user
-            if not user:
-                return
-            
-            user_data = await db_service.get_user(user.id)
-            language = user_data.get('language', 'tr') if user_data else 'tr'
-            
-            # Check if user has active subscription
-            subscription_status = await payment_service.check_subscription_status(user.id)
-            
-            if not subscription_status['active']:
-                await update.callback_query.answer(i18n.get_text("premium_required", language))
-                return
-            
-            # Cancel subscription
-            success = await payment_service.cancel_subscription(user.id)
-            
-            if success:
-                text = i18n.get_text("operation_successful", language)
-                keyboard = PaymentKeyboards.get_payment_back_keyboard(language)
-                await update.callback_query.edit_message_text(
-                    text,
-                    reply_markup=keyboard,
-                    parse_mode='Markdown'
-                )
-            else:
-                await update.callback_query.answer(i18n.get_text("error_occurred", language))
-            
-        except Exception as e:
-            logger.error(f"Error cancelling subscription: {e}")
-            await update.callback_query.answer(i18n.get_text("error_occurred", 'tr')) 
+            logger.error(f"Error handling successful payment: {e}")
+            # Avoid raising in message updates 
