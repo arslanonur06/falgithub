@@ -800,12 +800,10 @@
   "users": "👥 Kullanıcılar",
   "view_logs": "📋 Logları Görüntüle",
   "settings": "⚙️ Ayarlar",
-            "download_pdf": "📄 PDF İndir",
-  "premium_management": "💎 Premium Yönetimi",
+  "download_pdf": "📄 PDF İndir",
   "no_logs": "Henüz log yok.",
   "admin_logs_message": "📋 **Admin Logları**\n\n{logs}",
   "admin_pdf_download": "📄 **PDF İndirme**\n\nRaporları PDF formatında indirin.",
   "astrology_chatbot_activated": "🤖 **Astroloji Chatbot Aktif**\n\nArtık astroloji sorularınızı sorabilirsiniz!",
-  "moon_calendar_message": "🌙 **Ay Takvimi**\n\nAy fazları ve enerji rehberliği.",
-  "birth_chart_prompt": "🌟 Doğum bilgilerinizi girin:\n\nFormat: GG.AA.YYYY SS:DD Şehir\nÖrnek: 15.03.1990 14:30 İstanbul"
+  "moon_calendar_message": "🌙 **Ay Takvimi**\n\nAy fazları ve enerji rehberliği."
 } 
