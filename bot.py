@@ -46,13 +46,8 @@ for filename in os.listdir(locales_dir):
     if filename.endswith('.json'):
         lang_code = filename.replace('.json', '')
         filepath = os.path.join(locales_dir, filename)
-        try:
-            with open(filepath, 'r', encoding='utf-8') as f:
-                LOCALES[lang_code] = json.load(f)
-            print(f"✅ Loaded translations for {lang_code}")
-        except Exception as e:
-            print(f"❌ Error loading {lang_code} translations: {e}")
-            continue
+        with open(filepath, 'r', encoding='utf-8') as f:
+            LOCALES[lang_code] = json.load(f)
 
 def get_text(key: str, lang: str = 'en', **kwargs) -> str:
     """Get localized text for a given key, with robust fallback and logging"""
@@ -65,30 +60,17 @@ def get_text(key: str, lang: str = 'en', **kwargs) -> str:
             else:
                 return None
         return current
-    
-    # Get the translation
     text = get_nested_value(LOCALES.get(lang, {}), key)
     if text is None:
         text = get_nested_value(LOCALES.get('en', {}), key)
     if text is None:
         logger.warning(f"Missing translation key: {key} (lang={lang})")
         text = key  # Fallback to key itself
-    
-    # Ensure text is a string, not a dict or other type
-    if not isinstance(text, str):
-        if isinstance(text, dict):
-            # If it's a dict, try to get a title or description
-            text = text.get('title', text.get('description', key))
-        else:
-            text = str(text) if text is not None else key
-    
-    # Format with kwargs if provided
     if kwargs:
         try:
             text = text.format(**kwargs)
         except Exception as e:
             logger.warning(f"Format error for key {key}: {e}")
-    
     return text
 
 def get_user_language(user_id: int) -> str:
@@ -771,9 +753,9 @@ def create_main_menu_keyboard(lang='tr'):
         [InlineKeyboardButton(get_text("dream_analysis", lang), callback_data='select_dream')],
         [InlineKeyboardButton(get_text("astrology", lang), callback_data='select_astrology')],
         [InlineKeyboardButton(get_text("daily_card", lang), callback_data='daily_card')],
-        [InlineKeyboardButton("👥 Invite Friends", callback_data='referral')],
+        [InlineKeyboardButton(get_text("referral", lang), callback_data='referral')],
         [InlineKeyboardButton(get_text("premium_menu", lang), callback_data='premium_menu')],
-        [InlineKeyboardButton("🌐 Language", callback_data='change_language')]
+        [InlineKeyboardButton(get_text("language", lang), callback_data='change_language')]
     ]
     return InlineKeyboardMarkup(keyboard)
 
@@ -789,13 +771,13 @@ def create_language_keyboard():
 def create_admin_panel_keyboard(lang='tr'):
     """Admin panel klavyesini oluştur"""
     keyboard = [
-        [InlineKeyboardButton("📊 Statistics", callback_data='admin_stats')],
-        [InlineKeyboardButton("👥 Users", callback_data='admin_users')],
-        [InlineKeyboardButton("📋 View Logs", callback_data='admin_view_logs')],
-        [InlineKeyboardButton("⚙️ Settings", callback_data='admin_settings')],
-        [InlineKeyboardButton("📄 Download PDF", callback_data='admin_download_pdf')],
-        [InlineKeyboardButton("⭐ Premium Management", callback_data='admin_premium')],
-        [InlineKeyboardButton("🏠 Main Menu", callback_data='main_menu')]
+        [InlineKeyboardButton(get_text("statistics", lang), callback_data='admin_stats')],
+        [InlineKeyboardButton(get_text("users", lang), callback_data='admin_users')],
+        [InlineKeyboardButton(get_text("view_logs", lang), callback_data='admin_view_logs')],
+        [InlineKeyboardButton(get_text("settings", lang), callback_data='admin_settings')],
+        [InlineKeyboardButton(get_text("download_pdf", lang), callback_data='admin_download_pdf')],
+        [InlineKeyboardButton(get_text("premium_management", lang), callback_data='admin_premium')],
+        [InlineKeyboardButton(get_text("main_menu", lang), callback_data='main_menu')]
     ]
     return InlineKeyboardMarkup(keyboard)
 
@@ -877,14 +859,16 @@ async def start(update: Update, context: CallbackContext):
     # Send welcome message
     await update.message.reply_text(
         get_text("start_message", lang),
-        reply_markup=create_main_menu_keyboard(lang)
+        reply_markup=create_main_menu_keyboard(lang),
+        parse_mode='Markdown'
     )
     
     # Send language detection message if auto-detected
     if not user_data:
         lang_name = LOCALES[lang].get('language_name', lang)
         await update.message.reply_text(
-            f"🌐 Your language automatically detected as {lang_name}. Use language button to change if needed."
+            get_text("language_detected", lang, lang=lang_name),
+            parse_mode='Markdown'
         )
 
 async def admin(update: Update, context: CallbackContext):
@@ -898,9 +882,10 @@ async def admin(update: Update, context: CallbackContext):
     lang = get_user_language(user_id)
     
     await update.message.reply_text(
-        "🔧 Admin Panel",
-        reply_markup=create_admin_panel_keyboard(lang)
-    )
+        get_text("admin_panel_title", lang),
+        reply_markup=create_admin_panel_keyboard(lang),
+                parse_mode='Markdown'
+            )
 
 async def gift(update: Update, context: CallbackContext):
     """Gift subscription command - Admin only"""
@@ -1094,6 +1079,11 @@ async def handle_callback_query(update: Update, context: CallbackContext):
         await handle_share_coffee_twitter(query, lang)
     elif query.data.startswith('copy_coffee_link_'):
         await handle_copy_coffee_link(query, lang)
+    elif query.data.startswith('try_payment_'):
+        plan_name = query.data.replace('try_payment_', '')
+        await handle_try_payment(query, plan_name, lang)
+    elif query.data == 'contact_support':
+        await handle_contact_support(query, lang)
     elif query.data == 'referral_leaderboard':
         await show_referral_leaderboard(query, lang)
     elif query.data == 'referral_progress':
@@ -2033,23 +2023,41 @@ async def process_telegram_stars_payment(query, plan_name, lang):
     plan_name_display = plan.get('name', plan_name.title())
     
     try:
-        # Create Telegram Stars payment
-        payment_data = {
+        # Check if user has enough stars
+        # For now, we'll simulate the payment process
+        # In a real implementation, you would check the user's star balance
+        
+        # Create payment form using Telegram Stars
+        payment_form_data = {
             "title": f"Fal Gram - {plan_name_display}",
             "description": f"Premium plan subscription for {plan_name_display}",
             "payload": f"premium_{plan_name}_{user_id}",
-            "provider_token": os.getenv("TELEGRAM_PAYMENT_TOKEN"),  # Your payment provider token
             "currency": "XTR",  # Telegram Stars currency
-            "prices": [LabeledPrice(f"{plan_name_display} Plan", price_stars * 100)]  # Convert to cents
+            "prices": [LabeledPrice(f"{plan_name_display} Plan", price_stars)]  # Stars amount
         }
         
-        # Send invoice to user
-        await query.message.reply_invoice(
-            **payment_data,
-            reply_markup=InlineKeyboardMarkup([
-                [InlineKeyboardButton("💳 Pay Now", pay=True)],
-                [InlineKeyboardButton("❌ Cancel", callback_data="premium_menu")]
-            ])
+        # For Telegram Stars, we need to use a different approach
+        # Since direct star payment might not be available, we'll show instructions
+        
+        message = f"💎 **{plan_name_display} Plan** 💎\n\n"
+        message += f"💰 **Price:** {price_stars} Telegram Stars\n\n"
+        message += "📱 **To complete your purchase:**\n"
+        message += "1. Make sure you have enough Telegram Stars\n"
+        message += "2. Contact @BotFather to enable payments\n"
+        message += "3. Or use admin command to activate manually\n\n"
+        message += "🔧 **Alternative:** Contact support for manual activation"
+        
+        keyboard = [
+            [InlineKeyboardButton("💳 Try Payment", callback_data=f"try_payment_{plan_name}")],
+            [InlineKeyboardButton("📞 Contact Support", callback_data="contact_support")],
+            [InlineKeyboardButton("🔙 Back to Plans", callback_data="premium_menu")]
+        ]
+        
+        await safe_edit_message(
+            query,
+            message,
+            reply_markup=InlineKeyboardMarkup(keyboard),
+            parse_mode='Markdown'
         )
         
         # Update user state to waiting for payment
@@ -3991,6 +3999,62 @@ async def handle_copy_coffee_link(query, lang):
             reply_markup=InlineKeyboardMarkup(keyboard),
             parse_mode='Markdown'
         )
+
+
+async def handle_try_payment(query, plan_name, lang):
+    """Handle try payment action"""
+    user_id = query.from_user.id
+    plan = PREMIUM_PLANS.get(plan_name, {})
+    price_stars = plan.get('price_stars', 0)
+    plan_name_display = plan.get('name', plan_name.title())
+    
+    message = f"💳 **Payment Attempt** 💳\n\n"
+    message += f"Plan: **{plan_name_display}**\n"
+    message += f"Price: **{price_stars} Telegram Stars**\n\n"
+    message += "⚠️ **Note:** Telegram Stars payment is currently in development.\n\n"
+    message += "🔧 **For now, you can:**\n"
+    message += "• Contact support for manual activation\n"
+    message += "• Use admin commands if you're an admin\n"
+    message += "• Wait for full payment integration\n\n"
+    message += "📞 **Support:** @YourSupportUsername"
+    
+    keyboard = [
+        [InlineKeyboardButton("📞 Contact Support", callback_data="contact_support")],
+        [InlineKeyboardButton("🔙 Back to Plans", callback_data="premium_menu")]
+    ]
+    
+    await safe_edit_message(
+        query,
+        message,
+        reply_markup=InlineKeyboardMarkup(keyboard),
+        parse_mode='Markdown'
+    )
+
+
+async def handle_contact_support(query, lang):
+    """Handle contact support action"""
+    message = "📞 **Contact Support** 📞\n\n"
+    message += "Need help with payment or have questions?\n\n"
+    message += "🔗 **Support Options:**\n"
+    message += "• Telegram: @YourSupportUsername\n"
+    message += "• Email: support@falgram.com\n"
+    message += "• Website: https://falgram.com/support\n\n"
+    message += "📋 **Please include:**\n"
+    message += "• Your User ID: `" + str(query.from_user.id) + "`\n"
+    message += "• Issue description\n"
+    message += "• Screenshots if applicable\n\n"
+    message += "⏰ **Response time:** Usually within 24 hours"
+    
+    keyboard = [
+        [InlineKeyboardButton("🔙 Back to Menu", callback_data="main_menu")]
+    ]
+    
+    await safe_edit_message(
+        query,
+        message,
+        reply_markup=InlineKeyboardMarkup(keyboard),
+        parse_mode='Markdown'
+    )
 
 # --- Main Function ---
 

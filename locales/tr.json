@@ -800,12 +800,138 @@
   "users": "👥 Kullanıcılar",
   "view_logs": "📋 Logları Görüntüle",
   "settings": "⚙️ Ayarlar",
-            "download_pdf": "📄 PDF İndir",
+  "download_pdf": "📄 PDF İndir",
   "premium_management": "💎 Premium Yönetimi",
   "no_logs": "Henüz log yok.",
   "admin_logs_message": "📋 **Admin Logları**\n\n{logs}",
   "admin_pdf_download": "📄 **PDF İndirme**\n\nRaporları PDF formatında indirin.",
   "astrology_chatbot_activated": "🤖 **Astroloji Chatbot Aktif**\n\nArtık astroloji sorularınızı sorabilirsiniz!",
   "moon_calendar_message": "🌙 **Ay Takvimi**\n\nAy fazları ve enerji rehberliği.",
+<<<<<<< Current (Your changes)
   "birth_chart_prompt": "🌟 Doğum bilgilerinizi girin:\n\nFormat: GG.AA.YYYY SS:DD Şehir\nÖrnek: 15.03.1990 14:30 İstanbul"
+=======
+  "birth_chart_prompt": "🌟 Doğum bilgilerinizi girin:\n\nFormat: GG.AA.YYYY SS:DD Şehir\nÖrnek: 15.03.1990 14:30 İstanbul",
+  "referral": {
+    "title": "🌟 **REFERANS SİSTEMİ** 🌟",
+    "description": "Arkadaşlarınızı davet edin ve ödüller kazanın!",
+    "stats_title": "📊 **Referans İstatistikleriniz**",
+    "my_rewards_title": "🎁 **Ödülleriniz**",
+    "link_copied": "✅ Referans linki kopyalandı: {link}",
+    "leaderboard_title": "🏆 **Referans Lider Tablosu**",
+    "progress_title": "📈 **İlerlemeniz**",
+    "next_goal_title": "🎯 **Sonraki Hedef**",
+    "copy_link": "📋 Linki Kopyala",
+    "share_twitter": "🐦 X'te Paylaş",
+    "share_telegram": "📤 Telegram'da Paylaş",
+    "leaderboard": "🏆 Lider Tablosu",
+    "progress": "📊 İlerleme Detayları",
+    "next_goal": "🎯 Sonraki Hedef",
+    "back_to_referral": "🔙 Referansa Geri Dön",
+    "total_referrals": "Toplam Referans: **{count}**",
+    "free_readings_earned": "Kazanılan Ücretsiz Fallar: **{readings}**",
+    "stars_earned": "Kazanılan Yıldızlar: **{stars}** ⭐",
+    "total_rewards": "Toplam Ödül Değeri: **{rewards}** ⭐",
+    "buttons": {
+      "my_rewards": "🎁 Ödüllerim",
+      "my_stats": "📊 İstatistiklerim",
+      "back": "🔙 Geri"
+    }
+  },
+  "premium": {
+    "comparison_title": "📊 **PREMIUM PLAN KARŞILAŞTIRMASI** 📊",
+    "comparison_description": "Tüm premium planlarımızı karşılaştırın ve size en uygun olanı seçin!",
+    "plan_overview": "📋 **Plan Genel Bakışı**",
+    "feature_comparison": "✨ **Detaylı Özellik Karşılaştırması**",
+    "plan_details": "📋 Plan Detayları",
+    "payment_info": "💳 Ödeme Bilgileri",
+    "back_to_comparison": "🔙 Karşılaştırmaya Geri Dön",
+    "back_to_premium": "🔙 Premium Menü",
+    "pay_with_stars": "💳 Yıldızlarla Öde",
+    "telegram_stars_payment": "⭐ Telegram Yıldızlarıyla Öde",
+    "payment_success": "🎉 Ödeme Başarılı!",
+    "payment_error": "❌ Ödeme Hatası",
+    "try_again": "🔄 Tekrar Dene",
+    "purchase_initiated": "🛒 Satın alma başlatıldı. Ödeme ile devam etmek için aşağıdaki butona tıklayın."
+  },
+  "premium_plans": {
+    "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+    "plan_details": {
+      "description_label": "Açıklama",
+      "price_label": "Fiyat",
+      "duration_label": "Süre",
+      "features_label": "Özellikler"
+    },
+    "buttons": {
+      "buy": "💳 Şimdi Satın Al",
+      "back": "🔙 Geri"
+    },
+    "back_to_menu": "🔙 Menüye Geri Dön"
+  },
+  "language": {
+    "selection_title": "🌐 **Dil Seçimi** 🌐",
+    "selection_description": "En iyi deneyim için tercih ettiğiniz dili seçin:",
+    "current_language": "Mevcut Dil: **{lang}**",
+    "language_updated_success": "✅ Dil **{lang}** olarak güncellendi!",
+    "back_to_menu": "🔙 Menüye Geri Dön"
+  },
+  "navigation": {
+    "main_menu": "🏠 Ana Menü",
+    "back": "🔙 Geri",
+    "next": "➡️ İleri",
+    "previous": "⬅️ Önceki"
+  },
+  "buttons": {
+    "copy_link": "📋 Linki Kopyala",
+    "my_stats": "📊 İstatistiklerim",
+    "share_whatsapp": "📱 WhatsApp'ta Paylaş",
+    "share_telegram": "📤 Telegram'da Paylaş",
+    "my_rewards": "🎁 Ödüllerim",
+    "leaderboard": "🏆 Lider Tablosu",
+    "progress_details": "📊 İlerleme Detayları",
+    "next_goal": "🎯 Sonraki Hedef",
+    "main_menu": "🏠 Ana Menü",
+    "compare_plans": "📊 Planları Karşılaştır",
+    "payment_info": "💳 Ödeme Bilgileri",
+    "plan_details": "📋 Plan Detayları",
+    "back_to_premium": "🔙 Premium Menü",
+    "back_to_referral": "🔙 Referansa Geri Dön",
+    "back_to_plans": "🔙 Planlara Geri Dön",
+    "back_to_comparison": "🔙 Karşılaştırmaya Geri Dön",
+    "back_to_menu": "🔙 Menüye Geri Dön",
+    "back": "🔙 Geri",
+    "buy_now": "🛒 Şimdi Satın Al",
+    "close": "❌ Kapat",
+    "subscribe": "✅ Abone Ol",
+    "unsubscribe": "❌ Aboneliği İptal Et",
+    "upgrade_vip": "👑 VIP'e Yükselt",
+    "upgrade_premium": "⭐ Premium'a Yükselt",
+    "upgrade_basic": "💎 Temel'e Yükselt",
+    "buy_premium": "💳 Premium Satın Al",
+    "try_again": "🔄 Tekrar Dene"
+  },
+  "payment": {
+    "title": "💳 **ÖDEME SİSTEMİ** 💳",
+    "description": "💰 **Yıldızlarla premium özellikler elde edin!**\n\nYıldızlar bizim ödeme aracımızdır. Burada yıldızları nasıl kazanacağınızı ve kullanacağınızı görebilirsiniz.",
+    "secure_features": [
+      "• Tüm ödemeler Telegram üzerinden güvenli şekilde işlenir",
+      "• Ödeme bilgileriniz asla saklanmaz",
+      "• Başarılı ödemeden sonra anında aktivasyon"
+    ],
+    "stars_sources": [
+      "• Telegram Premium kullanarak yıldız kazanın",
+      "• Telegram'dan yıldız satın alın",
+      "• Diğer kullanıcılardan hediye olarak yıldız alın"
+    ],
+    "payment_steps": [
+      "1. Tercih ettiğiniz planı seçin",
+      "2. 'Yıldızlarla Öde'ye tıklayın",
+      "3. Telegram'da ödemeyi tamamlayın",
+      "4. Premium özelliklerinizin tadını çıkarın!"
+    ],
+    "need_help": "❓ **Yardıma mı ihtiyacınız var?**",
+    "contact_support": "Yardım için destek ekibimizle iletişime geçin.",
+    "buy_premium": "💳 Premium Satın Al",
+    "back_to_plans": "🔙 Planlara Geri Dön"
+  }
+>>>>>>> Incoming (Background Agent changes)
 } 
