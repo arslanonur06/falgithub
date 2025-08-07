@@ -33,9 +33,31 @@
   "daily_card_already_subscribed": "Tu suscripción a 'Carta del Día' ya está activa. Recibirás tu carta cada mañana.",
   "referral": "👥 Invitar Amigos",
   "language": "🌐 Selección de Idioma",
-  "language_selection": "¿En qué idioma te gustaría continuar?",
+  "language_selection": {
+    "title": "🌐 **Selección de Idioma**",
+    "description": "Por favor selecciona tu idioma preferido:",
+    "buttons": {
+      "turkish": "🇹🇷 Türkçe",
+      "english": "🇺🇸 English",
+      "spanish": "🇪🇸 Español",
+      "french": "🇫🇷 Français",
+      "russian": "🇷🇺 Русский",
+      "german": "🇩🇪 Deutsch",
+      "arabic": "🇸🇦 العربية",
+      "italian": "🇮🇹 Italiano",
+      "portuguese": "🇵🇹 Português",
+      "back": "⬅️ Volver"
+    }
+  },
+  "language": {
+    "current_language": "🌐 Idioma Actual: {lang}",
+    "selection_title": "🌐 **Selección de Idioma**",
+    "selection_description": "Por favor selecciona tu idioma preferido:",
+    "back_to_menu": "⬅️ Volver al Menú"
+  },
   "language_detected": "🌐 Tu idioma detectado automáticamente como {lang}. Usa el botón de idioma para cambiar si es necesario.",
   "language_updated": "🌐 Idioma actualizado a {lang}.",
+
   "fortune_request": "Envía una foto de tu taza de café...",
   "fortune_limit_reached": "Tu límite de lecturas gratis se ha alcanzado. Se requieren {stars_count} Estrellas de Telegram para continuar.",
   "fortune_in_progress": "🔮 Tu lectura se está preparando...",
@@ -51,17 +73,7 @@
   "premium_plan_basic": "✨ Plan Básico - 500 ⭐",
   "premium_plan_premium": "✨ Plan Premium - 1000 ⭐",
   "premium_plan_vip": "✨ Plan VIP - 2000 ⭐",
-  "premium_plans": {
-    "title": "💎 **PLANES PREMIUM** 💎",
-    "description": "¡Descubre nuestros planes premium para funciones especiales y experiencia ilimitada de fortuna!",
-    "separator": "━━━━━━━━━━━━━━━━━━━━━━",
-    "comparison": "📊 **Comparación de Planes**",
-    "features": "✨ **Características:**",
-    "price": "💰 **Precio:**",
-    "duration": "⏰ **Duración:**",
-    "buy_now": "🛒 Comprar Ahora",
-    "back_to_menu": "⬅️ Volver al Menú"
-  },
+
   "error": {
     "plan_not_found": "❌ Plan no encontrado. Por favor, inténtalo de nuevo."
   },
@@ -866,78 +878,7 @@
     "payment_success": "🎉 ¡Pago exitoso! Tus funciones premium están activas.",
     "payment_error": "❌ Error de pago. Intenta de nuevo o contacta soporte."
   },
-  "premium_plans": {
-    "separator": "━━━━━━━━━━━━━━━━━━━━━━",
-    "plan_details": {
-      "description_label": "Descripción",
-      "price_label": "Precio",
-      "duration_label": "Duración",
-      "features_label": "Características"
-    },
-    "buttons": {
-      "buy": "💳 Comprar Ahora",
-      "back": "🔙 Volver"
-    },
-    "back_to_menu": "🔙 Volver al Menú",
-    "plans": {
-      "basic": {
-        "name": "Plan Básico",
-        "description": "Lecturas ilimitadas y características avanzadas",
-        "duration": "30 días",
-        "price": "500 ⭐",
-        "features": [
-          "♾️ Lecturas ilimitadas (Café, Tarot, Sueños)",
-          "📊 Reporte semanal de horóscopo",
-          "🔮 Análisis avanzado de astrología",
-          "💫 Interpretación de carta natal",
-          "🌙 Características de calendario lunar",
-          "💬 Chatbot avanzado",
-          "🎯 Recomendaciones personalizadas",
-          "📈 Historial detallado de lecturas",
-          "🔔 Notificaciones especiales"
-        ]
-      },
-      "premium": {
-        "name": "Plan Premium",
-        "description": "Paquete completo de astrología y características especiales",
-        "duration": "30 días",
-        "price": "1000 ⭐",
-        "features": [
-          "✨ Características del Plan Básico",
-          "📅 Horóscopo mensual",
-          "🪐 Análisis de tránsitos planetarios",
-          "💕 Compatibilidad de signos",
-          "🌙 Calendario lunar avanzado",
-          "📈 Reportes detallados de astrología",
-          "🎯 Recomendaciones personalizadas",
-          "🔮 Tipos especiales de lectura",
-          "📊 Estadísticas de astrología",
-          "🎁 Contenido exclusivo",
-          "⚡ Soporte prioritario"
-        ]
-      },
-      "vip": {
-        "name": "Plan VIP",
-        "description": "Experiencia máxima con soporte prioritario",
-        "duration": "30 días",
-        "price": "2000 ⭐",
-        "features": [
-          "👑 Características del Plan Premium",
-          "🤖 Chatbot de Astrología 24/7",
-          "👥 Características sociales de astrología",
-          "🎁 Contenido VIP exclusivo",
-          "⚡ Soporte prioritario",
-          "📊 Analíticas avanzadas",
-          "🎯 Consultor personal de astrología",
-          "🌟 Tipos especiales de lectura VIP",
-          "💎 Contenido exclusivo ilimitado",
-          "🎪 Eventos especiales",
-          "📱 Interfaz VIP especial",
-          "🔮 Guía personal con IA"
-        ]
-      }
-    }
-  },
+
   "moon_calendar": {
     "title": "🌙 **CALENDARIO LUNAR** 🌙",
     "separator": "━━━━━━━━━━━━━━━━━━━━━━",

@@ -88,6 +88,12 @@
   },
   "language_detected": "🌐 Your language automatically detected as {lang}. Use language button to change if needed.",
   "language_updated": "🌐 Language updated to {lang}.",
+  "language": {
+    "current_language": "🌐 Current Language: {lang}",
+    "selection_title": "🌐 **Language Selection**",
+    "selection_description": "Please select your preferred language:",
+    "back_to_menu": "⬅️ Back to Menu"
+  },
   "fortune_request": "Send a photo of your coffee cup...",
   "fortune_limit_reached": "Your free fortune limit is reached. {stars_count} Telegram Stars required to continue.",
   "fortune_in_progress": "🔮 Your fortune is being prepared...",
