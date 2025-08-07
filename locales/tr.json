@@ -808,7 +808,7 @@
   "astrology_chatbot_activated": "🤖 **Astroloji Chatbot Aktif**\n\nArtık astroloji sorularınızı sorabilirsiniz!",
   "moon_calendar_message": "🌙 **Ay Takvimi**\n\nAy fazları ve enerji rehberliği.",
   "birth_chart_prompt": "🌟 Doğum bilgilerinizi girin:\n\nFormat: GG.AA.YYYY SS:DD Şehir\nÖrnek: 15.03.1990 14:30 İstanbul",
-  "referral": {
+  "referral_system": {
     "title": "🌟 **REFERANS SİSTEMİ** 🌟",
     "description": "Arkadaşlarınızı davet edin ve ödüller kazanın!",
     "stats_title": "📊 **Referans İstatistikleriniz**",
@@ -864,7 +864,7 @@
     },
     "back_to_menu": "🔙 Menüye Geri Dön"
   },
-  "language": {
+  "language_system": {
     "selection_title": "🌐 **Dil Seçimi** 🌐",
     "selection_description": "En iyi deneyim için tercih ettiğiniz dili seçin:",
     "current_language": "Mevcut Dil: **{lang}**",

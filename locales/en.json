@@ -820,7 +820,7 @@
   "settings": "⚙️ Settings",
   "download_pdf": "📄 Download PDF",
   "premium_management": "💎 Premium Management",
-  "referral": {
+  "referral_system": {
     "title": "🌟 **REFERRAL SYSTEM** 🌟",
     "description": "Invite friends and earn rewards!",
     "stats_title": "📊 **Your Referral Statistics**",
@@ -876,7 +876,7 @@
     },
     "back_to_menu": "🔙 Back to Menu"
   },
-  "language": {
+  "language_system": {
     "selection_title": "🌐 **Language Selection** 🌐",
     "selection_description": "Choose your preferred language for the best experience:",
     "current_language": "Current Language: **{lang}**",
