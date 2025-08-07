@@ -68,24 +68,7 @@
   "daily_card_subscribe": "Harika! Artık her gün size özel 'Günün Tarot Kartı' ve yorumunu göndereceğim.",
   "daily_card_unsubscribe": "Anlaşıldı. Günlük kart gönderimi artık aktif olmayacak.",
   "daily_card_already_subscribed": "Günün Kartı aboneliğiniz zaten aktif. Her sabah kartınızı alacaksınız.",
-  "referral": "👥 Referans",
-  "language": "🌐 Dil Seçimi",
-  "language_selection": {
-    "title": "🌐 **Dil Seçimi / Language Selection**",
-    "description": "Lütfen tercih ettiğiniz dili seçin:\nPlease select your preferred language:",
-    "buttons": {
-      "turkish": "🇹🇷 Türkçe",
-      "english": "🇺🇸 English",
-      "spanish": "🇪🇸 Español",
-      "french": "🇫🇷 Français",
-      "russian": "🇷🇺 Русский",
-      "german": "🇩🇪 Deutsch",
-      "arabic": "🇸🇦 العربية",
-      "italian": "🇮🇹 Italiano",
-      "portuguese": "🇵🇹 Português",
-      "back": "⬅️ Geri"
-    }
-  },
+
   "language_detected": "🌐 Diliniz otomatik olarak {lang} olarak tespit edildi. Gerekirse dil butonunu kullanarak değiştirebilirsiniz.",
   "language_updated": "🌐 Dil {lang} olarak güncellendi.",
 

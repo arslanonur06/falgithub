@@ -2501,6 +2501,13 @@ async def generate_coffee_fortune_impl(update, photo_bytes, lang):
     user_id = update.effective_user.id
     user_id_str = str(user_id)
     try:
+        # Convert photo_bytes to PIL Image for Gemini API
+        from PIL import Image
+        import io
+        
+        # Convert bytes to PIL Image
+        image = Image.open(io.BytesIO(photo_bytes))
+        
         # Use faster model for better performance
         try:
             model = genai.GenerativeModel('gemini-2.5-pro')
@@ -2512,6 +2519,7 @@ async def generate_coffee_fortune_impl(update, photo_bytes, lang):
                     model = genai.GenerativeModel('gemini-pro')
                 except Exception:
                     model = genai.GenerativeModel('gemini-1.5-flash')
+        
         # Get prompt from Supabase with proper language
         prompt = supabase_manager.get_prompt("coffee", lang)
         if not prompt:
@@ -2522,8 +2530,10 @@ async def generate_coffee_fortune_impl(update, photo_bytes, lang):
                 'es': f"Eres un lector de café experimentado. Interpreta los signos en la taza de café para {update.effective_user.first_name}.\n\nExplica las formas, símbolos y signos en la taza en detalle. Haz una interpretación personal e indica oportunidades futuras.\n\n150-200 palabras."
             }
             prompt = fallback_prompts.get(lang, fallback_prompts['en'])
+        
         # Prepare prompt with proper language instruction
         final_prompt = prompt.replace("{username}", update.effective_user.first_name)
+        
         # Add explicit language instruction
         language_instructions = {
             'tr': f"KAHVE FALI YORUMCUSU. SADECE TÜRKÇE KAHVE FALI YORUMU YAZ.\n\n{final_prompt}\n\nTÜRKÇE YORUM:",
@@ -2531,13 +2541,15 @@ async def generate_coffee_fortune_impl(update, photo_bytes, lang):
             'es': f"LECTOR DE CAFÉ. ESCRIBE SOLO LA INTERPRETACIÓN DEL CAFÉ EN ESPAÑOL.\n\n{final_prompt}\n\nINTERPRETACIÓN EN ESPAÑOL:"
         }
         final_prompt = language_instructions.get(lang, language_instructions['en'])
+        
         supabase_manager.add_log(f"Coffee fortune prompt prepared ({lang}): {len(final_prompt)} characters")
         supabase_manager.add_log(f"Gemini API call in progress (coffee, {lang}): {user_id_str}")
+        
         # Send to Gemini (async API) - with timeout and fallback
         try:
             loop = asyncio.get_event_loop()
             response = await asyncio.wait_for(
-                loop.run_in_executor(None, lambda: model.generate_content([final_prompt, photo_bytes])),
+                loop.run_in_executor(None, lambda: model.generate_content([final_prompt, image])),
                 timeout=8.0
             )
             supabase_manager.add_log(f"Gemini API response successfully received: {user_id_str}")
@@ -2557,10 +2569,12 @@ async def generate_coffee_fortune_impl(update, photo_bytes, lang):
         except Exception as e:
             supabase_manager.add_log(f"Gemini API error: {str(e)[:100]}")
             raise Exception(f"Gemini API error: {str(e)[:100]}")
+        
         if not response:
             raise Exception("No response received from AI API")
         if not response.text:
             raise Exception("Empty response received from AI API")
+        
         return response.text
     except Exception as e:
         logger.error(f"generate_coffee_fortune_impl error: {e}")
