@@ -69,6 +69,9 @@
   "daily_card_unsubscribe": "Anlaşıldı. Günlük kart gönderimi artık aktif olmayacak.",
   "daily_card_already_subscribed": "Günün Kartı aboneliğiniz zaten aktif. Her sabah kartınızı alacaksınız.",
 
+  "referral_button": "👥 Arkadaş Davet Et",
+  "language_button": "🌐 Dil Değiştir",
+
   "language_detected": "🌐 Diliniz otomatik olarak {lang} olarak tespit edildi. Gerekirse dil butonunu kullanarak değiştirebilirsiniz.",
   "language_updated": "🌐 Dil {lang} olarak güncellendi.",
 
@@ -179,7 +182,7 @@
     "buttons": {
       "stats": "📊 İstatistikler",
       "users": "👥 Kullanıcı Listesi",
-      "referrals": "👥 Referral İlişkileri",
+      "referrals": "👥 Referans ",
       "premium": "💎 Premium Yönetimi",
       "logs": "📋 Logları Görüntüle",
       "pdf": "📄 PDF İndir",
@@ -782,6 +785,7 @@
   "referral": {
     "title": "🌟 **REFERANS SİSTEMİ** 🌟",
     "description": "Arkadaşlarınızı davet edin ve ödüller kazanın!",
+    "button_text": "👥 Arkadaş Davet Et",
     "stats_title": "📊 **Referans İstatistikleriniz**",
     "my_rewards_title": "🎁 **Ödülleriniz**",
     "link_copied": "✅ Referans linki kopyalandı: {link}",
@@ -895,5 +899,7 @@
     "contact_support": "Yardım için destek ekibimizle iletişime geçin.",
     "buy_premium": "💳 Premium Satın Al",
     "back_to_plans": "🔙 Planlara Geri Dön"
-  }
+  },
+  "invite_friends": "👥 Arkadaş Davet Et",
+  "language_button": "🌐 Dil Seçimi"
 }

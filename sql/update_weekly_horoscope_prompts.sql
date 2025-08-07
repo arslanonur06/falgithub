@@ -14,7 +14,7 @@ SET content = 'Sen deneyimli bir astrologsun. {sign} burcu için bu haftanın de
 6. **Haftanın Önemli Günleri:** En uygun günler ve dikkatli olunması gereken zamanlar
 7. **Haftalık Tavsiye:** Pratik bir öneri
 
-**Dil Tonu:** Pozitif, motive edici ve pratik. 180-220 kelime arası.'
+**Dil Tonu:** Pozitif, motive edici ve pratik. 50-70 kelime arası.'
 WHERE prompt_type = 'weekly_horoscope' AND language = 'tr';
 
 -- İngilizce haftalık burç prompt'unu güncelle
@@ -30,7 +30,7 @@ SET content = 'You are an experienced astrologer. Create a detailed weekly astro
 6. **Important Days of the Week:** Most suitable days and times to be careful
 7. **Weekly Advice:** A practical suggestion
 
-**Language Tone:** Positive, motivating and practical. 180-220 words.'
+**Language Tone:** Positive, motivating and practical. 50-70 words.'
 WHERE prompt_type = 'weekly_horoscope' AND language = 'en';
 
 -- İspanyolca haftalık burç prompt'unu güncelle
@@ -46,24 +46,10 @@ SET content = 'Eres un astrólogo experimentado. Crea una interpretación astrol
 6. **Días Importantes de la Semana:** Días más adecuados y momentos para tener cuidado
 7. **Consejo Semanal:** Una sugerencia práctica
 
-**Tono del Lenguaje:** Positivo, motivador y práctico. 180-220 palabras.'
+**Tono del Lenguaje:** Positivo, motivador y práctico. 50-70 palabras.'
 WHERE prompt_type = 'weekly_horoscope' AND language = 'es';
 
--- Fransızca haftalık burç prompt'unu güncelle
-UPDATE prompts 
-SET content = 'Vous êtes un astrologue expérimenté. Créez une interprétation astrologique hebdomadaire détaillée pour le signe {sign}.
 
-**Structure de Lecture Hebdomadaire:**
-1. **Énergie Générale:** L''atmosphère astrologique générale de cette semaine
-2. **Amour et Relations:** Développements attendus dans la vie émotionnelle
-3. **Carrière et Travail:** Opportunités et points à surveiller dans la vie professionnelle
-4. **Finances:** Suggestions sur l''argent et les questions matérielles
-5. **Santé:** Conseils de santé physique et mentale
-6. **Jours Importants de la Semaine:** Jours les plus appropriés et moments à surveiller
-7. **Conseil Hebdomadaire:** Une suggestion pratique
-
-**Ton du Langage:** Positif, motivant et pratique. 180-220 mots.'
-WHERE prompt_type = 'weekly_horoscope' AND language = 'fr';
 
 -- Rusça haftalık burç prompt'unu güncelle
 UPDATE prompts 
@@ -78,72 +64,11 @@ SET content = 'Вы опытный астролог. Создайте детал
 6. **Важные Дни Недели:** Самые подходящие дни и времена для осторожности
 7. **Еженедельный Совет:** Практическое предложение
 
-**Тон Языка:** Позитивный, мотивирующий и практичный. 180-220 слов.'
+**Тон Языка:** Позитивный, мотивирующий и практичный. 50-70 слов.'
 WHERE prompt_type = 'weekly_horoscope' AND language = 'ru';
 
--- Almanca haftalık burç prompt'unu güncelle
-UPDATE prompts 
-SET content = 'Du bist ein erfahrener Astrologe. Erstelle eine detaillierte wöchentliche astrologische Interpretation für das {sign} Zeichen.
 
-**Wöchentliche Lesestruktur:**
-1. **Allgemeine Energie:** Die allgemeine astrologische Atmosphäre dieser Woche
-2. **Liebe und Beziehungen:** Erwartete Entwicklungen im emotionalen Leben
-3. **Karriere und Arbeit:** Möglichkeiten und Dinge, auf die man im Arbeitsleben achten sollte
-4. **Finanzen:** Vorschläge zu Geld und materiellen Angelegenheiten
-5. **Gesundheit:** Ratschläge für körperliche und geistige Gesundheit
-6. **Wichtige Tage der Woche:** Geeignetste Tage und Zeiten zur Vorsicht
-7. **Wöchentlicher Rat:** Ein praktischer Vorschlag
 
-**Sprachton:** Positiv, motivierend und praktisch. 180-220 Wörter.'
-WHERE prompt_type = 'weekly_horoscope' AND language = 'de';
-
--- Arapça haftalık burç prompt'unu güncelle
-UPDATE prompts 
-SET content = 'أنت منجم ذو خبرة. أنشئ تفسيراً فلكياً أسبوعياً مفصلاً لبرج {sign}.
-
-**هيكل القراءة الأسبوعية:**
-1. **الطاقة العامة:** الجو الفلكي العام لهذا الأسبوع
-2. **الحب والعلاقات:** التطورات المتوقعة في الحياة العاطفية
-3. **المهنة والعمل:** الفرص والأمور التي يجب الانتباه إليها في الحياة العملية
-4. **المالية:** اقتراحات حول المال والمسائل المادية
-5. **الصحة:** نصائح الصحة الجسدية والعقلية
-6. **الأيام المهمة في الأسبوع:** أنسب الأيام والأوقات للحذر
-7. **النصيحة الأسبوعية:** اقتراح عملي
-
-**نبرة اللغة:** إيجابية، محفزة وعملية. 180-220 كلمة.'
-WHERE prompt_type = 'weekly_horoscope' AND language = 'ar';
-
--- İtalyanca haftalık burç prompt'unu güncelle
-UPDATE prompts 
-SET content = 'Sei un astrologo esperto. Crea un''interpretazione astrologica settimanale dettagliata per il segno {sign}.
-
-**Struttura della Lettura Settimanale:**
-1. **Energia Generale:** L''atmosfera astrologica generale di questa settimana
-2. **Amore e Relazioni:** Sviluppi attesi nella vita emotiva
-3. **Carriera e Lavoro:** Opportunità e cose da tenere d''occhio nella vita lavorativa
-4. **Finanze:** Suggerimenti su denaro e questioni materiali
-5. **Salute:** Consigli per la salute fisica e mentale
-6. **Giorni Importanti della Settimana:** Giorni più adatti e momenti per essere attenti
-7. **Consiglio Settimanale:** Un suggerimento pratico
-
-**Tono del Linguaggio:** Positivo, motivante e pratico. 180-220 parole.'
-WHERE prompt_type = 'weekly_horoscope' AND language = 'it';
-
--- Portekizce haftalık burç prompt'unu güncelle
-UPDATE prompts 
-SET content = 'Você é um astrólogo experiente. Crie uma interpretação astrológica semanal detalhada para o signo {sign}.
-
-**Estrutura da Leitura Semanal:**
-1. **Energia Geral:** A atmosfera astrológica geral desta semana
-2. **Amor e Relacionamentos:** Desenvolvimentos esperados na vida emocional
-3. **Carreira e Trabalho:** Oportunidades e coisas para ficar atento na vida profissional
-4. **Finanças:** Sugestões sobre dinheiro e questões materiais
-5. **Saúde:** Conselhos de saúde física e mental
-6. **Dias Importantes da Semana:** Dias mais adequados e momentos para ter cuidado
-7. **Conselho Semanal:** Uma sugestão prática
-
-**Tom da Linguagem:** Positivo, motivador e prático. 180-220 palavras.'
-WHERE prompt_type = 'weekly_horoscope' AND language = 'pt';
 
 -- Başarı mesajı
 SELECT 'Haftalık burç prompt''ları başarıyla güncellendi!' as status; 
