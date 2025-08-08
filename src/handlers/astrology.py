@@ -59,7 +59,7 @@ class AstrologyHandlers:
         user_data = await db_service.get_user(user.id)
         if not user_data or not user_data.get('birth_date'):
             text = i18n.get_text("astrology.birth_date_required", language)
-            keyboard = AstrologyKeyboards.get_back_button(language, "astrology_menu")
+            keyboard = AstrologyKeyboards.get_back_button(language)
             await query.edit_message_text(text, reply_markup=keyboard)
             return
         
@@ -81,7 +81,7 @@ class AstrologyHandlers:
         user = update.effective_user
         language = user.language_code or "en" if user else "en"
         
-        keyboard = AstrologyKeyboards.get_zodiac_selection(language, "daily_horoscope")
+        keyboard = AstrologyKeyboards.get_zodiac_selection("daily_horoscope", language)
         text = i18n.get_text("astrology.select_zodiac_daily", language)
         
         await query.edit_message_text(text, reply_markup=keyboard)
@@ -101,7 +101,7 @@ class AstrologyHandlers:
             await query.edit_message_text(premium_check['message'], reply_markup=premium_check['keyboard'])
             return
         
-        keyboard = AstrologyKeyboards.get_zodiac_selection(language, "weekly_horoscope")
+        keyboard = AstrologyKeyboards.get_zodiac_selection("weekly_horoscope", language)
         text = i18n.get_text("weekly_horoscope.title", language)
         
         await query.edit_message_text(text, reply_markup=keyboard)
@@ -121,7 +121,7 @@ class AstrologyHandlers:
             await query.edit_message_text(premium_check['message'], reply_markup=premium_check['keyboard'])
             return
         
-        keyboard = AstrologyKeyboards.get_zodiac_selection(language, "monthly_horoscope")
+        keyboard = AstrologyKeyboards.get_zodiac_selection("monthly_horoscope", language)
         text = i18n.get_text("monthly_horoscope.title", language)
         
         await query.edit_message_text(text, reply_markup=keyboard)
@@ -141,8 +141,9 @@ class AstrologyHandlers:
             await query.edit_message_text(premium_check['message'], reply_markup=premium_check['keyboard'])
             return
         
-        keyboard = AstrologyKeyboards.get_compatibility_menu(language)
-        text = i18n.get_text("astrology.compatibility_menu", language)
+        # Begin by asking for the first zodiac sign
+        keyboard = AstrologyKeyboards.get_zodiac_selection("compat_first", language)
+        text = i18n.get_text("compatibility_first_sign", language)
         
         await query.edit_message_text(text, reply_markup=keyboard)
     
@@ -208,11 +209,11 @@ class AstrologyHandlers:
         context.user_data['compatibility_selection'][selection_type] = zodiac_index
         
         # Check if both signs are selected
-        if len(context.user_data['compatibility_selection']) == 2:
+        if all(key in context.user_data['compatibility_selection'] for key in ("first", "second")):
             await AstrologyHandlers._generate_compatibility(query, context.user_data['compatibility_selection'], language)
         else:
             # Show second sign selection
-            keyboard = AstrologyKeyboards.get_zodiac_selection(language, "compat_second")
+            keyboard = AstrologyKeyboards.get_zodiac_selection("compat_second", language)
             text = i18n.get_text("astrology.select_second_sign", language)
             await query.edit_message_text(text, reply_markup=keyboard)
     
@@ -225,7 +226,7 @@ class AstrologyHandlers:
             return {
                 'has_access': False,
                 'message': i18n.get_text("error.user_not_found", language),
-                'keyboard': AstrologyKeyboards.get_back_button(language, "astrology_menu")
+                'keyboard': AstrologyKeyboards.get_back_button(language)
             }
         
         # Determine plan rank
@@ -269,13 +270,13 @@ class AstrologyHandlers:
             )
             text += f"\n\n{interpretation}"
             
-            keyboard = AstrologyKeyboards.get_back_button(language, "astrology_menu")
+            keyboard = AstrologyKeyboards.get_back_button(language)
             await query.edit_message_text(text, reply_markup=keyboard)
             
         except Exception as e:
             logger.error(f"Error generating birth chart: {e}")
             text = i18n.get_text("error.generation_failed", language)
-            keyboard = AstrologyKeyboards.get_back_button(language, "astrology_menu")
+            keyboard = AstrologyKeyboards.get_back_button(language)
             await query.edit_message_text(text, reply_markup=keyboard)
     
     @staticmethod
@@ -326,13 +327,13 @@ class AstrologyHandlers:
             )
             text += f"\n\n{interpretation}"
             
-            keyboard = AstrologyKeyboards.get_back_button(language, "astrology_menu")
+            keyboard = AstrologyKeyboards.get_back_button(language)
             await query.edit_message_text(text, reply_markup=keyboard)
             
         except Exception as e:
             logger.error(f"Error generating horoscope: {e}")
             text = i18n.get_text("error.generation_failed", language)
-            keyboard = AstrologyKeyboards.get_back_button(language, "astrology_menu")
+            keyboard = AstrologyKeyboards.get_back_button(language)
             await query.edit_message_text(text, reply_markup=keyboard)
     
     @staticmethod
@@ -375,13 +376,13 @@ class AstrologyHandlers:
             )
             text += f"\n\n{interpretation}"
             
-            keyboard = AstrologyKeyboards.get_back_button(language, "astrology_menu")
+            keyboard = AstrologyKeyboards.get_back_button(language)
             await query.edit_message_text(text, reply_markup=keyboard)
             
         except Exception as e:
             logger.error(f"Error generating compatibility: {e}")
             text = i18n.get_text("error.generation_failed", language)
-            keyboard = AstrologyKeyboards.get_back_button(language, "astrology_menu")
+            keyboard = AstrologyKeyboards.get_back_button(language)
             await query.edit_message_text(text, reply_markup=keyboard)
     
     @staticmethod
@@ -409,13 +410,13 @@ class AstrologyHandlers:
             text = i18n.get_text("astrology.moon_calendar_title", language)
             text += f"\n\n{interpretation}"
             
-            keyboard = AstrologyKeyboards.get_back_button(language, "astrology_menu")
+            keyboard = AstrologyKeyboards.get_back_button(language)
             await query.edit_message_text(text, reply_markup=keyboard)
             
         except Exception as e:
             logger.error(f"Error generating moon calendar: {e}")
             text = i18n.get_text("error.generation_failed", language)
-            keyboard = AstrologyKeyboards.get_back_button(language, "astrology_menu")
+            keyboard = AstrologyKeyboards.get_back_button(language)
             await query.edit_message_text(text, reply_markup=keyboard)
 
 # Global handlers instance

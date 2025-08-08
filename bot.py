@@ -94,6 +94,9 @@ async def route_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         "profile": UserHandlers.show_profile,
         "help": UserHandlers.show_help,
         "language": UserHandlers.show_language_menu,
+        # Profile actions
+        "edit_profile": UserHandlers.show_edit_profile,
+        "usage_stats": UserHandlers.show_usage_stats,
         # Sections
         "astrology": AstrologyHandlers.show_astrology_menu,
         "fortune": __import__("src.handlers.fortune", fromlist=["FortuneHandlers"]).FortuneHandlers.show_fortune_menu,
@@ -116,10 +119,16 @@ async def route_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         "plan_details_premium": PaymentHandlers.show_plan_details,
         "plan_details_vip": PaymentHandlers.show_plan_details,
         "subscription_management": PaymentHandlers.show_subscription_management,
+        "subscription_status": PaymentHandlers.show_subscription_management,
+        "usage_statistics": PaymentHandlers.show_usage_statistics,
         "toggle_auto_renew": PaymentHandlers.toggle_auto_renew,
         "cancel_subscription": PaymentHandlers.handle_cancel_subscription,
         # Fortune
         "tarot_fortune": __import__("src.handlers.fortune", fromlist=["FortuneHandlers"]).FortuneHandlers.handle_tarot_reading,
+        "tarot_rider_waite": __import__("src.handlers.fortune", fromlist=["FortuneHandlers"]).FortuneHandlers.handle_tarot_option,
+        "tarot_celtic_cross": __import__("src.handlers.fortune", fromlist=["FortuneHandlers"]).FortuneHandlers.handle_tarot_option,
+        "tarot_three_card": __import__("src.handlers.fortune", fromlist=["FortuneHandlers"]).FortuneHandlers.handle_tarot_option,
+        "tarot_daily_card": __import__("src.handlers.fortune", fromlist=["FortuneHandlers"]).FortuneHandlers.handle_tarot_option,
         "coffee_fortune": __import__("src.handlers.fortune", fromlist=["FortuneHandlers"]).FortuneHandlers.handle_coffee_reading,
         "dream_fortune": __import__("src.handlers.fortune", fromlist=["FortuneHandlers"]).FortuneHandlers.handle_dream_interpretation,
         # Astrology
@@ -128,6 +137,12 @@ async def route_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         "monthly_horoscope": AstrologyHandlers.handle_monthly_horoscope,
         "birth_chart": AstrologyHandlers.handle_birth_chart,
         "moon_calendar": AstrologyHandlers.handle_moon_calendar,
+        # Horoscope period quick picks
+        "horoscope_daily": AstrologyHandlers.handle_daily_horoscope,
+        "horoscope_weekly": AstrologyHandlers.handle_weekly_horoscope,
+        "horoscope_monthly": AstrologyHandlers.handle_monthly_horoscope,
+        # Generic
+        "cancel": UserHandlers.show_main_menu,
     }
 
     if data in mapping:

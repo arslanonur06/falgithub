@@ -59,26 +59,10 @@ class FortuneHandlers:
             await query.edit_message_text(usage_check['message'], reply_markup=usage_check['keyboard'])
             return
         
-        # Get tarot cards
-        cards = await FortuneHandlers._get_tarot_cards()
-        if not cards:
-            text = i18n.get_text("error.general", language)
-            # Provide Back to Fortune and Main Menu buttons
-            action_keyboard = InlineKeyboardMarkup([
-                [InlineKeyboardButton(i18n.get_text('common.back', language), callback_data='fortune')],
-                [InlineKeyboardButton(i18n.get_text('main_menu', language), callback_data='main_menu')]
-            ])
-            await query.edit_message_text(text, reply_markup=action_keyboard)
-            return
-        
-        # Draw random cards
-        drawn_cards = random.sample(cards, min(3, len(cards)))
-        
-        # Generate interpretation
-        await FortuneHandlers._generate_tarot_interpretation(query, drawn_cards, language)
-        
-        # Update usage
-        await db_service.increment_usage(user.id)
+        # Show deck/spread options including Daily Card
+        prompt_text = i18n.get_text("tarot_fortune_prompt", language)
+        keyboard = FortuneKeyboards.get_tarot_deck_keyboard(language)
+        await query.edit_message_text(prompt_text, reply_markup=keyboard)
     
     @staticmethod
     async def handle_coffee_reading(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -164,6 +148,51 @@ class FortuneHandlers:
         context.user_data['waiting_for'] = 'palm_photo'
         
         await query.edit_message_text(text, reply_markup=keyboard)
+    
+    @staticmethod
+    async def handle_tarot_option(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+        """Handle tarot deck/spread option selection including daily card."""
+        query = update.callback_query
+        await query.answer()
+        
+        user = update.effective_user
+        try:
+            user_data = await db_service.get_user(user.id) if user else None
+        except Exception:
+            user_data = None
+        language = (user_data.get('language') if user_data else None) or (user.language_code if user and user.language_code else 'en')
+        
+        # Check usage limits before generating a reading
+        usage_check = await FortuneHandlers._check_usage_limits(user.id, language)
+        if not usage_check['can_use']:
+            await query.edit_message_text(usage_check['message'], reply_markup=usage_check['keyboard'])
+            return
+        
+        option = query.data  # e.g., tarot_daily_card, tarot_three_card
+        cards_catalog = await FortuneHandlers._get_tarot_cards()
+        if not cards_catalog:
+            await query.edit_message_text(i18n.get_text("error.general", language), reply_markup=FortuneKeyboards.get_back_button(language))
+            return
+        
+        # Determine number of cards
+        if option == "tarot_daily_card":
+            num_cards = 1
+        elif option in ("tarot_three_card", "tarot_rider_waite"):
+            num_cards = 3
+        elif option == "tarot_celtic_cross":
+            # Use a richer spread size when available; fallback to 5 if deck is small
+            num_cards = 10 if len(cards_catalog) >= 10 else min(5, len(cards_catalog))
+        else:
+            # Unknown option; go back to fortune menu
+            await FortuneHandlers.show_fortune_menu(update, context)
+            return
+        
+        # Draw cards and generate interpretation
+        drawn_cards = random.sample(cards_catalog, min(num_cards, len(cards_catalog)))
+        await FortuneHandlers._generate_tarot_interpretation(query, drawn_cards, language)
+        
+        # Update usage count
+        await db_service.increment_usage(user.id)
     
     @staticmethod
     async def handle_photo_input(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:

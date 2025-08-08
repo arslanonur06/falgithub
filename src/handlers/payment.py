@@ -452,3 +452,34 @@ class PaymentHandlers:
         except Exception as e:
             logger.error(f"Error cancelling subscription: {e}")
             await update.callback_query.answer("❌ An error occurred") 
+
+    @staticmethod
+    async def show_subscription_status(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+        """Alias to show subscription management/status screen."""
+        await PaymentHandlers.show_subscription_management(update, context)
+
+    @staticmethod
+    async def show_usage_statistics(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+        """Show user's usage statistics with a back option to subscription management."""
+        try:
+            user = update.effective_user
+            if not user:
+                return
+            user_data = await db_service.get_user(user.id)
+            language = user_data.get('language', 'en') if user_data else 'en'
+            total_readings = (user_data or {}).get('total_readings', 0)
+            daily_readings = (user_data or {}).get('daily_readings_used', 0)
+            from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+            text = (
+                f"📈 Usage Statistics\n\n"
+                f"Total readings: {total_readings}\n"
+                f"Today's readings: {daily_readings}/{settings.FREE_DAILY_LIMIT}"
+            )
+            keyboard = InlineKeyboardMarkup([
+                [InlineKeyboardButton(i18n.get_text("payment.subscription_management", language), callback_data="subscription_management")],
+                [InlineKeyboardButton(i18n.get_text("common.back", language), callback_data="premium")],
+            ])
+            await update.callback_query.edit_message_text(text, reply_markup=keyboard, parse_mode='Markdown')
+        except Exception as e:
+            logger.error(f"Error showing usage statistics: {e}")
+            await update.callback_query.answer("❌ An error occurred") 
