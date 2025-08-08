@@ -65,8 +65,8 @@ class ReferralKeyboards:
                     callback_data="share_telegram"
                 ),
                 InlineKeyboardButton(
-                    i18n.get_text("referral.share_whatsapp", language),
-                    callback_data="share_whatsapp"
+                    i18n.get_text("referral.share_twitter", language),
+                    callback_data="share_twitter"
                 )
             ],
             [

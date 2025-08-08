@@ -141,36 +141,48 @@ class PaymentHandlers:
                 await update.callback_query.answer("❌ Invalid plan")
                 return
             
-            # Create invoice
-            invoice_result = await payment_service.create_invoice(
-                user.id, 
-                plan_name, 
-                plan_info['price']
-            )
-            
-            if not invoice_result['success']:
-                await update.callback_query.answer("❌ Failed to create invoice")
+            provider_token = getattr(settings, 'PAYMENT_PROVIDER_TOKEN', '')
+            if provider_token:
+                # Send Telegram Stars invoice
+                from telegram import LabeledPrice
+                title = f"Fal Gram - {plan_info['name']}"
+                description = f"Premium plan subscription for {plan_info['name']}"
+                payload = f"premium_{plan_name}_{user.id}"
+                currency = "XTR"
+                prices = [LabeledPrice(f"{plan_info['name']}", plan_info['price'] * 100)]
+
+                await update.callback_query.answer()
+                await update.callback_query.message.reply_invoice(
+                    title=title,
+                    description=description,
+                    payload=payload,
+                    provider_token=provider_token,
+                    currency=currency,
+                    prices=prices
+                )
+
+                await context.bot.send_message(
+                    chat_id=user.id,
+                    text=i18n.get_text("premium.purchase_initiated", language)
+                )
                 return
-            
-            # For now, simulate successful payment
-            # In a real implementation, this would integrate with Telegram Stars
+
+            # Fallback: simulate successful subscription if no provider configured
             await update.callback_query.answer("Processing payment...")
-            
-            # Create subscription
             subscription_result = await payment_service.create_subscription(
                 user.id,
                 plan_name,
                 plan_info['duration_days']
             )
-            
+
             if subscription_result['success']:
                 text = f"🎉 **Payment Successful!**\n\n"
                 text += f"Your {plan_info['name']} subscription is now active!\n"
                 text += f"Expires: {subscription_result['expires_at'][:10]}\n\n"
                 text += "Enjoy unlimited access to all mystical services! ✨"
-                
+
                 keyboard = PaymentKeyboards.get_payment_back_keyboard(language)
-                
+
                 await update.callback_query.edit_message_text(
                     text,
                     reply_markup=keyboard,

@@ -234,15 +234,18 @@ class AstrologyHandlers:
             # Get birth date
             birth_date = datetime.fromisoformat(user_data['birth_date'])
             
-            # Create prompt for birth chart
-            prompt = i18n.get_text("astrology.birth_chart_prompt", language).format(
-                birth_date=birth_date.strftime("%Y-%m-%d"),
-                birth_time=user_data.get('birth_time', 'unknown'),
-                birth_place=user_data.get('birth_place', 'unknown')
+            # Build prompt from Supabase template if available
+            prompt_template = await db_service.get_prompt('birth_chart', language) or i18n.get_text("astrology.birth_chart_prompt", language)
+            user_name = (query.from_user.first_name or '').strip() if hasattr(query, 'from_user') and query.from_user else ''
+            prompt = (
+                prompt_template
+                .replace('{username}', user_name)
+                .replace('{birth_date}', birth_date.strftime('%Y-%m-%d'))
+                .replace('{birth_time}', user_data.get('birth_time', 'unknown'))
+                .replace('{birth_place}', user_data.get('birth_place', 'unknown'))
             )
-            
-            # Generate interpretation using AI
-            interpretation = await ai_service.generate_astrology_interpretation(prompt, language)
+            requester_id = query.from_user.id if hasattr(query, 'from_user') and query.from_user else 0
+            interpretation = await ai_service.generate_with_fallback(requester_id, prompt)
             
             # Format response
             text = i18n.get_text("astrology.birth_chart_title", language).format(
@@ -264,25 +267,35 @@ class AstrologyHandlers:
     async def _generate_horoscope(query, horoscope_type: str, zodiac_sign: str, language: str) -> None:
         """Generate horoscope interpretation."""
         try:
-            # Create prompt based on type
+            # Create prompt from Supabase based on type
             if horoscope_type == "daily_horoscope":
-                prompt = i18n.get_text("astrology.daily_horoscope_prompt", language).format(
-                    zodiac_sign=zodiac_sign,
-                    date=datetime.now().strftime("%Y-%m-%d")
+                prompt_template = await db_service.get_prompt('daily_horoscope', language) or i18n.get_text("astrology.daily_horoscope_prompt", language)
+                date_str = datetime.now().strftime("%Y-%m-%d")
+                prompt = (
+                    prompt_template
+                    .replace('{sign}', zodiac_sign)
+                    .replace('{date}', date_str)
                 )
             elif horoscope_type == "weekly_horoscope":
-                prompt = i18n.get_text("astrology.weekly_horoscope_prompt", language).format(
-                    zodiac_sign=zodiac_sign,
-                    week_start=datetime.now().strftime("%Y-%m-%d")
+                prompt_template = await db_service.get_prompt('weekly_horoscope', language) or i18n.get_text("astrology.weekly_horoscope_prompt", language)
+                week_start = datetime.now().strftime("%Y-%m-%d")
+                prompt = (
+                    prompt_template
+                    .replace('{sign}', zodiac_sign)
+                    .replace('{week_start}', week_start)
                 )
             elif horoscope_type == "monthly_horoscope":
-                prompt = i18n.get_text("astrology.monthly_horoscope_prompt", language).format(
-                    zodiac_sign=zodiac_sign,
-                    month=datetime.now().strftime("%B %Y")
+                prompt_template = await db_service.get_prompt('monthly_horoscope', language) or i18n.get_text("astrology.monthly_horoscope_prompt", language)
+                month_str = datetime.now().strftime("%B %Y")
+                prompt = (
+                    prompt_template
+                    .replace('{sign}', zodiac_sign)
+                    .replace('{month}', month_str)
                 )
             
-            # Generate interpretation
-            interpretation = await ai_service.generate_astrology_interpretation(prompt, language)
+            # Generate interpretation via fallback
+            requester_id = query.from_user.id if hasattr(query, 'from_user') and query.from_user else 0
+            interpretation = await ai_service.generate_with_fallback(requester_id, prompt)
             
             # Format response
             zodiac_names = {
@@ -319,13 +332,19 @@ class AstrologyHandlers:
             sign1 = zodiac_signs[selection['first']]
             sign2 = zodiac_signs[selection['second']]
             
-            # Create compatibility prompt
-            prompt = i18n.get_text("astrology.compatibility_prompt", language).format(
-                sign1=sign1, sign2=sign2
+            # Create compatibility prompt from Supabase if available
+            prompt_template = await db_service.get_prompt('compatibility', language) or i18n.get_text("astrology.compatibility_prompt", language)
+            user_name = (query.from_user.first_name or '').strip() if hasattr(query, 'from_user') and query.from_user else ''
+            prompt = (
+                prompt_template
+                .replace('{sign1}', sign1)
+                .replace('{sign2}', sign2)
+                .replace('{username}', user_name)
             )
             
-            # Generate interpretation
-            interpretation = await ai_service.generate_astrology_interpretation(prompt, language)
+            # Generate interpretation via fallback
+            requester_id = query.from_user.id if hasattr(query, 'from_user') and query.from_user else 0
+            interpretation = await ai_service.generate_with_fallback(requester_id, prompt)
             
             # Format response
             zodiac_names = {
@@ -359,14 +378,17 @@ class AstrologyHandlers:
             
             moon_phase = calculate_moon_phase()
             
-            # Create moon calendar prompt
-            prompt = i18n.get_text("astrology.moon_calendar_prompt", language).format(
-                moon_phase=moon_phase['phase'],
-                illumination=moon_phase['illumination']
+            # Create moon calendar prompt via Supabase if available
+            prompt_template = await db_service.get_prompt('moon_calendar', language) or i18n.get_text("astrology.moon_calendar_prompt", language)
+            prompt = (
+                prompt_template
+                .replace('{moon_phase}', moon_phase.get('phase', ''))
+                .replace('{illumination}', str(moon_phase.get('illumination', '')))
             )
             
-            # Generate interpretation
-            interpretation = await ai_service.generate_astrology_interpretation(prompt, language)
+            # Generate interpretation via fallback
+            requester_id = query.from_user.id if hasattr(query, 'from_user') and query.from_user else 0
+            interpretation = await ai_service.generate_with_fallback(requester_id, prompt)
             
             # Format response
             text = i18n.get_text("astrology.moon_calendar_title", language)

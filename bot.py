@@ -107,6 +107,7 @@ async def route_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         "copy_referral_link": UserHandlers.handle_copy_referral_link,
         "share_telegram": ReferralHandlers.handle_share_telegram,
         "share_whatsapp": ReferralHandlers.handle_share_whatsapp,
+        "share_twitter": ReferralHandlers.handle_share_twitter,
         # Premium
         "premium_plans": PaymentHandlers.show_premium_plans,
         "subscription_management": PaymentHandlers.show_subscription_management,

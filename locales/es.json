@@ -1,5 +1,20 @@
 {
   "admin": {
+    "stats_title": "📊 **ESTADÍSTICAS DEL BOT**",
+    "users_title": "👥 **GESTIÓN DE USUARIOS**",
+    "settings_title": "⚙️ **CONFIGURACIÓN DEL SISTEMA**",
+    "logs_title": "📋 **LOGS DEL SISTEMA**",
+    "premium_title": "💎 **GESTIÓN PREMIUM**",
+    "pdf_title": "📱 **REPORTES PDF**",
+    "buttons": {
+      "stats": "📊 Estadísticas",
+      "users": "👥 Usuarios",
+      "settings": "⚙️ Configuración",
+      "logs": "📋 Logs",
+      "premium": "💎 Premium",
+      "pdf": "📱 PDF",
+      "back": "🔙 Volver"
+    },
     "stats": "📊 Estadísticas",
     "users": "👥 Usuarios",
     "premium": "💎 Premium",
@@ -42,15 +57,19 @@
     "edit_info": "✏️ Editar Información"
   },
   "language": {
-    "select": "🌐 Selección de Idioma",
-    "changed": "✅ ¡Idioma actualizado!",
     "current_language": "🌐 Idioma Actual: {lang}",
     "selection_title": "🌐 **Selección de Idioma**",
     "selection_description": "Por favor selecciona tu idioma preferido:",
-    "back_to_menu": "⬅️ Volver al Menú"
+    "back_to_menu": "⬅️ Volver al Menú",
+    "select": "🌐 Selección de Idioma",
+    "changed": "✅ ¡Idioma actualizado!"
   },
-  "help": { "message": "Usa el menú para navegar y explorar funciones." },
-  "message": { "default_response": "Por favor use los botones del menú para navegar. 👇" },
+  "help": {
+    "message": "Usa el menú para navegar y explorar funciones."
+  },
+  "message": {
+    "default_response": "Por favor use los botones del menú para navegar. 👇"
+  },
   "referral_prompt": "¡Gana lecturas gratis compartiendo Fal Gram con tus amigos! Copia el enlace de abajo y envíalo. Obtendrás 1 LECTURA GRATIS por cada amigo que se una usando tu enlace.\n\nTu enlace especial: {referral_link}",
   "referral_success": "¡Genial! Un amigo se ha unido usando tu enlace de referencia. ¡Has ganado 1 LECTURA GRATIS como regalo!",
   "coffee_fortune": "☕ Lectura de Café",
@@ -80,7 +99,44 @@
   "birth_chart": "🌟 Carta Natal",
   "daily_horoscope": "📅 Horóscopo Diario",
   "compatibility": "💕 Compatibilidad",
-  "moon_calendar": "🌙 Calendario Lunar",
+  "moon_calendar": {
+    "title": "🌙 **CALENDARIO LUNAR** 🌙",
+    "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+    "today": "📅 **Hoy:** {date}",
+    "moon_phase": "🌙 **Fase Lunar:** {phase}",
+    "energy_label": "✨ **Energía Lunar de Hoy:**",
+    "suggestions_label": "🔮 **Sugerencias:**",
+    "suggestions": [
+      "• Meditación y trabajo de introspección",
+      "• Limpieza emocional y purificación",
+      "• Involúcrate en proyectos creativos",
+      "• Conecta con la naturaleza"
+    ],
+    "footer": "🌟 *Vive en armonía con los ciclos lunares* 🌟",
+    "buttons": {
+      "notifications": "🔔 Notificaciones Lunares",
+      "weekly": "📅 Calendario Semanal",
+      "back": "🔙 Astrología"
+    },
+    "phases": [
+      "🌑 Luna Nueva",
+      "🌒 Luna Creciente",
+      "🌓 Cuarto Creciente",
+      "🌔 Luna Gibosa Creciente",
+      "🌕 Luna Llena",
+      "🌖 Luna Gibosa Menguante",
+      "🌗 Cuarto Menguante",
+      "🌘 Luna Menguante"
+    ],
+    "energy_effects": [
+      "La energía lunar de hoy mejora tu creatividad",
+      "Día perfecto para el equilibrio emocional",
+      "Energía ideal para nuevos comienzos",
+      "Período que fortalece tu intuición e insights",
+      "Tiempo adecuado para el desarrollo espiritual",
+      "Período de profundización y conexión en relaciones"
+    ]
+  },
   "enter_birth_info": "📅 Ingresa tus datos de nacimiento (DD.MM.AAAA HH:MM - Ciudad):",
   "enter_your_sign": "⭐ Selecciona tu signo zodiacal:",
   "compatibility_prompt": "💕 Selecciona tu signo para conocer la compatibilidad entre dos signos:",
@@ -89,23 +145,28 @@
   "daily_card_subscribe": "¡Genial! Ahora te enviaré una 'Carta de Tarot del Día' especial y su interpretación todos los días.",
   "daily_card_unsubscribe": "Entendido. La entrega de cartas diarias ya no estará activa.",
   "daily_card_already_subscribed": "Tu suscripción a 'Carta del Día' ya está activa. Recibirás tu carta cada mañana.",
-  "referral": "👥 Invitar Amigos",
-  "language": {
-    "current_language": "🌐 Idioma Actual: {lang}",
-    "selection_title": "🌐 **Selección de Idioma**",
-    "selection_description": "Por favor selecciona tu idioma preferido:",
-    "back_to_menu": "⬅️ Volver al Menú"
+  "referral": {
+    "my_info": "👤 Mi Información",
+    "stats": "📊 Mis Estadísticas",
+    "leaderboard": "🏆 Ranking",
+    "rewards": "🎁 Recompensas",
+    "share": "📤 Compartir",
+    "copy_link": "📋 Copiar Enlace",
+    "share_telegram": "📤 Compartir en Telegram",
+    "share_whatsapp": "📱 Compartir en WhatsApp",
+    "share_text": "🔮 ¡Obtén tu lectura gratis en Fal Gram!",
+    "link_copied": "✅ Enlace copiado: {link}"
   },
   "language_detected": "🌐 Tu idioma detectado automáticamente como {lang}. Usa el botón de idioma para cambiar si es necesario.",
   "language_updated": "🌐 Idioma actualizado a {lang}.",
   "referral_button": "👥 Invitar Amigos",
   "language_button": "🌐 Cambiar Idioma",
-
   "fortune_request": "Envía una foto de tu taza de café...",
   "fortune_limit_reached": "Tu límite de lecturas gratis se ha alcanzado. Se requieren {stars_count} Estrellas de Telegram para continuar.",
   "fortune_in_progress": "🔮 Tu lectura se está preparando...",
   "fortune_error": "❌ Ocurrió un error al crear tu lectura.",
   "error": {
+    "plan_not_found": "❌ Plan no encontrado. Por favor, inténtalo de nuevo.",
     "general": "❌ Ocurrió un error. Por favor, inténtalo de nuevo.",
     "user_not_found": "❌ ¡Usuario no encontrado!"
   },
@@ -120,10 +181,6 @@
   "premium_plan_basic": "✨ Plan Básico - 500 ⭐",
   "premium_plan_premium": "✨ Plan Premium - 1000 ⭐",
   "premium_plan_vip": "✨ Plan VIP - 2000 ⭐",
-
-  "error": {
-    "plan_not_found": "❌ Plan no encontrado. Por favor, inténtalo de nuevo."
-  },
   "plan_comparison": {
     "title": "📊 **COMPARACIÓN DE PLANES** 📊",
     "separator": "━━━━━━━━━━━━━━━━━━━━━━",
@@ -188,8 +245,19 @@
       }
     }
   },
-  "subscription_management": "💳 Gestionar Suscripción",
-  "monthly_horoscope": "📅 Horóscopo Mensual",
+  "subscription_management": "💎 **Gestión de Suscripción**\n\nGestiona tu suscripción premium aquí.",
+  "monthly_horoscope": {
+    "title": "📅 **HORÓSCOPO MENSUAL** 📅",
+    "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+    "description": "¿Para qué signo quieres una lectura mensual?",
+    "features": [
+      "📈 Análisis de horóscopo mensual",
+      "🌟 Tránsitos planetarios",
+      "💫 Períodos importantes",
+      "🎯 Recomendaciones a largo plazo"
+    ],
+    "back_button": "🔙 Astrología"
+  },
   "purchase": "🛒 Comprar",
   "premium_menu_back": "🔙 Menú Premium",
   "premium_feature": "💎 FUNCIÓN PREMIUM",
@@ -220,10 +288,53 @@
     "buttons": {
       "another_analysis": "🔄 Otro Análisis",
       "main_menu": "🏠 Menú Principal"
-    }
+    },
+    "signs_template": "**{sign1} ↔️ {sign2}**"
   },
   "referral_system": {
+    "title": "👥 **SISTEMA DE REFERIDOS** 👥",
+    "separator": "━━━━━━━━━━━━━━━━━━━━━━",
+    "description": "🎁 **¡Gana lecturas gratis compartiendo Fal Gram!**\n\nPor cada amigo que se registre usando tu enlace, ganas:\n• 1 lectura GRATIS\n• 50 ⭐ en bonos\n• Acceso anticipado a nuevas funciones",
+    "stats_title": "📊 **TUS ESTADÍSTICAS**",
+    "my_rewards_title": "🎁 **MIS PREMIOS**",
+    "link_copied": "✅ Enlace copiado: {link}",
+    "referral_link": "🔗 **Tu Enlace de Referido:**",
+    "total_referrals": "👥 **Total de Referidos:** {count}",
+    "total_rewards": "🎁 **Total de Premios:** {rewards}",
+    "free_readings_earned": "📚 **Lecturas Gratis Ganadas:** {readings}",
+    "stars_earned": "⭐ **Estrellas Ganadas:** {stars}",
+    "how_it_works": "🔧 **Cómo Funciona:**",
+    "how_it_works_steps": [
+      "1. Comparte tu enlace especial con amigos",
+      "2. Cuando se registren, ganas premios",
+      "3. Usa tus premios para lecturas gratis",
+      "4. ¡Cuántos más amigos, más premios!"
+    ],
+    "buttons": {
+      "copy_link": "📋 Copiar Enlace",
+      "my_stats": "📊 Mis Estadísticas",
+      "my_rewards": "🎁 Mis Premios",
+      "share_twitter": "🐦 Compartir en X",
+      "share_telegram": "📤 Compartir en Telegram",
+      "back": "🔙 Menú Principal"
+    },
+    "no_data": "No hay datos disponibles aún.",
+    "progress_title": "📈 **Tu Progreso de Referidos**",
+    "next_goal_title": "🎯 **Tu Próximo Objetivo**",
+    "back_to_referral": "🔙 Volver a Referidos",
+    "copy_link": "📋 Copiar Enlace",
+    "leaderboard": "🏆 Ranking",
+    "leaderboard_title": "🏆 **Tabla de Clasificación de Referidos**",
     "main_panel": {
+      "buttons": {
+        "whatsapp": "📱 Compartir en WhatsApp",
+        "telegram": "📲 Compartir en Telegram",
+        "stats": "📊 Estadísticas Detalladas",
+        "rewards": "🎁 Mis Recompensas",
+        "copy": "📋 Copiar Enlace",
+        "refresh": "🔄 Actualizar",
+        "main_menu": "�� Menú Principal"
+      },
       "title": "🌟 **SISTEMA DE REFERIDOS FAL GRAM** 🌟",
       "separator": "━━━━━━━━━━━━━━━━━━━━━━",
       "status_label": "👤 **Tu Estado:**",
@@ -251,46 +362,20 @@
         "elite": "🌟 Elite",
         "premium": "💎 Premium",
         "new": "🆕 Nuevo"
-      },
-      "buttons": {
-        "whatsapp": "📱 Compartir en WhatsApp",
-        "telegram": "📲 Compartir en Telegram",
-        "stats": "📊 Estadísticas Detalladas",
-        "rewards": "🎁 Mis Recompensas",
-        "copy": "📋 Copiar Enlace",
-        "refresh": "🔄 Actualizar",
-        "main_menu": "🏠 Menú Principal"
       }
     },
-    "stats_panel": {
-      "title": "📊 **ESTADÍSTICAS DETALLADAS DE REFERIDOS** 📊",
-      "back_button": "🔙 Panel de Referidos",
-      "performance_label": "📈 **Rendimiento General:**",
-      "total_invites": "• Total de Invitaciones: **{count}** personas",
-      "this_week": "• Esta Semana: **{count}** invitaciones",
-      "this_month": "• Este Mes: **{count}** invitaciones",
-      "last_invite": "• Última Invitación: {date}",
-      "earnings_label": "💰 **Ganancias:**",
-      "total_readings": "• Total de Lecturas Ganadas: **{count}**",
-      "avg_per_invite": "• Prom/Invitación: **{avg:.1f}** lecturas",
-      "potential_value": "• Valor Potencial: **{value}** ⭐",
-      "ranking_label": "🏆 **Ranking y Estado:**",
-      "global_rank": "• Ranking Global: **#{rank}**",
-      "percentile": "• Percentil: **Top %{perc:.0f}**",
-      "level": "• Nivel Activo: Nivel {level}",
-      "goals_label": "📊 **Objetivos Futuros:**",
-      "next_level": "• Próximo Nivel: {count} invitaciones",
-      "to_vip": "• A VIP: {count} invitaciones",
-      "to_elite": "• A Elite: {count} invitaciones",
-      "leaderboard_label": "🔥 **Top 5 del Ranking de Este Mes:**",
-      "no_data": "Aún no"
-    },
+    "my_stats": "📊 Mis Estadísticas",
+    "my_rewards": "🎁 Mis Premios",
+    "next_goal": "🎯 Próximo Objetivo",
+    "progress": "📊 Detalles de Progreso",
     "rewards_panel": {
       "title": "🎁 **TU COLECCIÓN DE RECOMPENSAS** 🎁",
-      "back_button": "🔙 Panel de Referidos",
+      "buttons": {
+        "use_bonus": "💰 Usar Lecturas Bono"
+      },
+      "total_value": "• Valor Total: **{value}** ⭐",
       "balance_label": "💰 **Saldo Activo:**",
       "available_readings": "• Lecturas Disponibles: **{count}**",
-      "total_value": "• Valor Total: **{value}** ⭐",
       "badges_label": "🏅 **Insignias Ganadas:**",
       "no_badges": "• Aún no se han ganado insignias",
       "perks_label": "✨ **Tus Beneficios Especiales:**",
@@ -301,7 +386,7 @@
       "offers_list": [
         "• 🌟 3+ invitaciones esta semana → 2 lecturas bono extra",
         "• 💎 10+ invitaciones este mes → Sesión especial de lectura de tarot",
-        "• 👑 50% de descuento en membresía Premium (para VIPs)"
+        "• 👑 Membresía Premium 50% descuento (para VIPs)"
       ],
       "badges": {
         "1": "🌟 Primera Invitación",
@@ -324,9 +409,32 @@
           "• 📞 Soporte prioritario 24/7"
         ]
       },
-      "buttons": {
-        "use_bonus": "💰 Usar Lecturas Bono"
-      }
+      "back_button": "🔙 Panel de Referidos"
+    },
+    "share_twitter": "🐦 Compartir en X",
+    "share_telegram": "📤 Compartir en Telegram",
+    "stats_panel": {
+      "title": "📊 **ESTADÍSTICAS DETALLADAS DE REFERIDOS** 📊",
+      "back_button": "�� Panel de Referidos",
+      "performance_label": "📈 **Rendimiento General:**",
+      "total_invites": "• Total de Invitaciones: **{count}** personas",
+      "this_week": "• Esta Semana: **{count}** invitaciones",
+      "this_month": "• Este Mes: **{count}** invitaciones",
+      "last_invite": "• Última Invitación: {date}",
+      "earnings_label": "💰 **Ganancias:**",
+      "total_readings": "• Total de Lecturas Ganadas: **{count}**",
+      "avg_per_invite": "• Prom/Invitación: **{avg:.1f}** lecturas",
+      "potential_value": "• Valor Potencial: **{value}** ⭐",
+      "ranking_label": "🏆 **Ranking y Estado:**",
+      "global_rank": "• Ranking Global: **#{rank}**",
+      "percentile": "• Percentil: **Top %{perc:.0f}**",
+      "level": "• Nivel Activo: Nivel {level}",
+      "goals_label": "📊 **Objetivos Futuros:**",
+      "next_level": "• Próximo Nivel: {count} invitaciones",
+      "to_vip": "• A VIP: {count} invitaciones",
+      "to_elite": "• A Elite: {count} invitaciones",
+      "leaderboard_label": "🔥 **Top 5 del Ranking de Este Mes:**",
+      "no_data": "Aún no hay datos"
     }
   },
   "main_panel": {
@@ -422,7 +530,9 @@
     "revenue_stats": "💰 **Revenue Statistics:**",
     "subscription_stats": "📊 **Subscription Statistics:**",
     "monthly_growth": "📈 **Monthly Growth:**",
-    "retention_rate": "🔄 **Retention Rate:**"
+    "retention_rate": "🔄 **Retention Rate:**",
+    "coffee_fortune_paid": "☕ **Lectura de Café de Pago** ☕\n\nTu lectura de café de pago se está procesando. Por favor envía una foto de tu taza de café.",
+    "tarot_fortune_paid": "🃏 **Lectura de Tarot de Pago** 🃏\n\nTu lectura de tarot de pago:\n\n**Carta Extraída:** {card}\n\nSe está preparando tu interpretación detallada..."
   },
   "admin_gift": {
     "title": "🎁 **GIFT SUBSCRIPTION** 🎁",
@@ -633,7 +743,8 @@
           "🔮 Guía personal con IA"
         ]
       }
-    }
+    },
+    "back_to_menu": "🔙 Volver al Menú"
   },
   "astrology_analysis": {
     "daily_horoscope": {
@@ -756,18 +867,6 @@
     ],
     "back_button": "🔙 Astrología"
   },
-  "monthly_horoscope": {
-    "title": "📅 **HORÓSCOPO MENSUAL** 📅",
-    "separator": "━━━━━━━━━━━━━━━━━━━━━━",
-    "description": "¿Para qué signo quieres una lectura mensual?",
-    "features": [
-      "📈 Análisis de horóscopo mensual",
-      "🌟 Tránsitos planetarios",
-      "💫 Períodos importantes",
-      "🎯 Recomendaciones a largo plazo"
-    ],
-    "back_button": "🔙 Astrología"
-  },
   "astrology_chatbot": "🤖 Chatbot de Astrología",
   "astrology_menu_message": "⭐ **CENTRO DE ASTROLOGÍA** ⭐\n━━━━━━━━━━━━━━━━━━━━━━\n\nDescubre tu guía cósmica:\n\n🌟 **Horóscopo Diario** - Tus insights cósmicos diarios\n📊 **Reporte Semanal** - Pronóstico detallado de 7 días\n📅 **Análisis Mensual** - Predicciones a largo plazo\n💕 **Compatibilidad** - Insights de relaciones\n🌟 **Carta Natal** - Mapa astrológico personal\n🌙 **Calendario Lunar** - Guía de fases lunares\n🤖 **Chatbot IA** - Asistente astrológico 24/7\n\n━━━━━━━━━━━━━━━━━━━━━━\n✨ *Elige tu viaje cósmico* ✨",
   "premium_feature_title": "💎 **PREMIUM FEATURE** 💎",
@@ -816,7 +915,6 @@
   "compatibility_menu": "💕 **Compatibilidad**\n\nSelecciona tu signo zodiacal:",
   "weekly_horoscope_menu": "📅 **Horóscopo Semanal**\n\nSelecciona tu signo zodiacal:",
   "monthly_horoscope_menu": "📅 **Horóscopo Mensual**\n\nSelecciona tu signo zodiacal:",
-  "subscription_management": "💎 **Gestión de Suscripción**\n\nGestiona tu suscripción premium aquí.",
   "daily_horoscope_generating": "🔮 Generando tu horóscopo diario...",
   "weekly_horoscope_generating": "🔮 Generando tu horóscopo semanal...",
   "monthly_horoscope_generating": "🔮 Generando tu horóscopo mensual...",
@@ -827,48 +925,15 @@
   "dream_processing": "💭 Procesando tu análisis de sueños...",
   "birth_info_processing": "🌟 Procesando tu carta natal...",
   "chatbot_processing": "🤖 Procesando tu pregunta...",
-  "coffee_fortune_processing": "☕ Procesando tu lectura de café...",
   "premium_compare": "💎 Comparar Planes",
   "statistics": "📊 Estadísticas",
   "users": "👥 Usuarios",
   "view_logs": "📋 Ver Registros",
   "settings": "⚙️ Configuración",
   "download_pdf": "📄 Descargar PDF",
-  "premium_management": "💎 Gestión Premium",
-  "referral_system": {
-    "title": "👥 **SISTEMA DE REFERIDOS** 👥",
-    "separator": "━━━━━━━━━━━━━━━━━━━━━━",
-    "description": "🎁 **¡Gana lecturas gratis compartiendo Fal Gram!**\n\nPor cada amigo que se registre usando tu enlace, ganas:\n• 1 lectura GRATIS\n• 50 ⭐ en bonos\n• Acceso anticipado a nuevas funciones",
-    "stats_title": "📊 **TUS ESTADÍSTICAS**",
-    "my_rewards_title": "🎁 **MIS PREMIOS**",
-    "link_copied": "✅ Enlace copiado: {link}",
-    "referral_link": "🔗 **Tu Enlace de Referido:**",
-    "total_referrals": "👥 **Total de Referidos:** {count}",
-    "total_rewards": "🎁 **Total de Premios:** {rewards}",
-    "free_readings_earned": "📚 **Lecturas Gratis Ganadas:** {readings}",
-    "stars_earned": "⭐ **Estrellas Ganadas:** {stars}",
-    "how_it_works": "🔧 **Cómo Funciona:**",
-    "how_it_works_steps": [
-      "1. Comparte tu enlace especial con amigos",
-      "2. Cuando se registren, ganas premios",
-      "3. Usa tus premios para lecturas gratis",
-      "4. ¡Cuántos más amigos, más premios!"
-    ],
-    "buttons": {
-      "copy_link": "📋 Copiar Enlace",
-      "my_stats": "📊 Mis Estadísticas",
-      "my_rewards": "🎁 Mis Premios",
-      "share_twitter": "🐦 Compartir en X",
-      "share_telegram": "📤 Compartir en Telegram",
-      "back": "🔙 Menú Principal"
-    },
-    "no_data": "No hay datos disponibles aún.",
-    "progress_title": "📈 **Tu Progreso de Referidos**",
-    "next_goal_title": "🎯 **Tu Próximo Objetivo**"
-  },
   "payment": {
     "premium_plans": "💎 Planes Premium",
-    "plan_details": "📋 Detalles del Plan",
+    "plan_details": "📋 **Detalles del Plan**",
     "buy_plan": "💳 Comprar Plan",
     "subscription_management": "💎 Gestión de Suscripción",
     "title": "💳 **SISTEMA DE PAGO** 💳",
@@ -891,13 +956,12 @@
       "4. ¡Disfruta de tus funciones premium!"
     ],
     "payment_info": "💳 **Información de Pago**",
-    "plan_details": "📋 **Detalles del Plan**",
     "back_to_premium": "🔙 Menú Premium",
     "back_to_plans": "🔙 Volver a Planes",
     "back_to_comparison": "🔙 Volver a Comparación",
     "back_to_menu": "🔙 Volver al Menú",
     "back": "🔙 Volver",
-    "buy_now": "🛒 Comprar Ahora",
+    "buy_now": "💳 Comprar Ahora",
     "close": "❌ Cerrar",
     "subscribe": "✅ Suscribirse",
     "unsubscribe": "❌ Cancelar Suscripción",
@@ -905,79 +969,91 @@
     "upgrade_premium": "⭐ Actualizar a Premium",
     "upgrade_basic": "💎 Actualizar a Básico",
     "buy_premium": "💳 Comprar Premium",
-    "try_again": "🔄 Intentar de Nuevo"
-  },
-  "referral": {
-    "my_info": "👤 Mi Información",
-    "stats": "📊 Mis Estadísticas",
-    "leaderboard": "🏆 Ranking",
-    "rewards": "🎁 Recompensas",
-    "share": "📤 Compartir",
-    "copy_link": "📋 Copiar Enlace",
-    "share_telegram": "📤 Compartir en Telegram",
-    "share_whatsapp": "📱 Compartir en WhatsApp",
-    "share_text": "🔮 ¡Obtén tu lectura gratis en Fal Gram!",
-    "link_copied": "✅ Enlace copiado: {link}"
-  },
-  "admin": {
-    "stats_title": "📊 **ESTADÍSTICAS DEL BOT**",
-    "users_title": "👥 **GESTIÓN DE USUARIOS**",
-    "settings_title": "⚙️ **CONFIGURACIÓN DEL SISTEMA**",
-    "logs_title": "📋 **LOGS DEL SISTEMA**",
-    "premium_title": "💎 **GESTIÓN PREMIUM**",
-    "pdf_title": "📱 **REPORTES PDF**",
-    "buttons": {
-      "stats": "📊 Estadísticas",
-      "users": "👥 Usuarios",
-      "settings": "⚙️ Configuración",
-      "logs": "📋 Logs",
-      "premium": "💎 Premium",
-      "pdf": "📱 PDF",
-      "back": "🔙 Volver"
-    }
+    "try_again": "🔄 Intentar de Nuevo",
+    "need_help": "❓ **¿Necesitas Ayuda?**",
+    "contact_support": "Contacta a nuestro equipo de soporte.",
+    "secure_payment": "🔒 **Pago Seguro:**",
+    "how_to_get_stars": "💰 **Cómo obtener Estrellas de Telegram:**",
+    "payment_process": "📱 **Proceso de Pago:**"
   },
   "premium": {
     "purchase_initiated": "🛒 Compra iniciada. Haz clic en el botón para proceder con el pago.",
     "payment_success": "🎉 ¡Pago exitoso! Tus funciones premium están activas.",
-    "payment_error": "❌ Error de pago. Intenta de nuevo o contacta soporte."
+    "payment_error": "❌ Error de pago. Intenta de nuevo o contacta soporte.",
+    "comparison_title": "�� **COMPARACIÓN DE PLANES PREMIUM** 📊",
+    "comparison_description": "Compara todos nuestros planes premium y elige el mejor para ti!",
+    "plan_overview": "📋 **Resumen del Plan**",
+    "feature_comparison": "✨ **Comparación Detallada de Características**",
+    "plan_details": "�� Detalles del Plan",
+    "payment_info": "💳 Información de Pago",
+    "back_to_comparison": "🔙 Volver a Comparación",
+    "back_to_premium": "🔙 Menú Premium",
+    "pay_with_stars": "💳 Pagar con Estrellas",
+    "telegram_stars_payment": "⭐ Pagar con Estrellas de Telegram",
+    "try_again": "🔄 Intentar de Nuevo"
   },
-
-  "moon_calendar": {
-    "title": "🌙 **CALENDARIO LUNAR** 🌙",
-    "separator": "━━━━━━━━━━━━━━━━━━━━━━",
-    "today": "📅 **Hoy:** {date}",
-    "moon_phase": "🌙 **Fase Lunar:** {phase}",
-    "energy_label": "✨ **Energía Lunar de Hoy:**",
-    "suggestions_label": "🔮 **Sugerencias:**",
-    "suggestions": [
-      "• Meditación y trabajo de introspección",
-      "• Limpieza emocional y purificación",
-      "• Involúcrate en proyectos creativos",
-      "• Conecta con la naturaleza"
-    ],
-    "footer": "🌟 *Vive en armonía con los ciclos lunares* 🌟",
+  "admin_logs_message": "📋 **Logs de Admin**\n\n{logs}",
+  "admin_pdf_download": "📄 **Descarga de PDF**\n\nDescarga reportes en formato PDF.",
+  "astrology_chatbot_activated": "🤖 **Chatbot de Astrología Activo**\n\n¡Ahora puedes hacer preguntas de astrología!",
+  "invite_friends": "👥 Invitar Amigos",
+  "no_logs": "Aún no hay registros.",
+  "buttons": {
+    "back": "🔙 Volver",
+    "back_to_comparison": "🔙 Volver a Comparación",
+    "back_to_menu": "🔙 Volver al Menú",
+    "back_to_plans": "🔙 Volver a Planes",
+    "back_to_premium": "🔙 Menú Premium",
+    "back_to_referral": "🔙 Volver a Referidos",
+    "buy_now": "💳 Comprar Ahora",
+    "buy_premium": "💳 Comprar Premium",
+    "close": "❌ Cerrar",
+    "compare_plans": "📊 Comparar Planes",
+    "copy_link": "📋 Copiar Enlace",
+    "leaderboard": "🏆 Ranking",
+    "main_menu": "🏠 Menú Principal",
+    "my_rewards": "🎁 Mis Premios",
+    "my_stats": "📊 Mis Estadísticas",
+    "next_goal": "🎯 Próximo Objetivo",
+    "payment_info": "💳 Información de Pago",
+    "plan_details": "📋 Detalles del Plan",
+    "progress_details": "📈 Detalles de Progreso",
+    "share_telegram": "📤 Compartir en Telegram",
+    "share_whatsapp": "📱 Compartir en WhatsApp",
+    "subscribe": "✅ Suscribirse",
+    "try_again": "🔄 Intentar de Nuevo",
+    "unsubscribe": "❌ Cancelar Suscripción",
+    "upgrade_basic": "💎 Actualizar a Básico",
+    "upgrade_premium": "⭐ Actualizar a Premium",
+    "upgrade_vip": "👑 Actualizar a VIP"
+  },
+  "language_selection": {
     "buttons": {
-      "notifications": "🔔 Notificaciones Lunares",
-      "weekly": "📅 Calendario Semanal",
-      "back": "🔙 Astrología"
+      "back": "⬅️ Volver",
+      "english": "🇺🇸 English",
+      "french": "🇫🇷 Français",
+      "german": "🇩🇪 Deutsch",
+      "italian": "🇮🇹 Italiano",
+      "portuguese": "🇵🇹 Português",
+      "arabic": "🇸🇦 العربية",
+      "spanish": "🇪🇸 Español",
+      "turkish": "🇹🇷 Türkçe",
+      "russian": "🇷🇺 Русский"
     },
-    "phases": [
-      "🌑 Luna Nueva",
-      "🌒 Luna Creciente",
-      "🌓 Cuarto Creciente",
-      "🌔 Luna Gibosa Creciente",
-      "🌕 Luna Llena",
-      "🌖 Luna Gibosa Menguante",
-      "🌗 Cuarto Menguante",
-      "🌘 Luna Menguante"
-    ],
-    "energy_effects": [
-      "La energía lunar de hoy mejora tu creatividad",
-      "Día perfecto para el equilibrio emocional",
-      "Energía ideal para nuevos comienzos",
-      "Período que fortalece tu intuición e insights",
-      "Tiempo adecuado para el desarrollo espiritual",
-      "Período de profundización y conexión en relaciones"
-    ]
-  }
+    "title": "🌐 **Selección de Idioma**",
+    "description": "Selecciona tu idioma preferido:"
+  },
+  "language_system": {
+    "selection_title": "🌐 **Selección de Idioma** 🌐",
+    "selection_description": "Elige tu idioma preferido para la mejor experiencia:",
+    "current_language": "Idioma Actual: **{lang}**",
+    "language_updated_success": "✅ Idioma actualizado a **{lang}**!",
+    "back_to_menu": "🔙 Volver al Menú"
+  },
+  "navigation": {
+    "main_menu": "🏠 Menú Principal",
+    "back": "🔙 Volver",
+    "next": "➡️ Siguiente",
+    "previous": "⬅️ Anterior"
+  },
+  "moon_calendar_message": "🌙 **Calendario Lunar**\n\nFases lunares y guía de energía."
 }

@@ -319,6 +319,77 @@ class DatabaseService:
         except Exception as e:
             logger.error(f"Error getting prompts: {e}")
             return {}
+
+    async def get_prompt(self, prompt_type: str, language: str) -> Optional[str]:
+        """Fetch a single prompt text by type and language from Supabase.
+
+        Supports both schemas:
+        - columns: prompt_type, language, content
+        - or: key, language, value
+        """
+        try:
+            if not self.is_connected():
+                return None
+
+            # Try schema with prompt_type/content
+            try:
+                response = (
+                    self.supabase
+                    .table('prompts')
+                    .select('*')
+                    .eq('prompt_type', prompt_type)
+                    .eq('language', language)
+                    .limit(1)
+                    .execute()
+                )
+                if response.data:
+                    record = response.data[0]
+                    if 'content' in record and record['content']:
+                        return record['content']
+            except Exception:
+                pass
+
+            # Try schema with key/value
+            try:
+                response2 = (
+                    self.supabase
+                    .table('prompts')
+                    .select('*')
+                    .eq('key', prompt_type)
+                    .eq('language', language)
+                    .limit(1)
+                    .execute()
+                )
+                if response2.data:
+                    record2 = response2.data[0]
+                    if 'value' in record2 and record2['value']:
+                        return record2['value']
+            except Exception:
+                pass
+
+            # Fallback: single key like f"{prompt_type}.{language}"
+            try:
+                compound_key = f"{prompt_type}.{language}"
+                response3 = (
+                    self.supabase
+                    .table('prompts')
+                    .select('*')
+                    .eq('key', compound_key)
+                    .limit(1)
+                    .execute()
+                )
+                if response3.data:
+                    record3 = response3.data[0]
+                    text = record3.get('value') or record3.get('content')
+                    if text:
+                        return text
+            except Exception:
+                pass
+
+            return None
+        except Exception as e:
+            logger.error(f"Error getting prompt {prompt_type}/{language}: {e}")
+            return None
     
     async def update_prompt(self, key: str, value: str) -> bool:
         """Update a prompt."""

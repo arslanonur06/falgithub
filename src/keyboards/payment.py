@@ -103,7 +103,7 @@ class PaymentKeyboards:
         keyboard = [
             [
                 InlineKeyboardButton(
-                    "💳 Pay with Telegram Stars",
+                    i18n.get_text("premium.telegram_stars_payment", language),
                     callback_data=f"pay_{plan_name}"
                 )
             ],

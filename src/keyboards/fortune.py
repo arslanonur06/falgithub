@@ -11,6 +11,11 @@ class FortuneKeyboards:
     """Fortune keyboard layouts."""
     
     @staticmethod
+    def get_fortune_menu(language: str = "en") -> InlineKeyboardMarkup:
+        """Compatibility: alias for fortune menu keyboard."""
+        return FortuneKeyboards.get_fortune_menu_keyboard(language)
+
+    @staticmethod
     def get_fortune_menu_keyboard(language: str = "en") -> InlineKeyboardMarkup:
         """Get fortune main menu keyboard."""
         keyboard = [

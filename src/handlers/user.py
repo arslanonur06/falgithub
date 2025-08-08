@@ -306,8 +306,9 @@ class UserHandlers:
             referral_link = f"https://t.me/{bot_username}?start={referral_code}"
             
             # Copy to clipboard (this is a simplified version)
+            # Show alert with the link for easy copy
             await update.callback_query.answer(
-                i18n.get_text("referral.link_copied", language),
+                i18n.format_text("referral.link_copied", language, link=referral_link),
                 show_alert=True
             )
             

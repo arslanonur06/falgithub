@@ -13,7 +13,7 @@ from src.services.ai_service import ai_service
 from src.keyboards.fortune import FortuneKeyboards
 from src.utils.i18n import i18n
 from src.utils.logger import get_logger
-from src.utils.helpers import sanitize_text
+# Use validator's sanitize to support max_length
 from src.utils.validators import validator
 
 logger = get_logger("fortune_handlers")
@@ -31,7 +31,7 @@ class FortuneHandlers:
         language = user.language_code or "en" if user else "en"
         
         keyboard = FortuneKeyboards.get_fortune_menu(language)
-        text = i18n.get_text("fortune.menu_title", language)
+        text = i18n.get_text("menu.fortune", language)
         
         await query.edit_message_text(text, reply_markup=keyboard)
     
@@ -53,8 +53,8 @@ class FortuneHandlers:
         # Get tarot cards
         cards = await FortuneHandlers._get_tarot_cards()
         if not cards:
-            text = i18n.get_text("fortune.tarot_cards_unavailable", language)
-            keyboard = FortuneKeyboards.get_back_button(language, "fortune_menu")
+            text = i18n.get_text("error.general", language)
+            keyboard = FortuneKeyboards.get_back_button(language)
             await query.edit_message_text(text, reply_markup=keyboard)
             return
         
@@ -83,8 +83,8 @@ class FortuneHandlers:
             return
         
         # Ask for coffee cup photo
-        text = i18n.get_text("fortune.coffee_photo_request", language)
-        keyboard = FortuneKeyboards.get_back_button(language, "fortune_menu")
+        text = i18n.get_text("coffee_fortune_prompt", language)
+        keyboard = FortuneKeyboards.get_back_button(language)
         
         # Set state to wait for photo
         context.user_data['waiting_for'] = 'coffee_photo'
@@ -107,8 +107,8 @@ class FortuneHandlers:
             return
         
         # Ask for dream description
-        text = i18n.get_text("fortune.dream_description_request", language)
-        keyboard = FortuneKeyboards.get_back_button(language, "fortune_menu")
+        text = i18n.get_text("dream_analysis_prompt", language)
+        keyboard = FortuneKeyboards.get_back_button(language)
         
         # Set state to wait for text
         context.user_data['waiting_for'] = 'dream_text'
@@ -131,8 +131,9 @@ class FortuneHandlers:
             return
         
         # Ask for palm photo
-        text = i18n.get_text("fortune.palm_photo_request", language)
-        keyboard = FortuneKeyboards.get_back_button(language, "fortune_menu")
+        # Reuse generic photo request prompt text
+        text = i18n.get_text("coffee_fortune_prompt", language)
+        keyboard = FortuneKeyboards.get_back_button(language)
         
         # Set state to wait for photo
         context.user_data['waiting_for'] = 'palm_photo'
@@ -167,7 +168,7 @@ class FortuneHandlers:
             
         except Exception as e:
             logger.error(f"Error processing photo: {e}")
-            text = i18n.get_text("error.photo_processing_failed", language)
+            text = i18n.get_text("error.general", language)
             await update.message.reply_text(text)
     
     @staticmethod
@@ -181,7 +182,7 @@ class FortuneHandlers:
             return
         
         text = update.message.text
-        sanitized_text = sanitize_text(text, max_length=1000)
+        sanitized_text = validator.sanitize_text(text, max_length=1000)
         
         if waiting_for == 'dream_text':
             await FortuneHandlers._process_dream_text(update, context, sanitized_text, language)
@@ -198,7 +199,7 @@ class FortuneHandlers:
             return {
                 'can_use': False,
                 'message': i18n.get_text("error.user_not_found", language),
-                'keyboard': FortuneKeyboards.get_back_button(language, "fortune_menu")
+                'keyboard': FortuneKeyboards.get_back_button(language)
             }
         
         # Premium users have unlimited access
@@ -244,34 +245,30 @@ class FortuneHandlers:
     async def _generate_tarot_interpretation(query, cards: List[Dict[str, Any]], language: str) -> None:
         """Generate tarot card interpretation."""
         try:
-            # Create prompt for tarot interpretation
-            card_names = [card['name'] for card in cards]
-            card_meanings = [card['meaning'] for card in cards]
-            
-            prompt = i18n.get_text("fortune.tarot_interpretation_prompt", language).format(
-                cards=", ".join(card_names),
-                meanings=", ".join(card_meanings)
+            # Generate interpretation via AI fallback using a spread prompt
+            user_id = query.from_user.id if hasattr(query, "from_user") and query.from_user else None
+            card_names = ", ".join([c['name'] for c in cards])
+            card_meanings = "; ".join([c['meaning'] for c in cards])
+            spread_prompt = (
+                "You are an expert tarot reader. Provide a cohesive interpretation for the following spread.\n\n"
+                f"Cards: {card_names}\n"
+                f"Meanings: {card_meanings}\n\n"
+                "Include: overall theme, present situation, guidance, and a hopeful message."
             )
-            
-            # Generate interpretation using AI
-            interpretation = await ai_service.generate_fortune_interpretation(prompt, language)
+            interpretation = await ai_service.generate_with_fallback(user_id or 0, spread_prompt)
             
             # Format response
-            text = i18n.get_text("fortune.tarot_reading_title", language)
-            text += f"\n\n{i18n.get_text('fortune.drawn_cards', language)}:\n"
+            title = i18n.get_text("tarot_fortune", language)
+            lines = [f"{idx}. {card['name']}: {card['meaning']}" for idx, card in enumerate(cards, 1)]
+            text = f"{title}\n\n" + "\n".join(lines) + (f"\n\n{interpretation}" if interpretation else "")
             
-            for i, card in enumerate(cards, 1):
-                text += f"{i}. {card['name']}: {card['meaning']}\n"
-            
-            text += f"\n{i18n.get_text('fortune.interpretation', language)}:\n{interpretation}"
-            
-            keyboard = FortuneKeyboards.get_back_button(language, "fortune_menu")
+            keyboard = FortuneKeyboards.get_back_button(language)
             await query.edit_message_text(text, reply_markup=keyboard)
             
         except Exception as e:
             logger.error(f"Error generating tarot interpretation: {e}")
             text = i18n.get_text("error.generation_failed", language)
-            keyboard = FortuneKeyboards.get_back_button(language, "fortune_menu")
+            keyboard = FortuneKeyboards.get_back_button(language)
             await query.edit_message_text(text, reply_markup=keyboard)
     
     @staticmethod
@@ -282,18 +279,39 @@ class FortuneHandlers:
             processing_text = i18n.get_text("coffee_fortune_processing", language)
             await update.message.reply_text(processing_text)
 
-            # Create prompt for coffee reading
-            prompt = i18n.get_text("coffee_fortune_prompt", language)
-            
-            # Generate interpretation using AI with image
-            interpretation = await ai_service.generate_image_interpretation(prompt, photo_bytes, language)
+            # Fetch coffee prompt and run via AI fallback with image
+            user_id = update.effective_user.id
+            prompt_template = (
+                await db_service.get_prompt('coffee', language)
+                or await db_service.get_prompt('coffee_fortune', language)
+                or i18n.get_text('coffee_fortune_prompt', language)
+            )
+            # Personalize if template includes username placeholder
+            user_name = (update.effective_user.first_name or '').strip() if update.effective_user else ''
+            if user_name:
+                prompt_template = prompt_template.replace('{username}', user_name)
+            interpretation = await ai_service.generate_with_fallback(user_id, prompt_template, image_data=photo_bytes)
+            interpretation = interpretation or prompt_template
             
             # Format response
             title = i18n.get_text("coffee_fortune", language)
             text = f"{title}\n\n{interpretation}"
             
-            keyboard = FortuneKeyboards.get_back_button(language, "fortune_menu")
+            # Append share on X with #FalGram
+            from urllib.parse import quote
+            # Include interpretation in the share text, trim to fit 280 characters
+            full_share = f"{title}\n\n{interpretation}\n#FalGram"
+            share_text = full_share[:270]
+            twitter_url = f"https://twitter.com/intent/tweet?text={quote(share_text)}"
+            share_keyboard = InlineKeyboardMarkup([
+                [InlineKeyboardButton(i18n.get_text('referral.share_twitter', language), url=twitter_url)],
+                [InlineKeyboardButton(i18n.get_text('common.back', language), callback_data='fortune')],
+                [InlineKeyboardButton(i18n.get_text('navigation.main_menu', language), callback_data='main_menu')]
+            ])
+            
+            keyboard = FortuneKeyboards.get_back_button(language)
             await update.message.reply_text(text, reply_markup=keyboard)
+            await update.message.reply_text(i18n.get_text('coffee_fortune_share_twitter_message', language), reply_markup=share_keyboard)
             
             # Update usage
             await db_service.increment_user_usage(update.effective_user.id)
@@ -307,17 +325,22 @@ class FortuneHandlers:
     async def _process_palm_photo(update: Update, context: ContextTypes.DEFAULT_TYPE, photo_bytes: bytes, language: str) -> None:
         """Process palm photo for reading."""
         try:
-            # Create prompt for palm reading
-            prompt = i18n.get_text("fortune.palm_reading_prompt", language)
-            
-            # Generate interpretation using AI with image
-            interpretation = await ai_service.generate_image_interpretation(prompt, photo_bytes, language)
+            # Use fallback with palm-specific hint
+            user_id = update.effective_user.id
+            palm_hint = i18n.get_text('fortune.palm_reading', language)
+            base_prompt = (await db_service.get_prompt('palm', language) or i18n.get_text('coffee_fortune_prompt', language))
+            user_name = (update.effective_user.first_name or '').strip() if update.effective_user else ''
+            if user_name:
+                base_prompt = base_prompt.replace('{username}', user_name)
+            palm_prompt = palm_hint + ' - ' + base_prompt
+            interpretation = await ai_service.generate_with_fallback(user_id, palm_prompt, image_data=photo_bytes)
+            interpretation = interpretation or base_prompt
             
             # Format response
-            text = i18n.get_text("fortune.palm_reading_title", language)
-            text += f"\n\n{interpretation}"
+            title = i18n.get_text("fortune.palm_reading", language)
+            text = f"{title}\n\n{interpretation}"
             
-            keyboard = FortuneKeyboards.get_back_button(language, "fortune_menu")
+            keyboard = FortuneKeyboards.get_back_button(language)
             await update.message.reply_text(text, reply_markup=keyboard)
             
             # Update usage
@@ -332,21 +355,33 @@ class FortuneHandlers:
     async def _process_dream_text(update: Update, context: ContextTypes.DEFAULT_TYPE, dream_text: str, language: str) -> None:
         """Process dream text for interpretation."""
         try:
-            # Create prompt for dream interpretation
-            prompt = i18n.get_text("fortune.dream_interpretation_prompt", language).format(
-                dream=dream_text
-            )
-            
-            # Generate interpretation using AI
-            interpretation = await ai_service.generate_fortune_interpretation(prompt, language)
+            # Fetch dream prompt and send to AI with fallback
+            prompt_template = await db_service.get_prompt('dream', language) or i18n.get_text('dream_analysis_prompt', language)
+            user_name = (update.effective_user.first_name or '').strip() if update.effective_user else ''
+            if user_name:
+                prompt_template = prompt_template.replace('{username}', user_name)
+            filled_prompt = f"{prompt_template}\n\nDream: {dream_text}"
+            interpretation = await ai_service.generate_with_fallback(update.effective_user.id, filled_prompt)
+            interpretation = interpretation or prompt_template
             
             # Format response
-            text = i18n.get_text("fortune.dream_interpretation_title", language)
-            text += f"\n\n{i18n.get_text('fortune.your_dream', language)}:\n{dream_text}\n\n"
-            text += f"{i18n.get_text('fortune.interpretation', language)}:\n{interpretation}"
+            title = i18n.get_text("dream_analysis", language)
+            text = f"{title}\n\n{interpretation}"
             
-            keyboard = FortuneKeyboards.get_back_button(language, "fortune_menu")
+            # Append share on X with #FalGram
+            from urllib.parse import quote
+            full_share = f"{title}\n\n{interpretation}\n#FalGram"
+            share_text = full_share[:270]
+            twitter_url = f"https://twitter.com/intent/tweet?text={quote(share_text)}"
+            share_keyboard = InlineKeyboardMarkup([
+                [InlineKeyboardButton(i18n.get_text('referral.share_twitter', language), url=twitter_url)],
+                [InlineKeyboardButton(i18n.get_text('common.back', language), callback_data='fortune')],
+                [InlineKeyboardButton(i18n.get_text('navigation.main_menu', language), callback_data='main_menu')]
+            ])
+            
+            keyboard = FortuneKeyboards.get_back_button(language)
             await update.message.reply_text(text, reply_markup=keyboard)
+            await update.message.reply_text(i18n.get_text('coffee_fortune_share_twitter_message', language), reply_markup=share_keyboard)
             
             # Update usage
             await db_service.increment_user_usage(update.effective_user.id)

@@ -3,7 +3,7 @@ Referral handlers for the Fal Gram Bot.
 Handles referral system interactions.
 """
 
-from telegram import Update
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ContextTypes
 from config.settings import settings
 from src.utils.i18n import i18n
@@ -334,7 +334,12 @@ class ReferralHandlers:
     
     @staticmethod
     async def handle_share_whatsapp(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-        """Handle share on WhatsApp."""
+        """Deprecated: redirect to Share on X (Twitter) as requested."""
+        await ReferralHandlers.handle_share_twitter(update, context)
+
+    @staticmethod
+    async def handle_share_twitter(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+        """Handle share on X/Twitter with referral link and copy link option."""
         try:
             user = update.effective_user
             if not user:
@@ -345,38 +350,34 @@ class ReferralHandlers:
                 await update.callback_query.answer("❌ User not found")
                 return
             
+            language = user_data.get('language', 'en')
             referral_code = user_data.get('referral_code')
             
             if not referral_code:
-                # Generate referral code
                 from src.utils.helpers import generate_referral_code
                 referral_code = generate_referral_code(user.id)
                 await db_service.update_user(user.id, {'referral_code': referral_code})
             
-            # Create referral link
             bot_username = context.bot.username
             referral_link = f"https://t.me/{bot_username}?start={referral_code}"
             
-            # WhatsApp share text
-            share_text = f"🔮 Check out this amazing mystical bot!\n\n"
-            share_text += f"Get your daily horoscope, coffee fortune, and more!\n\n"
-            share_text += f"Join here: {referral_link}"
+            # Twitter intent URL
+            from urllib.parse import quote
+            share_text = f"🔮 {i18n.get_text('referral.share_text', language)} {referral_link}"
+            twitter_url = f"https://twitter.com/intent/tweet?text={quote(share_text)}"
             
-            # Create WhatsApp share URL
-            whatsapp_url = f"https://wa.me/?text={share_text.replace(' ', '%20')}"
-            
-            await update.callback_query.answer("Opening WhatsApp...")
-            
-            # Send the WhatsApp URL
-            await context.bot.send_message(
-                chat_id=user.id,
-                text=f"📱 [Share on WhatsApp]({whatsapp_url})",
-                parse_mode='Markdown'
+            keyboard = [
+                [InlineKeyboardButton(i18n.get_text('referral.share_twitter', language), url=twitter_url)],
+                [InlineKeyboardButton(i18n.get_text('referral.copy_link', language), callback_data='copy_referral_link')],
+                [InlineKeyboardButton(i18n.get_text('referral.back_to_referral', language), callback_data='referral')]
+            ]
+            await update.callback_query.edit_message_text(
+                i18n.get_text('referral.description', language),
+                reply_markup=InlineKeyboardMarkup(keyboard)
             )
-            
         except Exception as e:
-            logger.error(f"Error sharing on WhatsApp: {e}")
-            await update.callback_query.answer("❌ An error occurred") 
+            logger.error(f"Error sharing on Twitter/X: {e}")
+            await update.callback_query.answer("❌ An error occurred")
 
     # --- Compatibility methods required by verification script ---
     @staticmethod

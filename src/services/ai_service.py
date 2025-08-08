@@ -51,16 +51,17 @@ class AIService:
         
         return True
     
-    async def _make_gemini_request(self, prompt: str, image_data: Optional[bytes] = None) -> Optional[str]:
-        """Make request to Gemini API."""
+    async def _make_gemini_request(self, prompt: str, image_data: Optional[bytes] = None, model: Optional[str] = None) -> Optional[str]:
+        """Make request to Gemini API with optional model override."""
         if not self.gemini_api_key:
             logger.warning("Gemini API key not configured")
             return None
         
         try:
-            url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent"
-            if image_data:
-                url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-vision:generateContent"
+            # Determine model
+            if not model:
+                model = "gemini-pro-vision" if image_data else "gemini-pro"
+            url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
             
             headers = {
                 "Content-Type": "application/json",
@@ -105,6 +106,34 @@ class AIService:
         except Exception as e:
             logger.error(f"Error making Gemini request: {e}")
             return None
+
+    async def generate_with_fallback(self, user_id: int, prompt: str, image_data: Optional[bytes] = None) -> Optional[str]:
+        """Generate text using provider fallback: Gemini 2.5 Flash Lite -> 2.0 Flash -> DeepSeek -> Gemini 1.5 -> legacy.
+        Does rate limiting per user.
+        """
+        if not self._check_rate_limit(user_id):
+            return "Rate limit exceeded. Please try again later."
+
+        # Preferred Gemini model order
+        gemini_models = [
+            "gemini-2.5-flash-lite",
+            "gemini-2.0-flash",
+            "gemini-1.5-flash",
+        ]
+        for model in gemini_models:
+            result = await self._make_gemini_request(prompt, image_data=image_data, model=model)
+            if result:
+                return result
+
+        # DeepSeek as fallback (text only)
+        ds_prompt = prompt if not image_data else prompt + "\n\n(Visual reference provided; describe based on text instructions as needed.)"
+        result = await self._make_deepseek_request(ds_prompt)
+        if result:
+            return result
+
+        # Gemini legacy last chance
+        result = await self._make_gemini_request(prompt, image_data=image_data, model=None)
+        return result
     
     async def _make_deepseek_request(self, prompt: str) -> Optional[str]:
         """Make request to DeepSeek API."""
@@ -193,6 +222,28 @@ Make it mystical, insightful, and uplifting. Write in a caring, supportive tone.
         # Fallback to Gemini
         result = await self._make_gemini_request(prompt)
         return result
+    
+    async def generate_tarot_spread_interpretation(self, user_id: int, cards: List[Dict[str, Any]]) -> Optional[str]:
+        """Generate interpretation for a spread of tarot cards using both names and meanings."""
+        if not self._check_rate_limit(user_id):
+            return "Rate limit exceeded. Please try again later."
+        try:
+            card_names = ", ".join(card.get("name", "") for card in cards)
+            card_meanings = "; ".join(card.get("meaning", "") for card in cards)
+            prompt = (
+                "You are an expert tarot reader. Provide a cohesive interpretation for the following spread.\n\n"
+                f"Cards: {card_names}\n"
+                f"Card meanin gs (provided as hints): {card_meanings}\n\n"
+                "Include: overall theme, present situation, guidance, and a hopeful message."
+            )
+            # Prefer DeepSeek for text
+            result = await self._make_deepseek_request(prompt)
+            if result:
+                return result
+            return await self._make_gemini_request(prompt)
+        except Exception as e:
+            logger.error(f"Error generating spread interpretation: {e}")
+            return None
     
     async def generate_dream_interpretation(self, user_id: int, dream_text: str) -> Optional[str]:
         """Generate dream interpretation."""
