@@ -68,6 +68,13 @@ class UserHandlers:
             language = user_data.get('language', 'en') if user_data else 'en'
             
             text = i18n.get_text("menu.main_title", language)
+            # Show premium plan name inline if active
+            try:
+                if user_data and user_data.get('is_premium'):
+                    plan = (user_data.get('premium_plan') or '').upper()
+                    text += f"\n\n💎 {plan}"
+            except Exception:
+                pass
             keyboard = MainKeyboards.get_main_menu_keyboard(language)
             
             if update.callback_query:
@@ -205,6 +212,7 @@ class UserHandlers:
             user_data = await db_service.get_user(user.id)
             language = user_data.get('language', 'en') if user_data else 'en'
             
+            # Use localized rich help content if available
             help_text = i18n.get_text("help.message", language)
             keyboard = MainKeyboards.get_help_keyboard(language)
             

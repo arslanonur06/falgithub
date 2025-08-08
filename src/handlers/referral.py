@@ -26,9 +26,10 @@ class ReferralHandlers:
             user_data = await db_service.get_user(user.id)
             language = user_data.get('language', 'en') if user_data else 'en'
             
-            text = "👥 **Referral Program**\n\n"
-            text += "Invite friends and earn rewards!\n"
-            text += "Share your referral link and get bonuses for each friend who joins."
+            # Localized referral main panel text
+            title = i18n.get_text("referral_system.title", language)
+            description = i18n.get_text("referral_system.description", language)
+            text = f"{title}\n\n{description}"
             
             keyboard = ReferralKeyboards.get_referral_menu_keyboard(language)
             
@@ -68,15 +69,21 @@ class ReferralHandlers:
                 referral_code = generate_referral_code(user.id)
                 await db_service.update_user(user.id, {'referral_code': referral_code})
             
-            text = "📊 **My Referral Info**\n\n"
-            text += f"**Referral Code:** `{referral_code}`\n"
-            text += f"**Total Referrals:** {referral_count}\n"
-            text += f"**Total Earnings:** {referral_earnings} TRY\n\n"
-            
             # Referral link
             bot_username = context.bot.username
             referral_link = f"https://t.me/{bot_username}?start={referral_code}"
-            text += f"**Your Referral Link:**\n`{referral_link}`"
+
+            # Localized info message with placeholders
+            template = i18n.get_text("referral_info_message", language)
+            try:
+                text = template.format(
+                    referred_count=referral_count,
+                    referral_earnings=referral_earnings,
+                    referral_link=referral_link
+                )
+            except Exception:
+                # Fallback minimal text
+                text = f"📊\n{referral_count} | {referral_earnings}\n{referral_link}"
             
             keyboard = ReferralKeyboards.get_referral_back_keyboard(language)
             
@@ -108,35 +115,71 @@ class ReferralHandlers:
             # Get referral stats
             referral_count = user_data.get('referral_count', 0)
             referral_earnings = user_data.get('referral_earnings', 0)
-            
-            text = "📈 **Referral Statistics**\n\n"
-            text += f"**Total Referrals:** {referral_count}\n"
-            text += f"**Total Earnings:** {referral_earnings} TRY\n\n"
-            
-            # Calculate potential earnings
-            potential_earnings = referral_count * 100  # 100 TRY per referral
-            text += f"**Potential Earnings:** {potential_earnings} TRY\n\n"
-            
-            # Referral level
+
+            # Derive readings for averages (fallback: referrals)
+            total_readings = int(user_data.get('free_readings_earned', referral_count))
+
+            # Rank and percentile among users
+            all_users = await db_service.get_all_users() or []
+            sorted_users = sorted(all_users, key=lambda u: u.get('referral_count', 0), reverse=True)
+            rank = next((idx + 1 for idx, u in enumerate(sorted_users) if str(u.get('user_id')) == str(user.id) or str(u.get('id')) == str(user.id)), len(sorted_users))
+            percentile = 100.0 * (1 - (rank - 1) / max(1, len(sorted_users)))
+
+            # Levels
             if referral_count >= 50:
-                level = "Premium"
-                next_level = "Maximum level reached"
+                level = 5
             elif referral_count >= 25:
-                level = "Elite"
-                next_level = f"Need {50 - referral_count} more referrals for Premium"
+                level = 4
             elif referral_count >= 10:
-                level = "VIP"
-                next_level = f"Need {25 - referral_count} more referrals for Elite"
+                level = 3
             elif referral_count >= 5:
-                level = "Active"
-                next_level = f"Need {10 - referral_count} more referrals for VIP"
+                level = 2
             else:
-                level = "New"
-                next_level = f"Need {5 - referral_count} more referrals for Active"
-            
-            text += f"**Current Level:** {level}\n"
-            text += f"**Next Level:** {next_level}"
-            
+                level = 1
+
+            # Next goals
+            to_vip = max(0, 10 - referral_count)
+            to_elite = max(0, 25 - referral_count)
+            next_level_target = 5 if referral_count < 5 else 10 if referral_count < 10 else 25 if referral_count < 25 else 50 if referral_count < 50 else 50
+            next_level_remaining = max(0, next_level_target - referral_count)
+
+            # Panel texts from TR locales
+            title = i18n.get_text('referral.stats_panel.title', language)
+            text = title + "\n\n"
+            text += i18n.get_text('referral.stats_panel.performance_label', language) + "\n"
+            text += i18n.get_text('referral.stats_panel.total_invites', language).format(count=referral_count) + "\n"
+            text += i18n.get_text('referral.stats_panel.this_week', language).format(count=0) + "\n"
+            text += i18n.get_text('referral.stats_panel.this_month', language).format(count=0) + "\n"
+            text += i18n.get_text('referral.stats_panel.last_invite', language).format(date='N/A') + "\n\n"
+
+            text += i18n.get_text('referral.stats_panel.earnings_label', language) + "\n"
+            text += i18n.get_text('referral.stats_panel.total_readings', language).format(count=total_readings) + "\n"
+            avg = (total_readings / referral_count) if referral_count > 0 else 0.0
+            text += i18n.get_text('referral.stats_panel.avg_per_invite', language).format(avg=avg) + "\n"
+            potential_value = referral_count * 100
+            text += i18n.get_text('referral.stats_panel.potential_value', language).format(value=potential_value) + "\n\n"
+
+            text += i18n.get_text('referral.stats_panel.ranking_label', language) + "\n"
+            text += i18n.get_text('referral.stats_panel.global_rank', language).format(rank=rank) + "\n"
+            text += i18n.get_text('referral.stats_panel.percentile', language).format(perc=percentile) + "\n"
+            text += i18n.get_text('referral.stats_panel.level', language).format(level=level) + "\n\n"
+
+            text += i18n.get_text('referral.stats_panel.goals_label', language) + "\n"
+            text += i18n.get_text('referral.stats_panel.next_level', language).format(count=next_level_remaining) + "\n"
+            text += i18n.get_text('referral.stats_panel.to_vip', language).format(count=to_vip) + "\n"
+            text += i18n.get_text('referral.stats_panel.to_elite', language).format(count=to_elite) + "\n\n"
+
+            # Monthly leaderboard top 5
+            text += i18n.get_text('referral.stats_panel.leaderboard_label', language) + "\n"
+            top5 = sorted_users[:5]
+            if top5:
+                for idx, u in enumerate(top5, 1):
+                    uname = u.get('first_name') or u.get('username') or f"User{idx}"
+                    rc = u.get('referral_count', 0)
+                    text += f"{idx}. {uname} - {rc}\n"
+            else:
+                text += i18n.get_text('referral.stats_panel.no_data', language)
+
             keyboard = ReferralKeyboards.get_referral_back_keyboard(language)
             
             await update.callback_query.edit_message_text(
@@ -193,24 +236,62 @@ class ReferralHandlers:
             user_data = await db_service.get_user(user.id)
             language = user_data.get('language', 'en') if user_data else 'en'
             
-            text = "🎁 **Referral Rewards**\n\n"
-            text += "**Earn rewards for each friend you invite:**\n\n"
-            text += "**🎯 1-4 Referrals:**\n"
-            text += "• 50 TRY bonus per referral\n"
-            text += "• Weekly bonus readings\n\n"
-            text += "**🎯 5-9 Referrals:**\n"
-            text += "• 75 TRY bonus per referral\n"
-            text += "• Special profile color\n"
-            text += "• VIP tarot deck access\n\n"
-            text += "**🎯 10-24 Referrals:**\n"
-            text += "• 100 TRY bonus per referral\n"
-            text += "• Priority AI responses\n"
-            text += "• Personal reading consultant\n\n"
-            text += "**🎯 25+ Referrals:**\n"
-            text += "• 150 TRY bonus per referral\n"
-            text += "• 24/7 priority support\n"
-            text += "• Exclusive VIP features\n"
-            text += "• Special events access"
+            rc = user_data.get('referral_count', 0)
+            earnings = user_data.get('referral_earnings', 0)
+
+            # Rewards panel
+            title = i18n.get_text('referral.rewards_panel.title', language)
+            text = title + "\n\n"
+            text += i18n.get_text('referral.rewards_panel.balance_label', language) + "\n"
+            text += i18n.get_text('referral.rewards_panel.available_readings', language).format(count=rc) + "\n"
+            text += i18n.get_text('referral.rewards_panel.total_value', language).format(value=earnings) + "\n\n"
+
+            # Badges
+            text += i18n.get_text('referral.rewards_panel.badges_label', language) + "\n"
+            badges = i18n.get_text('referral.rewards_panel.badges', language)
+            earned = []
+            thresholds = [1, 5, 10, 25, 50]
+            for t in thresholds:
+                if rc >= t:
+                    label = badges.get(str(t)) if isinstance(badges, dict) else None
+                    if label:
+                        earned.append(f"• {label}")
+            if earned:
+                text += "\n".join(earned) + "\n\n"
+            else:
+                text += i18n.get_text('referral.rewards_panel.no_badges', language) + "\n\n"
+
+            # Perks
+            text += i18n.get_text('referral.rewards_panel.perks_label', language) + "\n"
+            perks = i18n.get_text('referral.rewards_panel.perks', language)
+            shown_any = False
+            if isinstance(perks, dict):
+                for t in sorted(perks.keys(), key=lambda x: int(x)):
+                    if rc >= int(t):
+                        plist = perks[t]
+                        if isinstance(plist, list) and plist:
+                            text += "\n".join(plist) + "\n"
+                            shown_any = True
+            if not shown_any:
+                text += i18n.get_text('referral.rewards_panel.no_perks', language) + "\n"
+
+            # Next rewards
+            text += "\n" + i18n.get_text('referral.rewards_panel.next_rewards_label', language) + "\n"
+            next_t = 5 if rc < 5 else 10 if rc < 10 else 25 if rc < 25 else 50 if rc < 50 else None
+            if next_t:
+                nr_tpl = i18n.get_text('referral.rewards_panel.next_reward_template', language)
+                remaining = max(0, next_t - rc)
+                # choose first reward name of that tier if exists
+                reward_name = ''
+                if isinstance(perks, dict) and str(next_t) in perks and isinstance(perks[str(next_t)], list) and perks[str(next_t)]:
+                    reward_name = perks[str(next_t)][0].replace('• ', '')
+                text += nr_tpl.format(remaining=remaining, reward_name=reward_name) + "\n\n"
+
+            # Offers list
+            text += i18n.get_text('referral.rewards_panel.offers_label', language) + "\n"
+            offers = i18n.get_text('referral.rewards_panel.offers_list', language)
+            if isinstance(offers, list) and offers:
+                text += "\n".join(offers)
             
             keyboard = ReferralKeyboards.get_referral_back_keyboard(language)
             
@@ -235,8 +316,7 @@ class ReferralHandlers:
             user_data = await db_service.get_user(user.id)
             language = user_data.get('language', 'en') if user_data else 'en'
             
-            text = "📤 **Share Your Referral Link**\n\n"
-            text += "Choose how you want to share your referral link:"
+            text = i18n.get_text("referral_system.description", language)
             
             keyboard = ReferralKeyboards.get_referral_share_keyboard(language)
             
@@ -372,7 +452,7 @@ class ReferralHandlers:
                 [InlineKeyboardButton(i18n.get_text('referral.back_to_referral', language), callback_data='referral')]
             ]
             await update.callback_query.edit_message_text(
-                i18n.get_text('referral.description', language),
+                i18n.get_text('referral_system.description', language),
                 reply_markup=InlineKeyboardMarkup(keyboard)
             )
         except Exception as e:

@@ -98,6 +98,7 @@ async def route_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         "fortune": __import__("src.handlers.fortune", fromlist=["FortuneHandlers"]).FortuneHandlers.show_fortune_menu,
         "referral": ReferralHandlers.show_referral_menu,
         "premium": PaymentHandlers.show_premium_menu,
+        "premium_info": PaymentHandlers.show_premium_info,
         # Referral
         "referral_info": ReferralHandlers.show_referral_info,
         "referral_stats": ReferralHandlers.show_referral_stats,
@@ -110,7 +111,11 @@ async def route_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         "share_twitter": ReferralHandlers.handle_share_twitter,
         # Premium
         "premium_plans": PaymentHandlers.show_premium_plans,
+        "plan_details_basic": PaymentHandlers.show_plan_details,
+        "plan_details_premium": PaymentHandlers.show_plan_details,
+        "plan_details_vip": PaymentHandlers.show_plan_details,
         "subscription_management": PaymentHandlers.show_subscription_management,
+        "toggle_auto_renew": PaymentHandlers.toggle_auto_renew,
         "cancel_subscription": PaymentHandlers.handle_cancel_subscription,
         # Fortune
         "tarot_fortune": __import__("src.handlers.fortune", fromlist=["FortuneHandlers"]).FortuneHandlers.handle_tarot_reading,

@@ -4,6 +4,30 @@ Tüm önemli değişiklikler bu dosyada belgelenmiştir.
 
 ---
 
+## [3.2.1] - 2025-08-08 🔧 **UPDATE: Premium Akış & Astrology UX**
+
+### 💎 Premium
+- ➕ Premium menüye **ℹ️ More Info** eklendi (i18n içeriklerinden derlenir)
+- 🧭 Plan listesinde her plan yanında **Plan Detayları** butonu
+- 📄 Plan detay ekranı: ad, Stars (XTR) fiyatı, süre, özellk listesi, ödeme CTA
+- 💳 Telegram Stars (XTR) faturalandırma: Stars tutarı doğrudan gönderilir (x100 yok)
+
+### 🌙 Astrology
+- 🛡️ Haftalık/Aylık/Uyumluluk/Ay Takvimi → Premium gerekli; Günlük ücretsiz
+- 🏷️ Menüde **Premium/VIP aktif** rozeti
+- 🧭 Haftalık/Aylık girişleri menüye eklendi
+
+### ☕💭 Kahve/Rüya Paylaşım
+- 📨 Yorum + **X’te Paylaş** daveti tek mesajda birleştirildi
+- 🧹 Paylaşım klavyesi sade: X’te Paylaş, Geri (Ana Menü kaldırıldı)
+
+### 🐞 Düzeltmeler
+- 🛠️ Astrology butonu: `get_astrology_menu` alias eklendi → AttributeError çözüldü
+- 🔁 "Message is not modified" hatasında yalnızca reply_markup güncelleniyor
+ - 🌍 i18n: Kodda kullanılan TÜM anahtarlar TR/EN/ES dosyalarına eklendi (eksik 0)
+
+---
+
 ## [3.2.0] - 2025-07-28 🌟 **MAJOR RELEASE: Gelişmiş Referral Sistemi & Premium Karşılaştırması**
 
 ### 💎 **YENİ ÖZELLİKLER**

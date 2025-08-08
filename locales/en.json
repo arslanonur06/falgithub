@@ -65,7 +65,23 @@
     "weekly_horoscope": "📊 Weekly Horoscope",
     "monthly_horoscope": "📅 Monthly Horoscope",
     "compatibility": "💕 Compatibility",
-    "moon_calendar": "🌙 Moon Calendar"
+    "moon_calendar": "🌙 Moon Calendar",
+    "menu_title": "🔮 Astrology Menu",
+    "select_zodiac_daily": "Please select your sign for the daily horoscope.",
+    "weekly_horoscope_prompt": "Write a comprehensive weekly horoscope for the {sign} sign.",
+    "monthly_horoscope_prompt": "Write a comprehensive monthly horoscope for the {sign} sign for {month}.",
+    "daily_horoscope_prompt": "Write a concise daily horoscope for the {sign} sign for {date}.",
+    "horoscope_title": "{zodiac_name} - {type}",
+    "birth_date_required": "📅 Birth date required. Please add it from your profile.",
+    "birth_chart_prompt": "Provide a detailed birth chart analysis. Name: {username}, Date: {birth_date}, Time: {birth_time}, Place: {birth_place}.",
+    "birth_chart_title": "🗺️ Birth Chart",
+    "compatibility_menu": "Choose compatibility type.",
+    "compatibility_prompt": "Analyze compatibility between {sign1} and {sign2} for {username}.",
+    "compatibility_title": "🤝 Compatibility",
+    "select_second_sign": "Select the second sign.",
+    "moon_calendar_prompt": "Moon phase: {moon_phase}, Illumination: {illumination}. Explain daily effects.",
+    "moon_calendar_title": "🌙 Moon Calendar",
+    "premium_required": "🔒 Premium plan required for this feature."
   },
   "astrology_calculating": "⭐ Performing astrological calculations...",
   "birth_chart": "🌟 Birth Chart",
@@ -127,7 +143,8 @@
     "copy_link": "📋 Copy Link",
     "share_telegram": "📤 Share on Telegram",
     "share_whatsapp": "📱 Share on WhatsApp",
-    "link_copied": "✅ Referral link copied: {link}"
+    "link_copied": "✅ Referral link copied: {link}",
+    "share_twitter": "🐦 Share on X"
   },
   "language_selection": {
     "title": "🌐 **Language Selection**",
@@ -176,22 +193,21 @@
     "buttons": {
       "buy": "💳 Buy Now",
       "back": "🔙 Back",
-      "plan_template": "✨ {plan_name} - {price} ⭐"
+      "plan_template": "{plan_name} - {price}"
     },
     "back_to_menu": "🔙 Back to Menu",
     "plans": {
       "basic": {
         "name": "Basic Plan",
-        "description": "Unlimited readings and advanced features",
+        "description": "Unlimited readings and core astrology features",
         "duration": "30 days",
         "price": "500 ⭐",
         "features": [
           "♾️ Unlimited readings (Coffee, Tarot, Dream)",
-          "📊 Weekly horoscope report",
-          "🔮 Advanced astrology analysis",
-          "💫 Birth chart interpretation",
-          "🌙 Moon calendar features",
-          "💬 Advanced chatbot",
+          "✅ Daily horoscope",
+          "✅ Basic birth chart",
+          "💫 Birth chart analysis",
+          "💬 Advanced chatbot (basic)",
           "🎯 Personalized recommendations",
           "📈 Detailed reading history",
           "🔔 Special notifications"
@@ -199,18 +215,19 @@
       },
       "premium": {
         "name": "Premium Plan",
-        "description": "Complete astrology package and special features",
+        "description": "Full astrology suite with advanced features",
         "duration": "30 days",
         "price": "1000 ⭐",
         "features": [
-          "✨ Basic Plan features",
+          "✨ All Basic features",
+          "📊 Weekly astrology report",
           "📅 Monthly horoscope",
-          "🪐 Planetary transits analysis",
-          "💕 Zodiac compatibility",
-          "🌙 Advanced moon calendar",
+          "🪐 Planetary transit analysis",
+          "💕 Compatibility",
+          "🌙 Advanced moon calendar notifications",
           "📈 Detailed astrology reports",
           "🎯 Personalized recommendations",
-          "🔮 Special reading types",
+          "🔮 Special fortune types",
           "📊 Astrology statistics",
           "🎁 Exclusive content",
           "⚡ Priority support"
@@ -229,20 +246,20 @@
           "⚡ Priority support",
           "📊 Advanced analytics",
           "🎯 Personal astrology consultant",
-          "🌟 Special VIP reading types",
+          "🌟 Special VIP fortune types",
           "💎 Unlimited exclusive content",
-          "🎪 Special events",
-          "📱 Special VIP interface",
+          "🎪 Exclusive events",
+          "📱 VIP-only interface",
           "🔮 AI-powered personal guidance"
         ]
       },
       "free": {
         "name": "Free",
-        "description": "Start with 5 free readings",
+        "description": "Start with 4 free readings",
         "duration": "Unlimited",
         "price": "0 ⭐",
         "features": [
-          "☕ 5 free readings (Coffee, Tarot, Dream)",
+          "☕ 4 free readings (Coffee, Tarot, Dream)",
           "♈ Daily horoscope",
           "🔮 Basic astrology features",
           "📱 Basic chatbot support",
@@ -257,7 +274,8 @@
   "error": {
     "general": "❌ An error occurred. Please try again.",
     "user_not_found": "❌ User not found!",
-    "plan_not_found": "❌ Plan not found. Please try again."
+    "plan_not_found": "❌ Plan not found. Please try again.",
+    "generation_failed": "❌ Generation failed. Please try again."
   },
   "plan_comparison": {
     "title": "📊 **PLAN COMPARISON** 📊",
@@ -933,7 +951,8 @@
     "payment_success": "🎉 Payment Successful!",
     "payment_error": "❌ Payment Error",
     "try_again": "🔄 Try Again",
-    "purchase_initiated": "🛒 Purchase initiated. Click the button below to proceed with payment."
+    "purchase_initiated": "🛒 Purchase initiated. Click the button below to proceed with payment.",
+    "more_info": "More Info"
   },
   "language_system": {
     "selection_title": "🌐 **Language Selection** 🌐",
@@ -997,13 +1016,28 @@
     "settings_title": "⚙️ **SYSTEM SETTINGS**",
     "logs_title": "📋 **SYSTEM LOGS**",
     "premium_title": "💎 **PREMIUM MANAGEMENT**",
-    "pdf_title": "📱 **PDF REPORTS**"
+    "pdf_title": "📱 **PDF REPORTS**",
+    "welcome": "👑 Welcome to the Admin Panel",
+    "premium_management": "💎 Premium Management",
+    "premium_stats_title": "📊 Premium Statistics",
+    "premium_users_title": "💎 Premium Users",
+    "error_loading_stats": "❌ Error loading statistics.",
+    "error_loading_users": "❌ Error loading users.",
+    "error_loading_logs": "❌ Error loading logs.",
+    "error_loading_premium_users": "❌ Error loading premium users.",
+    "error_loading_premium_stats": "❌ Error loading premium statistics.",
+    "error_generating_pdf": "❌ Error generating PDF.",
+    "gift_subscription_title": "🎁 Gift Subscription",
+    "cancel_subscription_title": "❌ Cancel Subscription",
+    "pdf_report": "📄 PDF Report",
+    "pdf_sent": "✅ PDF report sent."
   },
   "fortune": {
     "tarot_reading": "🎴 Tarot Reading",
     "coffee_reading": "☕ Coffee Reading",
     "dream_interpretation": "💭 Dream Interpretation",
-    "palm_reading": "🖐️ Palm Reading"
+    "palm_reading": "🖐️ Palm Reading",
+    "daily_limit_reached": "⚠️ You've reached your daily free limit. Limit: {limit}. Upgrade to Premium."
   },
   "payment": {
     "title": "💳 **Payment Information** 💳",
@@ -1048,7 +1082,9 @@
     "unsubscribe": "❌ Unsubscribe",
     "upgrade_basic": "💎 Upgrade to Basic",
     "upgrade_premium": "⭐ Upgrade to Premium",
-    "upgrade_vip": "👑 Upgrade to VIP"
+    "upgrade_vip": "👑 Upgrade to VIP",
+    "auto_renew_toggle": "🔄 Toggle Auto-Renew",
+    "auto_renew_toggled": "🔄 Your auto-renew preference has been updated."
   },
   "admin_logs_message": "📋 **Admin Logs**\n\n{logs}",
   "admin_pdf_download": "📄 **PDF Download**\n\nDownload reports in PDF format.",

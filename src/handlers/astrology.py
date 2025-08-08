@@ -32,6 +32,17 @@ class AstrologyHandlers:
         
         keyboard = AstrologyKeyboards.get_astrology_menu(language)
         text = i18n.get_text("astrology.menu_title", language)
+        # Append plan status indicators if applicable
+        try:
+            user_data = await db_service.get_user(user.id)
+            if user_data and user_data.get('is_premium'):
+                plan = (user_data.get('premium_plan') or '').lower()
+                if plan == 'vip':
+                    text += f"\n\n{i18n.get_text('astrology_menu.vip_active', language)}"
+                else:
+                    text += f"\n\n{i18n.get_text('astrology_menu.premium_active', language)}"
+        except Exception:
+            pass
         
         await query.edit_message_text(text, reply_markup=keyboard)
     
@@ -52,8 +63,8 @@ class AstrologyHandlers:
             await query.edit_message_text(text, reply_markup=keyboard)
             return
         
-        # Check premium access
-        premium_check = await AstrologyHandlers._check_premium_access(user.id, language)
+        # Birth chart available starting from Basic plan
+        premium_check = await AstrologyHandlers._check_premium_access(user.id, language, required_plan='basic')
         if not premium_check['has_access']:
             await query.edit_message_text(premium_check['message'], reply_markup=premium_check['keyboard'])
             return
@@ -84,14 +95,14 @@ class AstrologyHandlers:
         user = update.effective_user
         language = user.language_code or "en" if user else "en"
         
-        # Check premium access
-        premium_check = await AstrologyHandlers._check_premium_access(user.id, language)
+        # Monthly horoscope requires Premium plan
+        premium_check = await AstrologyHandlers._check_premium_access(user.id, language, required_plan='premium')
         if not premium_check['has_access']:
             await query.edit_message_text(premium_check['message'], reply_markup=premium_check['keyboard'])
             return
         
         keyboard = AstrologyKeyboards.get_zodiac_selection(language, "weekly_horoscope")
-        text = i18n.get_text("astrology.select_zodiac_weekly", language)
+        text = i18n.get_text("weekly_horoscope.title", language)
         
         await query.edit_message_text(text, reply_markup=keyboard)
     
@@ -104,14 +115,14 @@ class AstrologyHandlers:
         user = update.effective_user
         language = user.language_code or "en" if user else "en"
         
-        # Check premium access
-        premium_check = await AstrologyHandlers._check_premium_access(user.id, language)
+        # Compatibility requires Premium plan
+        premium_check = await AstrologyHandlers._check_premium_access(user.id, language, required_plan='premium')
         if not premium_check['has_access']:
             await query.edit_message_text(premium_check['message'], reply_markup=premium_check['keyboard'])
             return
         
         keyboard = AstrologyKeyboards.get_zodiac_selection(language, "monthly_horoscope")
-        text = i18n.get_text("astrology.select_zodiac_monthly", language)
+        text = i18n.get_text("monthly_horoscope.title", language)
         
         await query.edit_message_text(text, reply_markup=keyboard)
     
@@ -124,8 +135,8 @@ class AstrologyHandlers:
         user = update.effective_user
         language = user.language_code or "en" if user else "en"
         
-        # Check premium access
-        premium_check = await AstrologyHandlers._check_premium_access(user.id, language)
+        # Moon calendar requires Premium plan
+        premium_check = await AstrologyHandlers._check_premium_access(user.id, language, required_plan='premium')
         if not premium_check['has_access']:
             await query.edit_message_text(premium_check['message'], reply_markup=premium_check['keyboard'])
             return
@@ -144,8 +155,8 @@ class AstrologyHandlers:
         user = update.effective_user
         language = user.language_code or "en" if user else "en"
         
-        # Check premium access
-        premium_check = await AstrologyHandlers._check_premium_access(user.id, language)
+        # Moon calendar requires Premium plan
+        premium_check = await AstrologyHandlers._check_premium_access(user.id, language, required_plan='premium')
         if not premium_check['has_access']:
             await query.edit_message_text(premium_check['message'], reply_markup=premium_check['keyboard'])
             return
@@ -206,8 +217,8 @@ class AstrologyHandlers:
             await query.edit_message_text(text, reply_markup=keyboard)
     
     @staticmethod
-    async def _check_premium_access(user_id: int, language: str) -> Dict[str, Any]:
-        """Check if user has premium access for astrology features."""
+    async def _check_premium_access(user_id: int, language: str, required_plan: str = 'basic') -> Dict[str, Any]:
+        """Check if user has required plan access for astrology features."""
         user_data = await db_service.get_user(user_id)
         
         if not user_data:
@@ -217,9 +228,13 @@ class AstrologyHandlers:
                 'keyboard': AstrologyKeyboards.get_back_button(language, "astrology_menu")
             }
         
-        # Daily horoscope is free, others need premium
-        if user_data.get('is_premium'):
-            return {'has_access': True}
+        # Determine plan rank
+        plan_order = { 'free': 0, 'basic': 1, 'premium': 2, 'vip': 3 }
+        user_plan = (user_data.get('premium_plan') or ('basic' if user_data.get('is_premium') else 'free')).lower()
+        user_rank = plan_order.get(user_plan, 0)
+        required_rank = plan_order.get(required_plan.lower(), 1)
+        if user_rank >= required_rank:
+            return { 'has_access': True }
         
         return {
             'has_access': False,

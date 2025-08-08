@@ -65,7 +65,7 @@ class FortuneHandlers:
         await FortuneHandlers._generate_tarot_interpretation(query, drawn_cards, language)
         
         # Update usage
-        await db_service.increment_user_usage(user.id)
+        await db_service.increment_usage(user.id)
     
     @staticmethod
     async def handle_coffee_reading(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -267,7 +267,7 @@ class FortuneHandlers:
             
         except Exception as e:
             logger.error(f"Error generating tarot interpretation: {e}")
-            text = i18n.get_text("error.generation_failed", language)
+            text = i18n.get_text("error.general", language)
             keyboard = FortuneKeyboards.get_back_button(language)
             await query.edit_message_text(text, reply_markup=keyboard)
     
@@ -303,22 +303,22 @@ class FortuneHandlers:
             full_share = f"{title}\n\n{interpretation}\n#FalGram"
             share_text = full_share[:270]
             twitter_url = f"https://twitter.com/intent/tweet?text={quote(share_text)}"
+            # Simplify share keyboard to avoid extra menu components
             share_keyboard = InlineKeyboardMarkup([
                 [InlineKeyboardButton(i18n.get_text('referral.share_twitter', language), url=twitter_url)],
-                [InlineKeyboardButton(i18n.get_text('common.back', language), callback_data='fortune')],
-                [InlineKeyboardButton(i18n.get_text('navigation.main_menu', language), callback_data='main_menu')]
+                [InlineKeyboardButton(i18n.get_text('common.back', language), callback_data='fortune')]
             ])
             
             keyboard = FortuneKeyboards.get_back_button(language)
-            await update.message.reply_text(text, reply_markup=keyboard)
-            await update.message.reply_text(i18n.get_text('coffee_fortune_share_twitter_message', language), reply_markup=share_keyboard)
+            # Send interpretation and share prompt together in one message block
+            await update.message.reply_text(text + "\n\n" + i18n.get_text('coffee_fortune_share_twitter_message', language), reply_markup=share_keyboard)
             
             # Update usage
-            await db_service.increment_user_usage(update.effective_user.id)
+            await db_service.increment_usage(update.effective_user.id)
             
         except Exception as e:
             logger.error(f"Error processing coffee photo: {e}")
-            text = i18n.get_text("error.generation_failed", language)
+            text = i18n.get_text("error.general", language)
             await update.message.reply_text(text)
     
     @staticmethod
@@ -344,11 +344,11 @@ class FortuneHandlers:
             await update.message.reply_text(text, reply_markup=keyboard)
             
             # Update usage
-            await db_service.increment_user_usage(update.effective_user.id)
+            await db_service.increment_usage(update.effective_user.id)
             
         except Exception as e:
             logger.error(f"Error processing palm photo: {e}")
-            text = i18n.get_text("error.generation_failed", language)
+            text = i18n.get_text("error.general", language)
             await update.message.reply_text(text)
     
     @staticmethod
@@ -375,20 +375,18 @@ class FortuneHandlers:
             twitter_url = f"https://twitter.com/intent/tweet?text={quote(share_text)}"
             share_keyboard = InlineKeyboardMarkup([
                 [InlineKeyboardButton(i18n.get_text('referral.share_twitter', language), url=twitter_url)],
-                [InlineKeyboardButton(i18n.get_text('common.back', language), callback_data='fortune')],
-                [InlineKeyboardButton(i18n.get_text('navigation.main_menu', language), callback_data='main_menu')]
+                [InlineKeyboardButton(i18n.get_text('common.back', language), callback_data='fortune')]
             ])
             
             keyboard = FortuneKeyboards.get_back_button(language)
-            await update.message.reply_text(text, reply_markup=keyboard)
-            await update.message.reply_text(i18n.get_text('coffee_fortune_share_twitter_message', language), reply_markup=share_keyboard)
+            await update.message.reply_text(text + "\n\n" + i18n.get_text('coffee_fortune_share_twitter_message', language), reply_markup=share_keyboard)
             
             # Update usage
-            await db_service.increment_user_usage(update.effective_user.id)
+            await db_service.increment_usage(update.effective_user.id)
             
         except Exception as e:
             logger.error(f"Error processing dream text: {e}")
-            text = i18n.get_text("error.generation_failed", language)
+            text = i18n.get_text("error.general", language)
             await update.message.reply_text(text)
 
 # Global handlers instance

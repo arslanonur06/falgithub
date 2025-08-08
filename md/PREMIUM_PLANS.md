@@ -2,7 +2,7 @@
 
 ## 📋 Genel Bakış
 
-Fal Gram, kullanıcılarına **Premium odaklı** bir deneyim sunar. Ücretsiz kullanıcılar **5 fal hakkı** ile başlar ve sonrasında **Premium Planlara** yönlendirilir.
+Fal Gram, kullanıcılarına **Premium odaklı** bir deneyim sunar. Ücretsiz kullanıcılar **4 fal hakkı** ile başlar (sistemsel hata durumlarında hak düşmez) ve sonrasında **Premium Planlara** yönlendirilir. Ödemeler Telegram Stars (XTR) ile gerçekleştirilir.
 
 ---
 
@@ -10,9 +10,9 @@ Fal Gram, kullanıcılarına **Premium odaklı** bir deneyim sunar. Ücretsiz ku
 
 ### 🆓 **Ücretsiz Plan**
 - **Fiyat:** 0 ⭐
-- **Fal Hakkı:** 5 ücretsiz fal (Kahve, Tarot, Rüya)
+- **Fal Hakkı:** 4 ücretsiz fal (Kahve, Tarot, Rüya) — sistemsel hata olursa sayılmaz
 - **Özellikler:**
-  - ☕ 5 ücretsiz fal (Kahve, Tarot, Rüya)
+  - ☕ 4 ücretsiz fal (Kahve, Tarot, Rüya)
   - ♈ Günlük burç yorumu
   - 🔮 Temel astroloji özellikleri
   - 📱 Temel chatbot desteği
@@ -23,11 +23,10 @@ Fal Gram, kullanıcılarına **Premium odaklı** bir deneyim sunar. Ücretsiz ku
 - **Fal Hakkı:** ♾️ Sınırsız
 - **Özellikler:**
   - ♾️ Sınırsız fal (Kahve, Tarot, Rüya)
-  - 📊 Haftalık burç raporu
-  - 🔮 Gelişmiş astroloji analizi
+  - ✅ Günlük burç yorumu
+  - ✅ Temel doğum haritası
   - 💫 Doğum haritası yorumu
-  - 🌙 Ay takvimi özellikleri
-  - 💬 Gelişmiş chatbot
+  - 💬 Gelişmiş chatbot (temel)
   - 🎯 Kişiselleştirilmiş öneriler
   - 📈 Detaylı fal geçmişi
   - 🔔 Özel bildirimler
@@ -36,11 +35,12 @@ Fal Gram, kullanıcılarına **Premium odaklı** bir deneyim sunar. Ücretsiz ku
 - **Fiyat:** 1000 ⭐
 - **Fal Hakkı:** ♾️ Sınırsız
 - **Özellikler:**
-  - ✨ Temel Plan özellikleri
+  - ✨ Temel Plan + tüm özellikler
+  - 📊 Haftalık astroloji raporu
   - 📅 Aylık burç yorumu
   - 🪐 Gezegen geçişleri analizi
   - 💕 Burç uyumluluğu
-  - 🌙 Gelişmiş ay takvimi
+  - 🌙 Gelişmiş ay takvimi bildirimleri
   - 📈 Detaylı astroloji raporları
   - 🎯 Kişiselleştirilmiş öneriler
   - 🔮 Özel fal türleri
@@ -71,12 +71,12 @@ Fal Gram, kullanıcılarına **Premium odaklı** bir deneyim sunar. Ücretsiz ku
 
 | Özellik | Ücretsiz | Temel | Premium | VIP |
 |---------|----------|-------|---------|-----|
-| **Fal Hakkı** | 5 | ♾️ | ♾️ | ♾️ |
+| **Fal Hakkı** | 4 | ♾️ | ♾️ | ♾️ |
 | **Günlük Burç** | ✅ | ✅ | ✅ | ✅ |
-| **Haftalık Rapor** | ❌ | ✅ | ✅ | ✅ |
+| **Haftalık Rapor** | ❌ | ❌ | ✅ | ✅ |
 | **Aylık Burç** | ❌ | ❌ | ✅ | ✅ |
 | **Doğum Haritası** | ❌ | ✅ | ✅ | ✅ |
-| **Ay Takvimi** | ❌ | ✅ | ✅ | ✅ |
+| **Ay Takvimi** | ❌ | ❌ | ✅ | ✅ |
 | **Gezegen Analizi** | ❌ | ❌ | ✅ | ✅ |
 | **Burç Uyumluluğu** | ❌ | ❌ | ✅ | ✅ |
 | **7/24 Chatbot** | ❌ | ❌ | ❌ | ✅ |
@@ -92,7 +92,7 @@ Fal Gram, kullanıcılarına **Premium odaklı** bir deneyim sunar. Ücretsiz ku
 ### **Ücretsiz Plan**
 - **Fiyat:** 0 ⭐
 - **Süre:** Süresiz
-- **Fal Hakkı:** 5 fal
+- **Fal Hakkı:** 4 fal (hata olursa düşmez)
 
 ### **Temel Plan**
 - **Fiyat:** 500 ⭐
@@ -113,10 +113,11 @@ Fal Gram, kullanıcılarına **Premium odaklı** bir deneyim sunar. Ücretsiz ku
 
 ## 💳 Ödeme Sistemi
 
-### **Telegram Stars ile Ödeme**
+### **Telegram Stars ile Ödeme (XTR)**
 - ✅ **Güvenli Ödeme:** Tüm ödemeler Telegram üzerinden güvenli şekilde işlenir
 - ✅ **Anında Aktivasyon:** Başarılı ödemeden sonra anında premium özellikler aktif olur
 - ✅ **Bilgi Güvenliği:** Ödeme bilgileriniz asla saklanmaz
+- 💱 **Para Birimi:** XTR (Stars); fiyatta görüntülenen değer doğrudan Stars miktarıdır
 
 ### **Telegram Stars Nasıl Alınır?**
 - 🌟 **Telegram Premium:** Telegram Premium kullanarak yıldız kazanın
@@ -128,6 +129,22 @@ Fal Gram, kullanıcılarına **Premium odaklı** bir deneyim sunar. Ücretsiz ku
 2. **Ödeme:** "Yıldızlarla Öde" butonuna tıklayın
 3. **Onay:** Telegram'da ödemeyi tamamlayın
 4. **Aktivasyon:** Premium özelliklerinizin keyfini çıkarın!
+
+---
+
+## 🧭 Uygulama İçi Akış (UI/UX)
+
+### **Plan Detayları**
+- Premium menü → Planlar ekranında bir plana dokunduğunuzda doğrudan **detay ekranı** açılır
+- Detay ekranında: plan adı, **Stars fiyatı (XTR)**, süre, tüm özellikler listesi
+- CTA: **"Telegram Yıldızlarıyla Öde"**, geri → Planlar, geri → Premium
+
+### **Bilgi (More Info)**
+- Premium menüsünde **"ℹ️ More Info"** butonu ile gelişmiş özellikler (Ay Takvimi Plus, Chatbot VIP, Sosyal Özellikler), ödeme sistemi, veritabanı ve UX bilgileri özetlenir
+
+### **Paylaşım UX (Rüya/Kahve)**
+- Yorum ve **X'te Paylaş** daveti tek mesajda birleştirilmiştir
+- Paylaşım klavyesi sadeleştirilmiştir: **X'te Paylaş** ve **Geri**
 
 ---
 
@@ -218,10 +235,6 @@ Fal Gram, kullanıcılarına **Premium odaklı** bir deneyim sunar. Ücretsiz ku
 
 ---
 
-<<<<<<< Current (Your changes)
-**Son Güncelleme:** 28 Temmuz 2025  
-**Versiyon:** 3.2.0  
+**Son Güncelleme:** 08 Ağustos 2025  
+**Versiyon:** 3.2.1  
 **Durum:** Aktif 
-=======
-*Son güncelleme: v3.2.0 - 2024* 
->>>>>>> Incoming (Background Agent changes)

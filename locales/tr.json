@@ -19,13 +19,28 @@
     "settings_title": "⚙️ **SİSTEM AYARLARI**",
     "logs_title": "📋 **SİSTEM LOG'LARI**",
     "premium_title": "💎 **PREMIUM YÖNETİMİ**",
-    "pdf_title": "📱 **PDF RAPORLARI**"
+    "pdf_title": "📱 **PDF RAPORLARI**",
+    "welcome": "👑 Admin Paneline Hoş Geldiniz",
+    "premium_management": "💎 Premium Yönetimi",
+    "premium_stats_title": "📊 Premium İstatistikleri",
+    "premium_users_title": "💎 Premium Kullanıcılar",
+    "error_loading_stats": "❌ İstatistikler yüklenirken hata oluştu.",
+    "error_loading_users": "❌ Kullanıcılar yüklenirken hata oluştu.",
+    "error_loading_logs": "❌ Loglar yüklenirken hata oluştu.",
+    "error_loading_premium_users": "❌ Premium kullanıcılar yüklenirken hata oluştu.",
+    "error_loading_premium_stats": "❌ Premium istatistikleri yüklenirken hata oluştu.",
+    "error_generating_pdf": "❌ PDF oluşturulurken hata oluştu.",
+    "gift_subscription_title": "🎁 Premium Hediye Et",
+    "cancel_subscription_title": "❌ Aboneliği İptal Et",
+    "pdf_report": "📄 PDF Raporu",
+    "pdf_sent": "✅ PDF raporu gönderildi."
   },
   "fortune": {
     "tarot_reading": "🎴 Tarot Falı",
     "coffee_reading": "☕ Kahve Falı",
     "dream_interpretation": "💭 Rüya Tabiri",
-    "palm_reading": "🖐️ El Falı"
+    "palm_reading": "🖐️ El Falı",
+    "daily_limit_reached": "⚠️ Günlük ücretsiz limitinize ulaştınız. Limit: {limit}. Premium’a yükseltin."
   },
   "start_message": "✨🔮 **FAL GRAM'A HOŞ GELDİNİZ** 🔮✨\n━━━━━━━━━━━━━━━━━━━━━━\n\n🌟 *Mistik dünyanın kapıları açılıyor...*\n\n☕ **Kahve Falı** - Fincanınızda geleceği keşfedin\n🃏 **Tarot Falı** - Kartların size söyleyecekleri var\n💭 **Rüya Analizi** - Bilinçaltı mesajlarınızı çözün\n⭐ **Astroloji** - Yıldızlardan rehberlik\n🌅 **Günlük Kart** - Her sabah kişisel rehberlik\n👥 **Arkadaş Davet Et** - Paylaşıldıkça bereket çoğalır\n\n━━━━━━━━━━━━━━━━━━━━━━\n✨ *Kaderinizi keşfetmeye hazır mısınız?* ✨",
   "main_menu_button": "🏠 Ana Menü",
@@ -65,7 +80,7 @@
     "changed": "✅ Dil güncellendi!"
   },
   "help": {
-    "message": "Gezinmek için menüyü kullanın."
+    "message": "❓ Yardım ve SSS\n\n• Menüden istediğiniz bölümü seçin: Astroloji, Fallar, Premium, Davet, Profil.\n• Kahve Falı için fincan fotoğrafı gönderin; Rüya için metin yazın.\n• Tüm yorumlar Supabase'den alınan promptlarla ve yapay zekâ ile hazırlanır.\n• Paylaşım: Yorumdan sonra 'X'te Paylaş' ile metni doğrudan paylaşabilirsiniz.\n• Navigasyon: Her ekranda Geri/Ana menü butonları vardır; /start gerekmez.\n• Premium: Telegram Stars (XTR) ile ödeme yapabilirsiniz.\n\nDestek gerekiyor mu? @FalGramSupport"
   },
   "message": {
     "default_response": "Lütfen gezinmek için menü butonlarını kullanın. 👇"
@@ -93,7 +108,23 @@
     "weekly_horoscope": "📊 Haftalık Burç",
     "monthly_horoscope": "📅 Aylık Burç",
     "compatibility": "💕 Uyumluluk",
-    "moon_calendar": "🌙 Ay Takvimi"
+    "moon_calendar": "🌙 Ay Takvimi",
+    "menu_title": "🔮 Astroloji Menüsü",
+    "select_zodiac_daily": "Lütfen günlük burcunuzu seçin.",
+    "weekly_horoscope_prompt": "{sign} burcu için bu haftanın kapsamlı yorumunu yaz.",
+    "monthly_horoscope_prompt": "{sign} burcu için {month} ayına özel kapsamlı bir yorum yaz.",
+    "daily_horoscope_prompt": "{sign} burcu için {date} tarihli kısa ve net günlük yorum yaz.",
+    "horoscope_title": "{zodiac_name} - {type}",
+    "birth_date_required": "📅 Doğum tarihi gerekli. Lütfen profilinizden ekleyin.",
+    "birth_chart_prompt": "Kullanıcının doğum bilgilerine göre detaylı doğum haritası yorumu yap. İsim: {username}, Tarih: {birth_date}, Saat: {birth_time}, Yer: {birth_place}.",
+    "birth_chart_title": "🗺️ Doğum Haritası",
+    "compatibility_menu": "Uyumluluk için seçim yapın.",
+    "compatibility_prompt": "{username} için {sign1} ve {sign2} burçlarının uyumluluğunu yorumla.",
+    "compatibility_title": "🤝 Uyumluluk",
+    "select_second_sign": "İkinci burcu seçin.",
+    "moon_calendar_prompt": "Ay evresi: {moon_phase}, Aydınlanma: {illumination}. Günlük etkileri açıkla.",
+    "moon_calendar_title": "🌙 Ay Takvimi",
+    "premium_required": "🔒 Bu özellik için Premium gerekir."
   },
   "astrology_calculating": "⭐ Astrolojik hesaplamalar yapılıyor...",
   "birth_chart": "🌟 Doğum Haritası",
@@ -156,7 +187,8 @@
   "error": {
     "general": "❌ Bir hata oluştu. Lütfen tekrar deneyin.",
     "user_not_found": "❌ Kullanıcı bulunamadı!",
-    "plan_not_found": "❌ Plan bulunamadı. Lütfen tekrar deneyin."
+    "plan_not_found": "❌ Plan bulunamadı. Lütfen tekrar deneyin.",
+    "generation_failed": "❌ Üretim başarısız. Lütfen tekrar deneyin."
   },
   "admin_panel_message": "🔧 Admin Paneli",
   "admin_panel_title": "🔧 *Admin Paneli*",
@@ -467,45 +499,47 @@
     "buttons": {
       "buy": "💳 Şimdi Satın Al",
       "back": "🔙 Geri",
-      "plan_template": "✨ {plan_name} - {price} ⭐"
+      "plan_template": "{plan_name} - {price}"
     },
     "back_to_menu": "🔙 Menüye Geri Dön",
     "plans": {
       "basic": {
         "name": "Temel Plan",
-        "description": "Sınırsız fal ve gelişmiş özellikler",
+        "description": "Sınırsız fal ve temel astroloji özellikleri",
         "duration": "30 gün",
         "price": "500 ⭐",
         "features": [
           "♾️ Sınırsız fal (Kahve, Tarot, Rüya)",
-          "📊 Haftalık burç raporu",
-          "🔮 Gelişmiş astroloji analizi",
+          "✅ Günlük burç yorumu",
+          "✅ Temel doğum haritası",
           "💫 Doğum haritası yorumu",
-          "🌙 Ay takvimi özellikleri",
-          "💬 Gelişmiş chatbot",
+          "💬 Gelişmiş chatbot (temel)",
           "🎯 Kişiselleştirilmiş öneriler",
           "📈 Detaylı fal geçmişi",
           "🔔 Özel bildirimler"
-        ]
+        ],
+        "price_note": "$2.99/ay"
       },
       "premium": {
         "name": "Premium Plan",
-        "description": "Tam astroloji paketi ve özel özellikler",
+        "description": "Tam astroloji paketi ve gelişmiş özellikler",
         "duration": "30 gün",
         "price": "1000 ⭐",
         "features": [
-          "✨ Temel Plan özellikleri",
+          "✨ Temel Plan + tüm özellikler",
+          "📊 Haftalık astroloji raporu",
           "📅 Aylık burç yorumu",
           "🪐 Gezegen geçişleri analizi",
           "💕 Burç uyumluluğu",
-          "🌙 Gelişmiş ay takvimi",
+          "🌙 Gelişmiş ay takvimi bildirimleri",
           "📈 Detaylı astroloji raporları",
           "🎯 Kişiselleştirilmiş öneriler",
           "🔮 Özel fal türleri",
           "📊 Astroloji istatistikleri",
           "🎁 Özel içerikler",
           "⚡ Öncelikli destek"
-        ]
+        ],
+        "price_note": "$4.99/ay"
       },
       "vip": {
         "name": "VIP Plan",
@@ -525,7 +559,8 @@
           "🎪 Özel etkinlikler",
           "📱 Özel VIP arayüzü",
           "🔮 AI destekli kişisel rehberlik"
-        ]
+        ],
+        "price_note": "$9.99/ay"
       },
       "free": {
         "name": "Ücretsiz",
@@ -533,17 +568,16 @@
         "duration": "Süresiz",
         "price": "0 ⭐",
         "features": [
-          "☕ 5 ücretsiz fal (Kahve, Tarot, Rüya)",
-          "♈ Günlük burç",
-          "🔮 Temel astroloji özellikleri",
-          "📱 Temel chatbot desteği",
-          "🎁 Referans bonusları"
+          "4 ücretsiz fal hakkı (sistemde hata olursa sayma)",
+          "Temel özellikler",
+          "Reklamlar"
         ]
       }
     },
     "title": "💎 **PREMIUM ABONELİK**",
     "subtitle": "Mevcut Plan: **{plan_name}**",
-    "description": "🌟 **Daha Fazla Güç, Daha Derin Rehberlik!**\n\nSınırsız fal, gelişmiş astroloji ve kişiselleştirilmiş deneyim için premium plana geçin."
+    "description": "🌟 **Daha Fazla Güç, Daha Derin Rehberlik!**\n\nSınırsız fal, gelişmiş astroloji ve kişiselleştirilmiş deneyim için premium plana geçin.",
+    "v3_title": "💎 3 Seviyeli Premium Abonelik Sistemi"
   },
   "astrology_analysis": {
     "daily_horoscope": {
@@ -931,6 +965,8 @@
     "copy_link": "📋 Linki Kopyala",
     "share_telegram": "📤 Telegram'da Paylaş",
     "share_whatsapp": "📱 WhatsApp'ta Paylaş",
+    "share_twitter": "🐦 X'te Paylaş",
+    "back_to_referral": "🔙 Referansa Geri Dön",
     "share_text": "🔮 Fal Gram'da ücretsiz falını al!",
     "link_copied": "✅ Referans linki kopyalandı: {link}"
   },
@@ -948,7 +984,8 @@
     "payment_success": "🎉 Ödeme Başarılı!",
     "payment_error": "❌ Ödeme Hatası",
     "try_again": "🔄 Tekrar Dene",
-    "purchase_initiated": "🛒 Satın alma başlatıldı. Ödeme ile devam etmek için aşağıdaki butona tıklayın."
+    "purchase_initiated": "🛒 Satın alma başlatıldı. Ödeme ile devam etmek için aşağıdaki butona tıklayın.",
+    "more_info": "Daha Fazla Bilgi"
   },
   "language_selection": {
     "title": "🌐 **Dil Seçimi**",
@@ -1044,7 +1081,9 @@
     "unsubscribe": "❌ Aboneliği İptal Et",
     "upgrade_basic": "💎 Temel'e Yükselt",
     "upgrade_premium": "⭐ Premium'a Yükselt",
-    "upgrade_vip": "👑 VIP'e Yükselt"
+    "upgrade_vip": "👑 VIP'e Yükselt",
+    "auto_renew_toggle": "🔄 Otomatik Yenilemeyi Aç/Kapat",
+    "auto_renew_toggled": "🔄 Otomatik yenileme tercihiniz güncellendi."
   },
   "invite_friends": "👥 Arkadaş Davet Et",
   "astrology_chatbot": "🤖 Astroloji Chatbot",
@@ -1055,5 +1094,98 @@
     "current_language": "Mevcut Dil: **{lang}**",
     "language_updated_success": "✅ Dil **{lang}** olarak güncellendi!",
     "back_to_menu": "🔙 Menüye Geri Dön"
+  },
+  "astro_features": {
+    "title": "🚀 Gelişmiş Astroloji Özellikleri",
+    "moon_plus": {
+      "title": "🌙 Gelişmiş Ay Takvimi Plus",
+      "features": [
+        "✅ Gerçek ay fazları hesaplama - Matematiksel algoritma",
+        "✅ 7 günlük ay takvimi - Gelecek fazlar ve etkileri",
+        "✅ Kişiselleştirilmiş ay etki analizi - Enerji bazlı tavsiyeler",
+        "🔔 Dolunay/yeniay otomatik bildirimleri - Premium özellik"
+      ]
+    },
+    "chatbot_vip": {
+      "title": "🤖 7/24 Astroloji Chatbot (VIP)",
+      "features": [
+        "✅ Anlık astroloji soruları - \"Bugün Mars'ın etkisi nasıl?\"",
+        "✅ Gerçek zamanlı burç yorumları - \"İkizler için bu hafta\"",
+        "✅ Özel gezegen analizleri - \"Venüs geçişi ne zaman?\"",
+        "✅ Doğum haritası soruları - \"Jupiter nerede?\"",
+        "💾 Sohbet geçmişi - Tüm sorular kaydediliyor"
+      ]
+    },
+    "social_vip": {
+      "title": "👥 Sosyal Özellikler (VIP)",
+      "features": [
+        "✅ Burç uyumluluğu arkadaş sistemi - Veritabanı hazır",
+        "✅ Astroloji topluluğu - Kullanıcı bağlantıları sistemi",
+        "✅ Uyumluluk skorları - 0-100 puan sistemi",
+        "📤 Günlük burç paylaşım - Sosyal entegrasyon hazır"
+      ]
+    }
+  },
+  "premium_system": {
+    "title": "📊 Premium Abonelik Sistemi",
+    "telegram_stars": {
+      "title": "💳 Telegram Stars Entegrasyonu",
+      "features": [
+        "✅ 3 farklı plan fiyatı - 500, 1000, 2000 star",
+        "✅ Otomatik plan aktivasyonu - Ödeme sonrası anlık aktifleştirme",
+        "✅ Abonelik yönetimi - Süre takibi ve otomatik yenileme",
+        "✅ Premium erişim kontrolü - Plan bazında özellik kısıtlaması"
+      ]
+    },
+    "history": {
+      "title": "📈 Abonelik Geçmişi",
+      "features": [
+        "✅ Premium subscriptions tablosu - Tüm ödeme geçmişi",
+        "✅ Plan geçiş takibi - Hangi plandan hangi plana geçiş",
+        "✅ Süre yönetimi - Otomatik süre dolum kontrolü",
+        "📊 Gelir analitikleri - Admin panelinde görülebilir"
+      ]
+    }
+  },
+  "database_updates": {
+    "title": "🗄️ Database Yenilikleri",
+    "new_tables": {
+      "title": "5 Yeni Tablo Eklendi",
+      "list": [
+        "premium_subscriptions - Abonelik geçmişi ve takibi",
+        "chatbot_history - VIP chatbot sohbet geçmişi",
+        "moon_notifications - Ay bildirimleri takibi",
+        "user_connections - Sosyal özellikler ve arkadaşlık",
+        "weekly_reports - Haftalık astroloji raporları"
+      ]
+    },
+    "indexes": {
+      "title": "Gelişmiş İndeksler",
+      "list": [
+        "✅ Premium plan indexleri",
+        "✅ Performans optimizasyonu",
+        "✅ Otomatik güncelleme tetikleyicileri",
+        "✅ Gelişmiş sorgu desteği"
+      ]
+    }
+  },
+  "ux_improvements": {
+    "title": "🎯 Kullanıcı Deneyimi İyileştirmeleri",
+    "main_menu": {
+      "title": "📱 Ana Menü Güncellemeleri",
+      "features": [
+        "✅ Premium durumu göstergesi - Plan adı görünür",
+        "✅ Plan bazında özellik menüleri - Sadece erişilebilir özellikler",
+        "✅ Akıllı navigasyon - Premium upgrade yönlendirmeleri"
+      ]
+    },
+    "astrology_menu": {
+      "title": "⭐ Astroloji Menüsü Geliştirmeleri",
+      "features": [
+        "✅ Premium özellikler grubu - Haftalık rapor, gezegen geçişleri",
+        "✅ VIP özellikler grubu - Chatbot, sosyal özellikler",
+        "✅ Plan durumu göstergesi - \"Premium Özellikler Aktif!\""
+      ]
+    }
   }
 }

@@ -22,6 +22,16 @@ class AstrologyKeyboards:
             ],
             [
                 InlineKeyboardButton(
+                    i18n.get_text("astrology.weekly_horoscope", language),
+                    callback_data="weekly_horoscope"
+                ),
+                InlineKeyboardButton(
+                    i18n.get_text("astrology.monthly_horoscope", language),
+                    callback_data="monthly_horoscope"
+                )
+            ],
+            [
+                InlineKeyboardButton(
                     i18n.get_text("astrology.birth_chart", language),
                     callback_data="birth_chart"
                 ),
@@ -44,6 +54,11 @@ class AstrologyKeyboards:
             ]
         ]
         return InlineKeyboardMarkup(keyboard)
+
+    # Backwards-compatible alias expected by handlers
+    @staticmethod
+    def get_astrology_menu(language: str = "en") -> InlineKeyboardMarkup:
+        return AstrologyKeyboards.get_astrology_menu_keyboard(language)
     
     @staticmethod
     def get_horoscope_period_keyboard(language: str = "en") -> InlineKeyboardMarkup:
@@ -240,9 +255,9 @@ class AstrologyKeyboards:
 
     @staticmethod
     def get_premium_upgrade_keyboard(language: str = "en") -> InlineKeyboardMarkup:
-        # Minimal upgrade keyboard directing to premium menu
+        # Upgrade keyboard with direct Stars CTA
         from src.keyboards.payment import PaymentKeyboards
-        return PaymentKeyboards.get_premium_menu_keyboard(language)
+        return PaymentKeyboards.get_premium_upgrade_keyboard(language)
 
     @staticmethod
     def get_back_button(language: str = "en") -> InlineKeyboardMarkup:
