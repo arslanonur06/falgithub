@@ -354,6 +354,45 @@ class UserHandlers:
             logger.error(f"Error handling back button: {e}")
             await update.callback_query.answer("❌ An error occurred")
 
+    @staticmethod
+    async def show_edit_profile(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+        """Show edit profile placeholder with navigation options."""
+        try:
+            user = update.effective_user
+            if not user:
+                return
+            user_data = await db_service.get_user(user.id)
+            language = user_data.get('language', 'en') if user_data else 'en'
+            text = i18n.get_text("profile.title", language) + "\n\n" + (
+                i18n.get_text("feature_not_available", language)
+            )
+            keyboard = MainKeyboards.get_profile_keyboard(language)
+            await update.callback_query.edit_message_text(text, reply_markup=keyboard, parse_mode='Markdown')
+        except Exception as e:
+            logger.error(f"Error showing edit profile: {e}")
+            await update.callback_query.answer("❌ An error occurred")
+
+    @staticmethod
+    async def show_usage_stats(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+        """Show usage statistics from profile menu."""
+        try:
+            user = update.effective_user
+            if not user:
+                return
+            user_data = await db_service.get_user(user.id)
+            language = user_data.get('language', 'en') if user_data else 'en'
+            total = (user_data or {}).get('total_readings', 0)
+            daily = (user_data or {}).get('daily_readings_used', 0)
+            text = (
+                i18n.get_text("profile.usage_stats", language)
+                + f"\n\nTotal readings: {total}\nToday's readings: {daily}/{settings.FREE_DAILY_LIMIT}"
+            )
+            keyboard = MainKeyboards.get_profile_keyboard(language)
+            await update.callback_query.edit_message_text(text, reply_markup=keyboard, parse_mode='Markdown')
+        except Exception as e:
+            logger.error(f"Error showing usage stats: {e}")
+            await update.callback_query.answer("❌ An error occurred")
+
 
 # Import datetime at the top
 from datetime import datetime 

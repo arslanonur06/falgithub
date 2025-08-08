@@ -124,6 +124,8 @@ class AdminHandlers:
             await AdminHandlers._show_admin_referrals(query, language)
         elif query.data == "admin_settings":
             await AdminHandlers._show_admin_settings(query, language)
+        elif query.data == "admin_menu":
+            await AdminHandlers._show_admin_main_menu(query, language)
         elif query.data == "admin_download_pdf":
             await AdminHandlers._download_admin_pdf(query, language)
         elif query.data == "admin_premium_users":
@@ -136,6 +138,8 @@ class AdminHandlers:
             await AdminHandlers._show_cancel_subscription(query, language)
         elif query.data == "back_to_admin":
             await AdminHandlers._show_admin_main_menu(query, language)
+        else:
+            await query.edit_message_text("❓ Unknown admin action")
     
     @staticmethod
     def _is_admin(user_id: int) -> bool:
