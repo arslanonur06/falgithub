@@ -120,6 +120,8 @@ class AdminHandlers:
             await AdminHandlers._show_admin_premium(query, language)
         elif query.data == "admin_logs":
             await AdminHandlers._show_admin_logs(query, language)
+        elif query.data == "admin_referrals":
+            await AdminHandlers._show_admin_referrals(query, language)
         elif query.data == "admin_settings":
             await AdminHandlers._show_admin_settings(query, language)
         elif query.data == "admin_download_pdf":
@@ -282,6 +284,51 @@ class AdminHandlers:
         keyboard = AdminKeyboards.get_admin_settings_keyboard(language)
         
         await query.edit_message_text(text, reply_markup=keyboard)
+
+    @staticmethod
+    async def _show_admin_referrals(query, language: str) -> None:
+        """Show referral analytics in admin panel."""
+        try:
+            top = await db_service.get_top_referrers(limit=5)
+            last7 = await db_service.get_referral_counts_by_day(days=7)
+            last6m = await db_service.get_referral_counts_by_month(months=6)
+            avg_rev = await db_service.get_revenue_per_referral(days=30)
+
+            text = "📈 Referral Analytics\n\n"
+            text += "🏆 Top Referrers (last):\n"
+            if top:
+                for i, u in enumerate(top, 1):
+                    name = u.get('first_name') or u.get('username') or f"User{i}"
+                    cnt = u.get('referred_count', u.get('referral_count', 0))
+                    text += f"{i}. {name} — {cnt}\n"
+            else:
+                text += "No data\n"
+
+            text += "\n🗓️ Last 7 days:\n"
+            if last7:
+                for b in last7:
+                    text += f"{b['date']}: {b['count']}\n"
+            else:
+                text += "No data\n"
+
+            text += "\n📅 Last 6 months (referrals):\n"
+            if last6m:
+                for b in last6m:
+                    text += f"{b['month']}: {b['count']}\n"
+            else:
+                text += "No data\n"
+
+            text += "\n💰 Revenue per Referral (last 30d):\n"
+            text += f"Total Revenue: {avg_rev['total_revenue']} XTR\n"
+            text += f"Total Referrals: {avg_rev['total_referrals']}\n"
+            text += f"Avg / Referral: {avg_rev['avg_revenue_per_referral']} XTR\n"
+
+            keyboard = AdminKeyboards.get_back_to_admin_keyboard(language)
+            await query.edit_message_text(text, reply_markup=keyboard)
+        except Exception as e:
+            logger.error(f"Error showing admin referrals: {e}")
+            keyboard = AdminKeyboards.get_back_to_admin_keyboard(language)
+            await query.edit_message_text("❌ Error loading referral analytics", reply_markup=keyboard)
     
     @staticmethod
     async def _download_admin_pdf(query, language: str) -> None:

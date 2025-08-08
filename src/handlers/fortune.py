@@ -28,7 +28,12 @@ class FortuneHandlers:
         await query.answer()
         
         user = update.effective_user
-        language = user.language_code or "en" if user else "en"
+        # Use stored language preference from DB for consistency
+        try:
+            user_data = await db_service.get_user(user.id) if user else None
+        except Exception:
+            user_data = None
+        language = (user_data.get('language') if user_data else None) or (user.language_code if user and user.language_code else 'en')
         
         keyboard = FortuneKeyboards.get_fortune_menu(language)
         text = i18n.get_text("menu.fortune", language)
@@ -42,7 +47,11 @@ class FortuneHandlers:
         await query.answer()
         
         user = update.effective_user
-        language = user.language_code or "en" if user else "en"
+        try:
+            user_data = await db_service.get_user(user.id) if user else None
+        except Exception:
+            user_data = None
+        language = (user_data.get('language') if user_data else None) or (user.language_code if user and user.language_code else 'en')
         
         # Check usage limits
         usage_check = await FortuneHandlers._check_usage_limits(user.id, language)
@@ -54,8 +63,12 @@ class FortuneHandlers:
         cards = await FortuneHandlers._get_tarot_cards()
         if not cards:
             text = i18n.get_text("error.general", language)
-            keyboard = FortuneKeyboards.get_back_button(language)
-            await query.edit_message_text(text, reply_markup=keyboard)
+            # Provide Back to Fortune and Main Menu buttons
+            action_keyboard = InlineKeyboardMarkup([
+                [InlineKeyboardButton(i18n.get_text('common.back', language), callback_data='fortune')],
+                [InlineKeyboardButton(i18n.get_text('main_menu', language), callback_data='main_menu')]
+            ])
+            await query.edit_message_text(text, reply_markup=action_keyboard)
             return
         
         # Draw random cards
@@ -74,7 +87,11 @@ class FortuneHandlers:
         await query.answer()
         
         user = update.effective_user
-        language = user.language_code or "en" if user else "en"
+        try:
+            user_data = await db_service.get_user(user.id) if user else None
+        except Exception:
+            user_data = None
+        language = (user_data.get('language') if user_data else None) or (user.language_code if user and user.language_code else 'en')
         
         # Check usage limits
         usage_check = await FortuneHandlers._check_usage_limits(user.id, language)
@@ -98,7 +115,11 @@ class FortuneHandlers:
         await query.answer()
         
         user = update.effective_user
-        language = user.language_code or "en" if user else "en"
+        try:
+            user_data = await db_service.get_user(user.id) if user else None
+        except Exception:
+            user_data = None
+        language = (user_data.get('language') if user_data else None) or (user.language_code if user and user.language_code else 'en')
         
         # Check usage limits
         usage_check = await FortuneHandlers._check_usage_limits(user.id, language)
@@ -122,7 +143,11 @@ class FortuneHandlers:
         await query.answer()
         
         user = update.effective_user
-        language = user.language_code or "en" if user else "en"
+        try:
+            user_data = await db_service.get_user(user.id) if user else None
+        except Exception:
+            user_data = None
+        language = (user_data.get('language') if user_data else None) or (user.language_code if user and user.language_code else 'en')
         
         # Check usage limits
         usage_check = await FortuneHandlers._check_usage_limits(user.id, language)
@@ -144,7 +169,11 @@ class FortuneHandlers:
     async def handle_photo_input(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         """Handle photo input for fortune telling."""
         user = update.effective_user
-        language = user.language_code or "en" if user else "en"
+        try:
+            user_data = await db_service.get_user(user.id) if user else None
+        except Exception:
+            user_data = None
+        language = (user_data.get('language') if user_data else None) or (user.language_code if user and user.language_code else 'en')
         
         waiting_for = context.user_data.get('waiting_for')
         if not waiting_for:
@@ -175,7 +204,12 @@ class FortuneHandlers:
     async def handle_text_input(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         """Handle text input for fortune telling."""
         user = update.effective_user
-        language = user.language_code or "en" if user else "en"
+        # Use stored language preference from DB for consistency across flows
+        try:
+            user_data = await db_service.get_user(user.id) if user else None
+        except Exception:
+            user_data = None
+        language = (user_data.get('language') if user_data else None) or (user.language_code if user and user.language_code else 'en')
         
         waiting_for = context.user_data.get('waiting_for')
         if not waiting_for:
@@ -223,9 +257,12 @@ class FortuneHandlers:
     async def _get_tarot_cards() -> List[Dict[str, Any]]:
         """Get tarot cards from database."""
         try:
-            # This would fetch from database in a real implementation
-            # For now, return sample cards
-            return [
+            # Prefer localized cards from locales if provided (list of {name, meaning})
+            # Fallback to English sample set
+            # Note: Language will be handled at the call site by selecting desired items
+            localized = i18n.get_raw('tarot.cards', 'tr')  # probe key existence
+            # We don't know the target language here; return English fallback, caller will format
+            default_cards = [
                 {"name": "The Fool", "meaning": "New beginnings, innocence, spontaneity"},
                 {"name": "The Magician", "meaning": "Manifestation, resourcefulness, power"},
                 {"name": "The High Priestess", "meaning": "Intuition, mystery, spirituality"},
@@ -237,6 +274,7 @@ class FortuneHandlers:
                 {"name": "Strength", "meaning": "Inner strength, courage, persuasion"},
                 {"name": "The Hermit", "meaning": "Soul-searching, introspection, solitude"}
             ]
+            return default_cards
         except Exception as e:
             logger.error(f"Error getting tarot cards: {e}")
             return []
@@ -245,21 +283,27 @@ class FortuneHandlers:
     async def _generate_tarot_interpretation(query, cards: List[Dict[str, Any]], language: str) -> None:
         """Generate tarot card interpretation."""
         try:
-            # Generate interpretation via AI fallback using a spread prompt
+            # Build a localized spread prompt from Supabase/i18n if available
             user_id = query.from_user.id if hasattr(query, "from_user") and query.from_user else None
-            card_names = ", ".join([c['name'] for c in cards])
-            card_meanings = "; ".join([c['meaning'] for c in cards])
-            spread_prompt = (
-                "You are an expert tarot reader. Provide a cohesive interpretation for the following spread.\n\n"
-                f"Cards: {card_names}\n"
-                f"Meanings: {card_meanings}\n\n"
-                "Include: overall theme, present situation, guidance, and a hopeful message."
+            # Attempt to localize card names/meanings if locales provide them
+            # If not available, use provided card objects as-is
+            card_names = ", ".join([c.get('name', '') for c in cards])
+            card_meanings = "; ".join([c.get('meaning', '') for c in cards])
+            prompt_template = (
+                await db_service.get_prompt('tarot_spread', language)
+                or i18n.get_text('tarot.spread_prompt', language)
             )
+            if not prompt_template or prompt_template == 'tarot.spread_prompt':
+                prompt_template = (
+                    "You are an expert tarot reader. Provide a cohesive interpretation for the spread.\n\n"
+                    "Include: overall theme, present situation, guidance, and a hopeful message."
+                )
+            spread_prompt = f"{prompt_template}\n\nCards: {card_names}\nMeanings: {card_meanings}"
             interpretation = await ai_service.generate_with_fallback(user_id or 0, spread_prompt)
             
             # Format response
             title = i18n.get_text("tarot_fortune", language)
-            lines = [f"{idx}. {card['name']}: {card['meaning']}" for idx, card in enumerate(cards, 1)]
+            lines = [f"{idx}. {card.get('name','')}: {card.get('meaning','')}" for idx, card in enumerate(cards, 1)]
             text = f"{title}\n\n" + "\n".join(lines) + (f"\n\n{interpretation}" if interpretation else "")
             
             keyboard = FortuneKeyboards.get_back_button(language)
@@ -306,7 +350,8 @@ class FortuneHandlers:
             # Simplify share keyboard to avoid extra menu components
             share_keyboard = InlineKeyboardMarkup([
                 [InlineKeyboardButton(i18n.get_text('referral.share_twitter', language), url=twitter_url)],
-                [InlineKeyboardButton(i18n.get_text('common.back', language), callback_data='fortune')]
+                [InlineKeyboardButton(i18n.get_text('common.back', language), callback_data='fortune')],
+                [InlineKeyboardButton(i18n.get_text('main_menu', language), callback_data='main_menu')]
             ])
             
             keyboard = FortuneKeyboards.get_back_button(language)
@@ -340,8 +385,11 @@ class FortuneHandlers:
             title = i18n.get_text("fortune.palm_reading", language)
             text = f"{title}\n\n{interpretation}"
             
-            keyboard = FortuneKeyboards.get_back_button(language)
-            await update.message.reply_text(text, reply_markup=keyboard)
+            action_keyboard = InlineKeyboardMarkup([
+                [InlineKeyboardButton(i18n.get_text('common.back', language), callback_data='fortune')],
+                [InlineKeyboardButton(i18n.get_text('main_menu', language), callback_data='main_menu')]
+            ])
+            await update.message.reply_text(text, reply_markup=action_keyboard)
             
             # Update usage
             await db_service.increment_usage(update.effective_user.id)
@@ -375,7 +423,8 @@ class FortuneHandlers:
             twitter_url = f"https://twitter.com/intent/tweet?text={quote(share_text)}"
             share_keyboard = InlineKeyboardMarkup([
                 [InlineKeyboardButton(i18n.get_text('referral.share_twitter', language), url=twitter_url)],
-                [InlineKeyboardButton(i18n.get_text('common.back', language), callback_data='fortune')]
+                [InlineKeyboardButton(i18n.get_text('common.back', language), callback_data='fortune')],
+                [InlineKeyboardButton(i18n.get_text('main_menu', language), callback_data='main_menu')]
             ])
             
             keyboard = FortuneKeyboards.get_back_button(language)

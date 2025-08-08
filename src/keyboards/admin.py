@@ -36,6 +36,12 @@ class AdminKeyboards:
             ],
             [
                 InlineKeyboardButton(
+                    "🎯 Referrals",
+                    callback_data="admin_referrals"
+                )
+            ],
+            [
+                InlineKeyboardButton(
                     i18n.get_text("admin.settings", language),
                     callback_data="admin_settings"
                 )

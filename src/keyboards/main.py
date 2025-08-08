@@ -43,12 +43,18 @@ class MainKeyboards:
                     i18n.get_text("menu.help", language),
                     callback_data="help"
                 )
+            ],
+            [
+                InlineKeyboardButton(
+                    i18n.get_text("language.select", language) if i18n.get_text("language.select", language) != "language.select" else (i18n.get_text("language_button", language) if i18n.get_text("language_button", language) != "language_button" else "🌐 Dil Seçimi"),
+                    callback_data="language"
+                )
             ]
         ]
         return InlineKeyboardMarkup(keyboard)
     
     @staticmethod
-    def get_language_selection_keyboard() -> InlineKeyboardMarkup:
+    def get_language_selection_keyboard(language: str = "en") -> InlineKeyboardMarkup:
         """Get language selection keyboard."""
         keyboard = [
             [
@@ -59,7 +65,7 @@ class MainKeyboards:
                 InlineKeyboardButton("🇪🇸 Español", callback_data="set_lang_es")
             ],
             [
-                InlineKeyboardButton(i18n.get_text("common.back", "en"), callback_data="main_menu")
+                InlineKeyboardButton(i18n.get_text("common.back", language), callback_data="main_menu")
             ]
         ]
         return InlineKeyboardMarkup(keyboard)

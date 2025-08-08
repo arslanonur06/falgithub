@@ -1083,7 +1083,16 @@
     "upgrade_premium": "⭐ Premium'a Yükselt",
     "upgrade_vip": "👑 VIP'e Yükselt",
     "auto_renew_toggle": "🔄 Otomatik Yenilemeyi Aç/Kapat",
-    "auto_renew_toggled": "🔄 Otomatik yenileme tercihiniz güncellendi."
+    "auto_renew_toggled": "🔄 Otomatik yenileme tercihiniz güncellendi.",
+    "invalid_plan": "❌ Geçersiz plan",
+    "invoice_title": "Fal Gram - {plan_name}",
+    "invoice_description": "{plan_name} planı için premium abonelik",
+    "processing": "💫 Ödeme işleniyor...",
+    "subscription_activated": "{plan_name} aboneliğiniz aktifleştirildi!\nBitiş: {expires_at}\n\n✨ Tüm premium özelliklerin tadını çıkarın!",
+    "payment_error": "❌ Ödeme hatası",
+    "no_active_subscription": "❌ İptal edilecek aktif abonelik yok",
+    "cancelled_title": "❌ **Abonelik İptal Edildi**",
+    "cancelled_body": "Premium aboneliğiniz iptal edildi.\nFaturalandırma dönemi sonuna kadar ücretsiz özellikleri kullanmaya devam edebilirsiniz."
   },
   "invite_friends": "👥 Arkadaş Davet Et",
   "astrology_chatbot": "🤖 Astroloji Chatbot",

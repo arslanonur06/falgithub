@@ -144,6 +144,81 @@ class DatabaseService:
         except Exception as e:
             logger.error(f"Error getting all users: {e}")
             return []
+
+    async def get_premium_users(self) -> List[Dict[str, Any]]:
+        """Get users with an active premium plan if possible; fallback to any non-free plan."""
+        try:
+            if not self.is_connected():
+                return []
+            try:
+                # Prefer active based on expiry
+                response = (
+                    self.supabase
+                    .table('users')
+                    .select('*')
+                    .neq('premium_plan', 'free')
+                    .execute()
+                )
+                users = response.data or []
+                # Filter locally by expiry if available
+                now = datetime.utcnow()
+                active: List[Dict[str, Any]] = []
+                for u in users:
+                    exp = u.get('premium_expires_at')
+                    if not exp:
+                        active.append(u)
+                        continue
+                    try:
+                        dt = datetime.fromisoformat(str(exp).replace('Z', '+00:00'))
+                        if dt > now:
+                            active.append(u)
+                    except Exception:
+                        active.append(u)
+                return active
+            except Exception:
+                # Fallback: any user marked is_premium
+                response2 = self.supabase.table('users').select('*').eq('is_premium', True).execute()
+                return response2.data or []
+        except Exception as e:
+            logger.error(f"Error getting premium users: {e}")
+            return []
+
+    async def get_payment_statistics(self) -> Dict[str, int]:
+        """Aggregate payment stats from payment_transactions if available."""
+        result = {'total_revenue': 0, 'revenue_today': 0, 'revenue_month': 0}
+        if not self.is_connected():
+            return result
+        try:
+            # Fetch recent payments to aggregate locally
+            resp = (
+                self.supabase
+                .table('payment_transactions')
+                .select('*')
+                .eq('status', 'completed')
+                .order('created_at', desc=True)
+                .limit(1000)
+                .execute()
+            )
+            rows = resp.data or []
+            now = datetime.utcnow()
+            start_today = now.replace(hour=0, minute=0, second=0, microsecond=0)
+            start_month = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+            for r in rows:
+                amount = int(r.get('amount') or 0)
+                result['total_revenue'] += amount
+                ts = r.get('created_at')
+                try:
+                    dt = datetime.fromisoformat(str(ts).replace('Z', '+00:00'))
+                except Exception:
+                    dt = None
+                if dt:
+                    if dt >= start_today:
+                        result['revenue_today'] += amount
+                    if dt >= start_month:
+                        result['revenue_month'] += amount
+        except Exception as e:
+            logger.error(f"Error aggregating payment statistics: {e}")
+        return result
     
     # Usage tracking
     async def increment_usage(self, user_id: int, usage_type: str = "reading") -> bool:
@@ -271,6 +346,207 @@ class DatabaseService:
         except Exception as e:
             logger.error(f"Error getting referrals for user {user_id}: {e}")
             return []
+
+    async def get_top_referrers(self, limit: int = 10) -> List[Dict[str, Any]]:
+        """Return top referrers based on referred_count/referral_count."""
+        try:
+            if not self.is_connected():
+                return []
+            # Try sort by referred_count
+            try:
+                resp = (
+                    self.supabase
+                    .table('users')
+                    .select('id, user_id, username, first_name, referred_count, referral_count')
+                    .order('referred_count', desc=True)
+                    .limit(limit)
+                    .execute()
+                )
+                if resp.data:
+                    return resp.data
+            except Exception:
+                pass
+            # Fallback sort by referral_count
+            resp2 = (
+                self.supabase
+                .table('users')
+                .select('id, user_id, username, first_name, referred_count, referral_count')
+                .order('referral_count', desc=True)
+                .limit(limit)
+                .execute()
+            )
+            return resp2.data or []
+        except Exception as e:
+            logger.error(f"Error getting top referrers: {e}")
+            return []
+
+    async def get_referral_counts_by_day(self, days: int = 7) -> List[Dict[str, Any]]:
+        """Return counts of referrals per day for the last N days (client-side aggregation)."""
+        if not self.is_connected():
+            return []
+        try:
+            since = datetime.utcnow() - timedelta(days=days)
+            resp = (
+                self.supabase
+                .table('referrals')
+                .select('created_at')
+                .gte('created_at', since.isoformat())
+                .order('created_at')
+                .limit(5000)
+                .execute()
+            )
+            rows = resp.data or []
+            buckets: Dict[str, int] = {}
+            for r in rows:
+                ts = r.get('created_at')
+                try:
+                    dt = datetime.fromisoformat(str(ts).replace('Z', '+00:00'))
+                    key = dt.strftime('%Y-%m-%d')
+                except Exception:
+                    key = 'unknown'
+                buckets[key] = buckets.get(key, 0) + 1
+            # Prepare sorted list
+            keys = sorted(buckets.keys())
+            return [{ 'date': k, 'count': buckets[k] } for k in keys]
+        except Exception as e:
+            logger.error(f"Error computing referral counts by day: {e}")
+            return []
+
+    async def get_referral_counts_by_month(self, months: int = 6) -> List[Dict[str, Any]]:
+        """Return counts of referrals per calendar month for the last N months."""
+        if not self.is_connected():
+            return []
+        try:
+            now = datetime.utcnow().replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+            # Approximate N months back by subtracting months*31 days, then filter client-side by month keys
+            since = now - timedelta(days=31 * months)
+            resp = (
+                self.supabase
+                .table('referrals')
+                .select('created_at')
+                .gte('created_at', since.isoformat())
+                .order('created_at')
+                .limit(10000)
+                .execute()
+            )
+            rows = resp.data or []
+            buckets: Dict[str, int] = {}
+            for r in rows:
+                ts = r.get('created_at')
+                try:
+                    dt = datetime.fromisoformat(str(ts).replace('Z', '+00:00'))
+                    key = dt.strftime('%Y-%m')
+                except Exception:
+                    key = 'unknown'
+                buckets[key] = buckets.get(key, 0) + 1
+            keys = sorted(buckets.keys())
+            return [{ 'month': k, 'count': buckets[k] } for k in keys]
+        except Exception as e:
+            logger.error(f"Error computing referral counts by month: {e}")
+            return []
+
+    async def get_revenue_per_referral(self, days: Optional[int] = None) -> Dict[str, Any]:
+        """Compute revenue per referral in Stars.
+
+        If days is provided, restrict both revenue and referrals to last N days.
+        Returns dict with totals and average.
+        """
+        result = {
+            'total_revenue': 0,
+            'total_referrals': 0,
+            'avg_revenue_per_referral': 0.0,
+        }
+        if not self.is_connected():
+            return result
+        try:
+            # Time window
+            since_iso = None
+            if days is not None:
+                since_iso = (datetime.utcnow() - timedelta(days=days)).isoformat()
+
+            # Revenue
+            q = self.supabase.table('payment_transactions').select('amount, created_at').eq('status', 'completed')
+            if since_iso:
+                q = q.gte('created_at', since_iso)
+            rev_rows = q.limit(10000).execute().data or []
+            total_rev = 0
+            for r in rev_rows:
+                try:
+                    total_rev += int(r.get('amount') or 0)
+                except Exception:
+                    continue
+
+            # Referrals count
+            q2 = self.supabase.table('referrals').select('id, created_at')
+            if since_iso:
+                q2 = q2.gte('created_at', since_iso)
+            ref_rows = q2.limit(10000).execute().data or []
+            total_refs = len(ref_rows)
+
+            avg = (total_rev / total_refs) if total_refs > 0 else 0.0
+            result.update({
+                'total_revenue': total_rev,
+                'total_referrals': total_refs,
+                'avg_revenue_per_referral': round(avg, 2),
+            })
+        except Exception as e:
+            logger.error(f"Error computing revenue per referral: {e}")
+        return result
+
+    async def get_referral_summary(self, user_id: int) -> Dict[str, Any]:
+        """Compute referral summary (this week, this month, last invite) for a user.
+
+        Falls back to zeros if table or fields are missing.
+        """
+        try:
+            referrals = await self.get_user_referrals(user_id)
+            if not referrals:
+                return {
+                    'this_week': 0,
+                    'this_month': 0,
+                    'last_invite_at': None,
+                    'total_count': 0,
+                }
+
+            now = datetime.utcnow()
+            week_start = now - timedelta(days=now.weekday())  # Monday
+            month_start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+
+            def parse_dt(value: Any) -> Optional[datetime]:
+                if not value:
+                    return None
+                try:
+                    return datetime.fromisoformat(value.replace('Z', '+00:00'))
+                except Exception:
+                    try:
+                        return datetime.strptime(value, '%Y-%m-%d %H:%M:%S')
+                    except Exception:
+                        return None
+
+            dates: List[datetime] = []
+            for r in referrals:
+                dt = parse_dt(r.get('created_at') or r.get('inserted_at'))
+                if dt:
+                    dates.append(dt)
+
+            this_week = sum(1 for d in dates if d >= week_start)
+            this_month = sum(1 for d in dates if d >= month_start)
+            last_invite_at = max(dates).isoformat() if dates else None
+
+            return {
+                'this_week': this_week,
+                'this_month': this_month,
+                'last_invite_at': last_invite_at,
+                'total_count': len(referrals),
+            }
+        except Exception as e:
+            logger.error(f"Error building referral summary for user {user_id}: {e}")
+            return {
+                'this_week': 0,
+                'this_month': 0,
+                'last_invite_at': None,
+                'total_count': 0,
+            }
     
     # Logging operations
     async def add_log(self, message: str, level: str = "info", user_id: Optional[int] = None) -> bool:
@@ -325,6 +601,9 @@ class DatabaseService:
 
         Supports both schemas:
         - columns: prompt_type, language, content
+
+
+        
         - or: key, language, value
         """
         try:

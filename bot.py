@@ -93,6 +93,7 @@ async def route_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         "main_menu": UserHandlers.show_main_menu,
         "profile": UserHandlers.show_profile,
         "help": UserHandlers.show_help,
+        "language": UserHandlers.show_language_menu,
         # Sections
         "astrology": AstrologyHandlers.show_astrology_menu,
         "fortune": __import__("src.handlers.fortune", fromlist=["FortuneHandlers"]).FortuneHandlers.show_fortune_menu,

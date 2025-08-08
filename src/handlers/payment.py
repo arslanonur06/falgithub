@@ -95,7 +95,7 @@ class PaymentHandlers:
             # Get plan info
             plan_info = payment_service._get_plan_info(plan_name)
             if not plan_info:
-                await update.callback_query.answer("❌ Invalid plan")
+                await update.callback_query.answer(i18n.get_text('payment.invalid_plan', language))
                 return
             
             # Localized plan fields from locales (aligned with PREMIUM_PLANS.md)
@@ -113,10 +113,13 @@ class PaymentHandlers:
             text += f"{i18n.get_text('premium_plans.plan_details.duration_label', language)}: {plan_duration}\n"
             
             # Also append localized bullet features list for detail view
-            features = i18n.get_text(f"premium_plans.plans.{plan_name}.features", language)
+            features = i18n.get_raw(f"premium_plans.plans.{plan_name}.features", language)
             if isinstance(features, list):
                 text += "\n\n**" + i18n.get_text('premium_plans.plan_details.features_label', language) + "**\n"
                 text += "\n".join([f"• {f}" for f in features])
+            elif isinstance(features, str) and features:
+                text += "\n\n**" + i18n.get_text('premium_plans.plan_details.features_label', language) + "**\n"
+                text += features
 
             keyboard = PaymentKeyboards.get_plan_detail_keyboard(plan_name, language)
             
@@ -151,7 +154,7 @@ class PaymentHandlers:
             plan_title = i18n.get_text(f"premium_plans.plans.{plan_name}.name", language) or plan_info['name']
             plan_price = i18n.get_text(f"premium_plans.plans.{plan_name}.price", language) or f"{plan_info['price']} ⭐"
             plan_duration = i18n.get_text(f"premium_plans.plans.{plan_name}.duration", language) or f"{plan_info['duration_days']} days"
-            features = i18n.get_text(f"premium_plans.plans.{plan_name}.features", language)
+            features = i18n.get_raw(f"premium_plans.plans.{plan_name}.features", language)
 
             text = f"{i18n.get_text('premium_plans.title', language)}\n"
             text += f"{i18n.get_text('premium_plans.separator', language)}\n\n"
@@ -161,6 +164,9 @@ class PaymentHandlers:
             if isinstance(features, list):
                 text += "\n\n**" + i18n.get_text('premium_plans.plan_details.features_label', language) + "**\n"
                 text += "\n".join([f"• {f}" for f in features])
+            elif isinstance(features, str) and features:
+                text += "\n\n**" + i18n.get_text('premium_plans.plan_details.features_label', language) + "**\n"
+                text += features
 
             keyboard = PaymentKeyboards.get_plan_detail_keyboard(plan_name, language)
             await update.callback_query.edit_message_text(
@@ -197,15 +203,7 @@ class PaymentHandlers:
                 sv = i18n.get_text(f'astro_features.{section}.features', language)
                 parts.append(f"\n• {st}\n" + ("\n".join([f"  - {x}" for x in sv]) if isinstance(sv, list) else str(sv)))
 
-            # Payment system (Secure payment, how to get stars, process)
-            ps_title = i18n.get_text('premium_system.title', language)
-            parts.append(f"\n\n{ps_title}")
-            for section in ['telegram_stars', 'history']:
-                st = i18n.get_text(f'premium_system.{section}.title', language)
-                sv = i18n.get_text(f'premium_system.{section}.features', language)
-                parts.append(f"\n• {st}\n" + ("\n".join([f"  - {x}" for x in sv]) if isinstance(sv, list) else str(sv)))
-
-            # Explicit payment notes if available
+            # Explicit payment notes if available (prefer using payment.* keys instead of premium_system)
             pay_notes = []
             for key in ['secure_payment', 'how_to_get_stars', 'payment_process']:
                 val = i18n.get_text(f'payment.{key}', language)
@@ -270,8 +268,8 @@ class PaymentHandlers:
             if provider_token:
                 # Send Telegram Stars invoice
                 from telegram import LabeledPrice
-                title = f"Fal Gram - {plan_info['name']}"
-                description = f"Premium plan subscription for {plan_info['name']}"
+                title = i18n.format_text('payment.invoice_title', language, plan_name=plan_info['name'])
+                description = i18n.format_text('payment.invoice_description', language, plan_name=plan_info['name'])
                 payload = f"premium_{plan_name}_{user.id}"
                 currency = "XTR"  # Telegram Stars
                 # Stars are unit-less; amount in invoice is in stars
@@ -294,7 +292,7 @@ class PaymentHandlers:
                 return
             
             # Fallback: simulate successful subscription if no provider configured
-            await update.callback_query.answer("Processing payment...")
+            await update.callback_query.answer(i18n.get_text('payment.processing', language))
             subscription_result = await payment_service.create_subscription(
                 user.id,
                 plan_name,
@@ -302,10 +300,9 @@ class PaymentHandlers:
             )
             
             if subscription_result['success']:
-                text = f"🎉 **Payment Successful!**\n\n"
-                text += f"Your {plan_info['name']} subscription is now active!\n"
-                text += f"Expires: {subscription_result['expires_at'][:10]}\n\n"
-                text += "Enjoy unlimited access to all mystical services! ✨"
+                text = i18n.get_text('premium.payment_success', language) if i18n.get_text('premium.payment_success', language) != 'premium.payment_success' else "🎉 Payment Successful!"
+                details = i18n.format_text('payment.subscription_activated', language, plan_name=plan_info['name'], expires_at=subscription_result.get('expires_at', '')[:10])
+                text = f"{text}\n\n{details}"
                 
                 keyboard = PaymentKeyboards.get_payment_back_keyboard(language)
                 
@@ -315,7 +312,7 @@ class PaymentHandlers:
                     parse_mode='Markdown'
                 )
             else:
-                await update.callback_query.answer("❌ Failed to activate subscription")
+                await update.callback_query.answer(i18n.get_text('payment.payment_error', language))
             
         except Exception as e:
             logger.error(f"Error processing payment: {e}")
@@ -431,16 +428,16 @@ class PaymentHandlers:
             subscription_status = await payment_service.check_subscription_status(user.id)
             
             if not subscription_status['active']:
-                await update.callback_query.answer("❌ No active subscription to cancel")
+                await update.callback_query.answer(i18n.get_text('payment.no_active_subscription', language))
                 return
             
             # Cancel subscription
             success = await payment_service.cancel_subscription(user.id)
             
             if success:
-                text = "❌ **Subscription Cancelled**\n\n"
-                text += "Your premium subscription has been cancelled.\n"
-                text += "You can still use free features until the end of your billing period."
+                title = i18n.get_text('payment.cancelled_title', language)
+                body = i18n.get_text('payment.cancelled_body', language)
+                text = f"{title}\n\n{body}"
                 
                 keyboard = PaymentKeyboards.get_payment_back_keyboard(language)
                 

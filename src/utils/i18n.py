@@ -76,10 +76,32 @@ class I18n:
         if not translation:
             translation = key
         
-        # Ensure translation is a string
+        # Ensure translation is a string for text API
         if not isinstance(translation, str):
             translation = str(translation) if translation is not None else key
         
+        return translation
+
+    def get_raw(self, key: str, lang: str = None):
+        """Get raw translation value (can be dict/list/string) without coercion."""
+        if not lang:
+            lang = settings.DEFAULT_LANGUAGE
+        keys = key.split('.')
+        translation = self.translations.get(lang, {})
+        for k in keys:
+            if isinstance(translation, dict) and k in translation:
+                translation = translation[k]
+            else:
+                translation = None
+                break
+        if translation is None and lang != settings.DEFAULT_LANGUAGE:
+            translation = self.translations.get(settings.DEFAULT_LANGUAGE, {})
+            for k in keys:
+                if isinstance(translation, dict) and k in translation:
+                    translation = translation[k]
+                else:
+                    translation = None
+                    break
         return translation
     
     def get_available_languages(self) -> list:

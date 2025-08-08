@@ -78,11 +78,17 @@ class UserHandlers:
             keyboard = MainKeyboards.get_main_menu_keyboard(language)
             
             if update.callback_query:
-                await update.callback_query.edit_message_text(
-                    text,
-                    reply_markup=keyboard,
-                    parse_mode='Markdown'
-                )
+                try:
+                    await update.callback_query.edit_message_text(
+                        text,
+                        reply_markup=keyboard,
+                        parse_mode='Markdown'
+                    )
+                except Exception as e:
+                    if 'Message is not modified' in str(e):
+                        await update.callback_query.edit_message_reply_markup(reply_markup=keyboard)
+                    else:
+                        raise
             else:
                 await update.message.reply_text(
                     text,
@@ -158,8 +164,8 @@ class UserHandlers:
             user_data = await db_service.get_user(user.id)
             language = user_data.get('language', 'en') if user_data else 'en'
             
-            text = i18n.get_text("language.select", language)
-            keyboard = MainKeyboards.get_language_selection_keyboard()
+            text = i18n.get_text("language.selection_title", language) if i18n.get_text("language.selection_title", language) != "language.selection_title" else i18n.get_text("language.select", language)
+            keyboard = MainKeyboards.get_language_selection_keyboard(language)
             
             await update.callback_query.edit_message_text(
                 text,
